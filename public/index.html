@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CakeTalk — Artisanal Bakes & Custom Celebration Cakes</title>
+  <meta name="description" content="Handcrafted artisan sourdough, flaky French viennoiserie, and bespoke custom celebration cakes baked fresh daily with European butter and wild levain.">
+  
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/custom-builder.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <aside class="announcement-bar" aria-label="Bakery Announcements">
+    <span>✨ <strong>FREE ARTISAN DELIVERY</strong> on orders over $40 with code <strong>FREESHIP</strong></span>
+    <span>•</span>
+    <span>Morning oven bakes ready daily at 7:00 AM</span>
+    <span>•</span>
+    <span>Same-Day Local Delivery & Easy Pickup Available</span>
+  </aside>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="header-brand">
+        <a href="/" onclick="event.preventDefault(); switchWebsiteMode('customer');" style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="brand-logo-icon">🎂</div>
+          <h1 class="brand-title">CakeTalk</h1>
+        </a>
+      </div>
+
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="#catalog" class="nav-link active">Daily Bakes</a>
+        <a href="#cake-studio" class="nav-link">Cake Studio</a>
+        <a href="#reviews" class="nav-link">Reviews</a>
+        <a href="#gifting" class="nav-link">Gifting</a>
+        <a href="#locations" class="nav-link">Locations</a>
+        <a href="#inquiry" class="nav-link">Inquiries</a>
+        <span class="nav-indicator-bar" id="navIndicatorBar"></span>
+      </nav>
+
+      <div class="header-actions">
+        <!-- Unified Role Mode Switcher (Customer vs Admin) -->
+        <div class="view-mode-toggle" role="group" aria-label="Website View Mode">
+          <button id="btnModeCustomer" class="view-mode-btn active" onclick="switchWebsiteMode('customer')" title="View bakery as customer">
+            <span>🥐</span> Customer View
+          </button>
+          <button id="btnModeAdmin" class="view-mode-btn" onclick="switchWebsiteMode('admin')" title="Access Owner / Admin Suite">
+            <span>⚙️</span> Owner & Admin Suite
+          </button>
+        </div>
+
+        <!-- Quick Order Lookup -->
+        <button class="action-icon-btn" onclick="UI.openModal('trackOrderSearchModal')" title="Track Your Order" aria-label="Track Your Order">
+          🔍
+        </button>
+
+        <!-- Cart Bag Button -->
+        <button class="action-icon-btn open-cart-btn" aria-label="View Shopping Bag" title="Shopping Bag">
+          👜
+          <span class="cart-counter-badge" style="display: none;">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =======================================================================
+       CUSTOMER STOREFRONT CONTAINER (VIEW 1)
+       ======================================================================= -->
+  <div id="customerViewContainer" class="view-container">
+
+    <!-- Hero Section (Faithful Representation of Reference Mockup Layout) -->
+    <section class="hero-section">
+      <div class="container">
+      <div class="hero-mockup-wrapper">
+        <!-- Left Image Tile: Rustic Bread Craft -->
+        <div class="hero-image-tile">
+          <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80" alt="Fresh artisan sourdough bread and bakery flour">
+          <div class="hero-image-caption">
+            <span>36h Wild Levain</span>
+            <span>Naturally Fermented</span>
+          </div>
+        </div>
+
+        <!-- Center Dark Roasted Espresso Banner -->
+        <div class="hero-center-banner">
+          <span class="hero-subtitle-badge">Handcrafted Patisserie & Daily Bakes</span>
+          <h2 class="hero-headline">BAKED FRESH EVERY MORNING, WITH REAL PASSION.</h2>
+          <p class="hero-description">
+            Wild fermented sourdough, flaky Normandy butter viennoiserie, and bespoke custom celebration cakes crafted by master pâtissiers with honest, organic ingredients.
+          </p>
+          <div class="hero-cta-group">
+            <a href="#catalog" class="btn btn-primary btn-lg">Explore Daily Bakes</a>
+            <button class="btn btn-secondary btn-lg btn-launch-cake-studio">Design Custom Cake</button>
+          </div>
+        </div>
+
+        <!-- Right Image Tile: Golden Pastries & Croissants -->
+        <div class="hero-image-tile">
+          <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80" alt="Fresh golden croissants and flaky pastries">
+          <div class="hero-image-caption">
+            <span>Normandy Butter 84%</span>
+            <span>72 Laminated Layers</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Trust Badges Strip -->
+      <div class="hero-perks-strip">
+        <div class="perk-item">
+          <div class="perk-icon">🌾</div>
+          <div class="perk-text">
+            <h5>100% Wild Ferment</h5>
+            <p>Naturally slow-proofed sourdough starters.</p>
+          </div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-icon">🧈</div>
+          <div class="perk-text">
+            <h5>European Cultured Butter</h5>
+            <p>Isigny Sainte-Mère 84% butterfat laminations.</p>
+          </div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-icon">🚚</div>
+          <div class="perk-text">
+            <h5>Same-Day Hand Delivery</h5>
+            <p>Chilled local vans & scheduled store pickup.</p>
+          </div>
+        </div>
+        <div class="perk-item">
+          <div class="perk-icon">⭐</div>
+          <div class="perk-text">
+            <h5>4.9★ Rated Bakery</h5>
+            <p>Over 1,200+ verified customer celebrations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Daily Bakes & Catalog Section (Covering Category Pills, Products & Logistics) -->
+  <div id="catalog">
+    <section class="category-nav-section">
+      <div class="container">
+      <div class="category-pill-container" role="tablist">
+        <button class="category-pill active" data-category="All" role="tab">All Items</button>
+        <button class="category-pill" data-category="Artisan Breads" role="tab">Artisan Breads</button>
+        <button class="category-pill" data-category="Viennoiserie" role="tab">Viennoiserie & Pastries</button>
+        <button class="category-pill" data-category="Custom Cakes" role="tab">Custom Cakes</button>
+        <button class="category-pill" data-category="Savory & Sandwiches" role="tab">Savory & Sandwiches</button>
+        <button class="category-pill" data-category="Gluten-Free & Vegan" role="tab">Gluten-Free & Vegan</button>
+        <button class="category-pill" data-category="Gift Sets" role="tab">Gift Sets & Hampers</button>
+      </div>
+
+      <!-- Secondary Filter & Search Toolbar -->
+      <div class="filter-toolbar">
+        <div class="search-box-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="catalogSearchInput" placeholder="Search sourdough, croissants, cakes..." aria-label="Search bakes">
+        </div>
+
+        <div class="filter-selects-group">
+          <select id="dietaryFilterSelect" class="filter-select" aria-label="Filter by dietary preference">
+            <option value="All">All Dietary Lifestyles</option>
+            <option value="Gluten-Free">Gluten-Free Friendly</option>
+            <option value="Vegan">100% Plant-Based Vegan</option>
+            <option value="Organic">Organic & Wild</option>
+            <option value="Nut-Free">Nut-Free Facility Safe</option>
+          </select>
+
+          <select id="sortFilterSelect" class="filter-select" aria-label="Sort products">
+            <option value="featured">Featured Selections</option>
+            <option value="rating">Highest Rated (★)</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Catalog Grid -->
+  <section class="catalog-section">
+    <div class="container">
+      <div id="productsGrid" class="products-grid">
+        <!-- Products populated dynamically by app.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Logistics: Delivery Checker & Pickup Scheduler -->
+  <section class="logistics-bar-section">
+    <div class="container">
+      <div class="logistics-container">
+        <!-- Zip Checker -->
+        <div class="logistics-box">
+          <h3 class="logistics-box-title">
+            <span>📍</span> Local Delivery Coverage Checker
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--color-text-muted);">
+            Check if your address qualifies for hand-delivery in our temperature-controlled bakery fleet.
+          </p>
+          <div class="zip-check-input-group">
+            <input type="text" id="deliveryZipInput" placeholder="Enter 5-digit ZIP code (e.g. 90210, 10001)">
+            <button class="btn btn-primary btn-sm" id="btnCheckZip">Verify Zip</button>
+          </div>
+          <div id="zipCheckResult" class="zip-status-result"></div>
+        </div>
+
+        <!-- Scheduled Pickup Box -->
+        <div class="logistics-box">
+          <h3 class="logistics-box-title">
+            <span>🕒</span> Express Bakery Pickup Scheduler
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--color-text-muted);">
+            Skip the morning line! Order ahead and collect your warm bakes packaged and ready at our counter.
+          </p>
+          <div style="display: flex; gap: 0.85rem; margin-top: 1rem; align-items: center; flex-wrap: wrap;">
+            <div style="font-size: 0.85rem; font-weight: 600; color: var(--color-espresso);">
+              Available Slots Today:
+            </div>
+            <span class="badge badge-sage">11:00 AM - 12:00 PM</span>
+            <span class="badge badge-sage">2:00 PM - 3:00 PM</span>
+            <span class="badge badge-sage">5:00 PM - 6:00 PM</span>
+          </div>
+          <p style="font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.65rem;">
+            Order by 2:00 PM for guaranteed same-day pickup.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div> <!-- End #catalog -->
+
+  <!-- Interactive Custom Cake Studio Showcase Banner -->
+  <section class="container" id="cake-studio">
+    <div class="cake-studio-banner-section">
+      <div class="container cake-studio-grid">
+        <div class="cake-studio-content">
+          <span class="badge badge-honey" style="margin-bottom: 1rem;">INTERACTIVE 3D & 2D STUDIO</span>
+          <h2>Design Your Bespoke Celebration Cake</h2>
+          <p>
+            Experience our real-time interactive cake customizer! Choose your artisanal sponge, silky Swiss meringue buttercream, custom tier sizes, piped borders, and live personalized inscription plaque with immediate pricing.
+          </p>
+          <div class="studio-step-pills">
+            <div class="studio-step-pill">1. Sponge Flavors</div>
+            <div class="studio-step-pill">2. Tiers & Servings</div>
+            <div class="studio-step-pill">3. Frosting Palette</div>
+            <div class="studio-step-pill">4. Lambeth & Drip Styles</div>
+            <div class="studio-step-pill">5. Personalized Plaque</div>
+          </div>
+          <button class="btn btn-primary btn-lg btn-launch-cake-studio">
+            <span>✨</span> Launch Custom Cake Studio
+          </button>
+        </div>
+
+        <div class="cake-studio-preview-card">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎂</div>
+          <h4 style="color: #fff; font-size: 1.3rem; margin-bottom: 0.5rem;">Real-Time Visualizer</h4>
+          <p style="font-size: 0.88rem; color: rgba(255,255,255,0.75); margin-bottom: 1.25rem;">
+            Watch your creation transform in real-time as you tweak frosting tones, French macaron crowns, and greeting plaques.
+          </p>
+          <button class="btn btn-secondary btn-sm btn-launch-cake-studio">Try Cake Studio Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews & Community Testimonials Section -->
+  <section class="reviews-section" id="reviews">
+    <div class="container">
+      <div class="section-header-center">
+        <span class="badge badge-terracotta" style="margin-bottom: 0.75rem;">COMMUNITY & TRUST</span>
+        <h2>Loved By Cake Connoisseurs</h2>
+        <p>From intimate birthday dinners to grand weddings, here is what our guests say about our bakes.</p>
+      </div>
+
+      <div class="reviews-summary-bar">
+        <div style="text-align: center;">
+          <div class="rating-score-huge">4.95</div>
+          <div style="color: var(--color-honey); font-size: 1.2rem; margin: 4px 0;">★★★★★</div>
+          <div style="font-size: 0.82rem; color: var(--color-text-muted);">Overall Customer Satisfaction</div>
+        </div>
+        <div style="height: 50px; width: 1px; background: var(--color-cream-border);"></div>
+        <div style="text-align: center;">
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--color-espresso);">1,280+</div>
+          <div style="font-size: 0.82rem; color: var(--color-text-muted);">Celebrations Sweetened</div>
+        </div>
+        <div style="height: 50px; width: 1px; background: var(--color-cream-border);"></div>
+        <div style="text-align: center;">
+          <div style="font-size: 1.6rem; font-weight: 700; color: var(--color-espresso);">100%</div>
+          <div style="font-size: 0.82rem; color: var(--color-text-muted);">Natural Cultured Ingredients</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="UI.openModal('writeReviewModal')">Write a Review</button>
+      </div>
+
+      <div class="reviews-cards-grid">
+        <div class="review-card">
+          <div class="review-card-header">
+            <span class="reviewer-name">Hannah Sterling</span>
+            <span style="color: var(--color-honey);">★★★★★</span>
+          </div>
+          <p class="review-comment">"The Madagascar Vanilla & Raspberry cake was the crown jewel of our 30th anniversary dinner! The buttercream was ethereal and not cloyingly sweet."</p>
+          <div class="review-footer-meta">
+            <span>Verified Buyer • Custom Cake</span>
+            <span>2 days ago</span>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-card-header">
+            <span class="reviewer-name">Chef Dominic Miller</span>
+            <span style="color: var(--color-honey);">★★★★★</span>
+          </div>
+          <p class="review-comment">"Superb chocolate balance in the Valrhona Ganache cake. The cocoa notes shine through without being bitter. You can tell they use top-tier French butter."</p>
+          <div class="review-footer-meta">
+            <span>Verified Buyer • Celebration Cake</span>
+            <span>1 week ago</span>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <div class="review-card-header">
+            <span class="reviewer-name">Amelia Davis</span>
+            <span style="color: var(--color-honey);">★★★★★</span>
+          </div>
+          <p class="review-comment">"I lived in Paris for 3 years, and CakeTalk's croissants are genuinely the only ones in the country that rival the French bakeries. The flakiness is unreal!"</p>
+          <div class="review-footer-meta">
+            <span>Verified Buyer • Viennoiserie</span>
+            <span>2 weeks ago</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loyalty Perks & Gifting Hampers Section -->
+  <section class="container" id="gifting">
+    <div class="loyalty-gifting-grid">
+      <!-- Crumb Club Loyalty Card -->
+      <div class="feature-callout-card loyalty">
+        <div class="callout-icon">🏅</div>
+        <h3 class="callout-title">The CakeTalk Crumb Club</h3>
+        <p class="callout-desc">
+          Join our artisan loyalty circle. Earn 1 Crumb Point for every $1 spent and unlock delicious sweet rewards on birthdays and holidays.
+        </p>
+        <ul class="callout-perks-list">
+          <li><span class="bullet">✓</span> 50 Welcome Crumb Points upon signing up</li>
+          <li><span class="bullet">✓</span> Complimentary birthday pastry & coffee on your special day</li>
+          <li><span class="bullet">✓</span> Early VIP reservation access for seasonal holiday bake boxes</li>
+        </ul>
+        <button class="btn btn-dark btn-sm" onclick="UI.openModal('authModal')">Join Crumb Club (Free)</button>
+      </div>
+
+      <!-- Curated Gifting Hampers -->
+      <div class="feature-callout-card gifting">
+        <div class="callout-icon">🎁</div>
+        <h3 class="callout-title">Curated Bakery Gifting</h3>
+        <p class="callout-desc">
+          Celebrate life's precious milestones with our Parisian macaron boxes, breakfast hampers, and digital gift cards with personalized handwritten notes.
+        </p>
+        <ul class="callout-perks-list">
+          <li><span class="bullet">✓</span> Hand-tied silk terracotta ribbon & custom foil gift tags</li>
+          <li><span class="bullet">✓</span> Nationwide express gift delivery with fresh insulated coolers</li>
+          <li><span class="bullet">✓</span> Instant digital e-gift cards with customizable message</li>
+        </ul>
+        <a href="#catalog" class="btn btn-primary btn-sm" onclick="document.querySelector('[data-category=\\'Gift Sets\\']')?.click();">Explore Gift Hampers</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Locations, Hours & FAQ Section -->
+  <section class="container" id="locations">
+    <div class="locations-faq-grid">
+      <!-- Bakery Location Card -->
+      <div class="location-card">
+        <div class="live-open-badge">
+          <span class="live-open-dot"></span>
+          <span>BAKERY OPEN NOW UNTIL 7:30 PM</span>
+        </div>
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">The Flagship Bakery & Cafe</h3>
+        <p style="color: var(--color-text-muted); font-size: 0.92rem; margin-bottom: 1.25rem;">
+          452 Elm Street, Heritage District, Metro City<br>
+          Phone: +1 (555) 234-5678 • Email: hello@caketalksite.com
+        </p>
+
+        <h4 style="font-size: 1rem; margin-bottom: 0.5rem; font-family: var(--font-sans); font-weight: 700;">Baking & Counter Hours</h4>
+        <table class="hours-table">
+          <tr>
+            <td>Monday – Friday</td>
+            <td style="text-align: right; font-weight: 600;">7:00 AM – 7:30 PM</td>
+          </tr>
+          <tr>
+            <td>Saturday</td>
+            <td style="text-align: right; font-weight: 600;">7:30 AM – 8:00 PM</td>
+          </tr>
+          <tr>
+            <td>Sunday (Brunch & Bakes)</td>
+            <td style="text-align: right; font-weight: 600;">8:00 AM – 6:00 PM</td>
+          </tr>
+        </table>
+
+        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--color-cream-bg); border-radius: var(--radius-md); font-size: 0.85rem;">
+          <strong>Pickup Note:</strong> Online orders can be picked up directly from the dedicated express counter on the left side of the cafe.
+        </div>
+      </div>
+
+      <!-- FAQ Accordion -->
+      <div>
+        <h3 style="font-size: 1.6rem; margin-bottom: 1rem;">Frequently Asked Questions</h3>
+
+        <div class="faq-accordion-item open">
+          <div class="faq-header">
+            <span>How much notice is required for custom cakes?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">
+            We recommend ordering celebration cakes at least 48 hours in advance through our Custom Cake Studio. For multi-tier wedding cakes and large corporate orders, 2 to 3 weeks notice is preferred.
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-header">
+            <span>Do you accommodate dietary allergies?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">
+            Yes! We offer certified Gluten-Free almond cakes and 100% plant-based vegan cupcakes. Please note that while we follow strict sanitation protocols, our facility handles wheat, dairy, and tree nuts.
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-header">
+            <span>How does local cake delivery work?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">
+            All cakes and delicate pastries are transported in our temperature-controlled chilled vans by trained bakery couriers, ensuring your creation arrives pristine and chilled.
+          </div>
+        </div>
+
+        <div class="faq-accordion-item">
+          <div class="faq-header">
+            <span>Can I customize the greeting text on my cake?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">
+            Absolutely! When using our Custom Cake Studio, you can type your exact greeting into the Inscription Plaque input and see it appear in real-time on the cake stand.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Custom Wedding & Event Consultation Inquiry Section -->
+  <section class="container" id="inquiry" style="margin-bottom: 4rem;">
+    <div style="background: #fff; border: 1px solid var(--color-cream-border); border-radius: var(--radius-xl); padding: 3rem; box-shadow: var(--shadow-sm);">
+      <div style="max-width: 650px; margin: 0 auto; text-align: center; margin-bottom: 2rem;">
+        <span class="badge badge-terracotta" style="margin-bottom: 0.75rem;">BESPOKE EVENTS</span>
+        <h2 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Book a Master Baker Consultation</h2>
+        <p style="color: var(--color-text-muted);">
+          Planning a wedding, corporate anniversary, or gala? Share your vision with our head pastry chef for a tailored tasting and bespoke quote.
+        </p>
+      </div>
+
+      <form id="customInquiryForm" style="max-width: 700px; margin: 0 auto;">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Your Name *</label>
+            <input type="text" id="inqName" class="form-control" required placeholder="Elena Vance">
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" id="inqEmail" class="form-control" required placeholder="elena@example.com">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" id="inqPhone" class="form-control" required placeholder="+1 (555) 012-3456">
+          </div>
+          <div class="form-group">
+            <label>Event Date *</label>
+            <input type="date" id="inqDate" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Estimated Guest Count</label>
+            <input type="number" id="inqGuests" class="form-control" value="75" min="10" max="1000">
+          </div>
+          <div class="form-group">
+            <label>Budget Range</label>
+            <select id="inqBudget" class="form-control">
+              <option value="$250 - $450">$250 – $450 (Intimate Celebration)</option>
+              <option value="$500 - $850">$500 – $850 (Multi-Tier Wedding)</option>
+              <option value="$1,000+">$1,000+ (Grand Gala / Corporate)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Cake Theme & Aesthetic</label>
+          <input type="text" id="inqTheme" class="form-control" placeholder="e.g. Modern botanical, rustic pressed flowers, gold leaf lambeth">
+        </div>
+
+        <div class="form-group">
+          <label>Event Notes & Flavor Preferences</label>
+          <textarea id="inqNotes" class="form-control" rows="3" placeholder="Tell us about the venue, dietary needs, or flavor ideas..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+          Submit Event Consultation Request
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <div>
+          <h3 class="footer-brand-title">🎂 CakeTalk</h3>
+          <p class="footer-desc">
+            Boutique artisan bakery crafting slow-fermented wild sourdough, golden laminated viennoiserie, and bespoke celebration cakes baked fresh every morning with real passion.
+          </p>
+          <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
+            <strong>Customer Care:</strong> +1 (555) 234-5678<br>
+            <strong>Inquiries:</strong> hello@caketalksite.com
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Menu & Shop</h4>
+          <ul class="footer-nav-list">
+            <li><a href="#catalog">Artisan Sourdough Breads</a></li>
+            <li><a href="#catalog">French Butter Croissants</a></li>
+            <li><a href="#cake-studio" class="btn-launch-cake-studio">Custom Cake Builder</a></li>
+            <li><a href="#catalog">Gluten-Free & Vegan Bakes</a></li>
+            <li><a href="#gifting">Gifting Hampers & Macarons</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Bakery & Service</h4>
+          <ul class="footer-nav-list">
+            <li><a href="#locations">Store Locations & Hours</a></li>
+            <li><a href="#locations">Local Delivery Checker</a></li>
+            <li><a href="#reviews">Customer Testimonials</a></li>
+            <li><a href="#gifting">Crumb Club Loyalty</a></li>
+            <li><a href="/admin">Owner Management Portal</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">The Baker's Journal</h4>
+          <p style="font-size: 0.85rem; color: rgba(255,255,255,0.65);">
+            Subscribe to receive secret weekend bake menus, exclusive promo codes, and chef recipes.
+          </p>
+          <form class="footer-newsletter-form" onsubmit="event.preventDefault(); UI.showToast('Thank you for subscribing to CakeTalk!', 'success'); this.reset();">
+            <input type="email" placeholder="Your email address" required>
+            <button class="btn btn-primary btn-sm" type="submit">Join</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>© 2026 CakeTalk Bakery Company. All rights reserved. Handcrafted with honest ingredients.</div>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="#" onclick="event.preventDefault(); alert('Allergen Policy: We process organic wheat, dairy, and nuts in our patisserie.');">Allergen Notice</a>
+          <a href="#" onclick="event.preventDefault(); alert('Privacy: Customer data is securely preserved for order processing.');">Privacy Policy</a>
+          <a href="#admin" onclick="event.preventDefault(); switchWebsiteMode('admin');">Staff & Owner Portal</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Sticky Order Bar (Matching the iPhone mockup in reference image) -->
+  <div class="mobile-sticky-order-bar">
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <span style="font-size: 1.3rem;">👜</span>
+      <div>
+        <div id="stickyCartTotal" style="font-weight: 800; font-size: 1rem; color: var(--color-espresso);">$0.00</div>
+        <div id="stickyCartCount" style="font-size: 0.72rem; color: var(--color-text-muted);">Bag (0 items)</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm open-cart-btn">Order Sticky 🛒</button>
+  </div>
+
+  </div> <!-- End #customerViewContainer -->
+
+  <!-- =======================================================================
+       OWNER & ADMIN MANAGEMENT SUITE (VIEW 2 - EMBEDDED UNDER SINGLE LINK)
+       ======================================================================= -->
+  <div id="adminViewContainer" class="view-container hidden">
+    <!-- Top Banner for Embedded Admin Mode -->
+    <div class="admin-mode-top-banner">
+      <div class="container admin-mode-top-banner-inner">
+        <div class="admin-mode-badge-title">
+          <span>⚙️</span>
+          <span><strong>Owner & Admin Suite Active</strong> — Live Orders, Real-Time Inventory & Catalog Management</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button class="btn btn-secondary btn-sm" onclick="switchWebsiteMode('customer')" style="background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.3);">
+            <span>←</span> Back to Customer Storefront
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Body Layout -->
+    <div style="display: flex; min-height: 80vh; position: relative;">
+      <!-- Left Sidebar Navigation -->
+      <aside class="admin-sidebar" style="position: relative; top: 0; min-height: 100%;">
+        <div class="sidebar-brand-box">
+          <div class="sidebar-logo">🎂</div>
+          <div>
+            <div class="sidebar-title">CakeTalk</div>
+            <span class="sidebar-badge">Owner Suite</span>
+          </div>
+        </div>
+
+        <ul class="sidebar-nav-menu">
+          <li class="sidebar-nav-item active">
+            <button data-admin-tab="analytics">
+              <span class="sidebar-icon">📊</span>
+              <span class="sidebar-text">Analytics Overview</span>
+            </button>
+          </li>
+          <li class="sidebar-nav-item">
+            <button data-admin-tab="orders">
+              <span class="sidebar-icon">🧾</span>
+              <span class="sidebar-text">Order Management</span>
+            </button>
+          </li>
+          <li class="sidebar-nav-item">
+            <button data-admin-tab="products">
+              <span class="sidebar-icon">🥐</span>
+              <span class="sidebar-text">Products & Menu</span>
+            </button>
+          </li>
+          <li class="sidebar-nav-item">
+            <button data-admin-tab="inventory">
+              <span class="sidebar-icon">📦</span>
+              <span class="sidebar-text">Inventory & Pantry</span>
+            </button>
+          </li>
+          <li class="sidebar-nav-item">
+            <button data-admin-tab="customers">
+              <span class="sidebar-icon">👥</span>
+              <span class="sidebar-text">Customer Directory</span>
+            </button>
+          </li>
+          <li class="sidebar-nav-item">
+            <button data-admin-tab="coupons">
+              <span class="sidebar-icon">🏷️</span>
+              <span class="sidebar-text">Promotions & Deals</span>
+            </button>
+          </li>
+          <li class="sidebar-nav-item">
+            <button data-admin-tab="inquiries">
+              <span class="sidebar-icon">💌</span>
+              <span class="sidebar-text">Event Inquiries</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="sidebar-user-footer">
+          <div class="admin-avatar-info">
+            <div class="avatar-circle">EV</div>
+            <div>
+              <div class="admin-name">Eleanor Vance</div>
+              <div class="admin-role">Head Pâtissier</div>
+            </div>
+          </div>
+          <button id="btnAdminLogout" title="Sign out" style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">
+            🚪
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Admin Content Area -->
+      <main class="admin-main-wrapper" style="margin-left: 0; flex: 1;">
+        <!-- Admin Header -->
+        <header class="admin-top-header">
+          <div class="header-title-box">
+            <h2 id="adminHeaderTitle">Analytics Overview</h2>
+          </div>
+
+          <div class="admin-header-actions">
+            <button class="btn btn-secondary btn-sm" onclick="switchWebsiteMode('customer')">
+              <span>🌐</span> Customer Storefront
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="AdminApp.openAddProductModal()">
+              <span>+</span> Add Product
+            </button>
+          </div>
+        </header>
+
+        <div class="admin-content-area">
+          <!-- TAB 1: ANALYTICS OVERVIEW -->
+          <section id="tab-analytics" class="tab-content-panel active">
+            <div class="kpi-cards-grid">
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span>Total Revenue</span>
+                  <div class="kpi-icon-box green">💰</div>
+                </div>
+                <div id="kpiRevenue" class="kpi-value">$0.00</div>
+                <div class="kpi-trend">↑ +18.4% vs last week</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span>Total Orders</span>
+                  <div class="kpi-icon-box orange">🧾</div>
+                </div>
+                <div id="kpiOrders" class="kpi-value">0</div>
+                <div class="kpi-trend">↑ 12 active today</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span>Avg Order Value</span>
+                  <div class="kpi-icon-box blue">📈</div>
+                </div>
+                <div id="kpiAOV" class="kpi-value">$0.00</div>
+                <div class="kpi-trend">↑ $58.20 average basket</div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span>Active Patrons</span>
+                  <div class="kpi-icon-box purple">👥</div>
+                </div>
+                <div id="kpiCustomers" class="kpi-value">0</div>
+                <div class="kpi-trend">↑ 92% retention rate</div>
+              </div>
+            </div>
+
+            <h4 style="font-size: 1rem; margin-bottom: 0.85rem; color: #4A5568;">Real-Time Oven & Dispatch Pipeline</h4>
+            <div id="kpiOrderStatusStrip" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 2rem;"></div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 1.75rem;">
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <h3>Bakes by Category</h3>
+                </div>
+                <div style="padding: 1.25rem;">
+                  <div id="analyticsCategoryList"></div>
+                </div>
+              </div>
+
+              <div class="admin-card">
+                <div class="admin-card-header">
+                  <h3>Recent Incoming Orders</h3>
+                  <button class="btn btn-secondary btn-sm" onclick="document.querySelector('[data-admin-tab=\\'orders\\']').click()">View All</button>
+                </div>
+                <div class="admin-table-container">
+                  <table class="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Type</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="analyticsRecentOrdersTbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 2: ORDER MANAGEMENT -->
+          <section id="tab-orders" class="tab-content-panel">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3>Active Bakery Orders</h3>
+                <button class="btn btn-secondary btn-sm" onclick="AdminApp.loadOrders()">🔄 Refresh Orders</button>
+              </div>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Order Code</th>
+                      <th>Customer Info</th>
+                      <th>Fulfillment Schedule</th>
+                      <th>Order Items</th>
+                      <th>Total</th>
+                      <th>Status Workflow</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ordersTableTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 3: PRODUCT CATALOG CRUD -->
+          <section id="tab-products" class="tab-content-panel">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3>Bakery Menu & Catalog Management</h3>
+                <button class="btn btn-primary btn-sm" onclick="AdminApp.openAddProductModal()">+ Add New Product</button>
+              </div>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Image</th>
+                      <th>Title & Badge</th>
+                      <th>Category</th>
+                      <th>Price</th>
+                      <th>Stock Available</th>
+                      <th>Rating</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="productsTableTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 4: INVENTORY & PANTRY -->
+          <section id="tab-inventory" class="tab-content-panel">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <div>
+                  <h3>Bakery Ingredient & Supply Inventory</h3>
+                  <p style="font-size: 0.8rem; color: #718096; margin-top: 2px;">Track French butter, Valrhona chocolate, organic flours, and packaging stock.</p>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="AdminApp.loadInventory()">🔄 Refresh Stock</button>
+              </div>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Ingredient / Supply</th>
+                      <th>Category</th>
+                      <th>Current Stock</th>
+                      <th>Min Reorder Threshold</th>
+                      <th>Stock Health</th>
+                      <th>Quick Restock</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventoryTableTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 5: CUSTOMER DIRECTORY -->
+          <section id="tab-customers" class="tab-content-panel">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3>Customer Profiles & Loyalty Club</h3>
+              </div>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Crumb Club Tier</th>
+                      <th>Order History</th>
+                      <th>Lifetime Spend</th>
+                    </tr>
+                  </thead>
+                  <tbody id="customersTableTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 6: PROMOTIONS & COUPONS -->
+          <section id="tab-coupons" class="tab-content-panel">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3>Active Promotions & Promo Codes</h3>
+                <button class="btn btn-primary btn-sm" onclick="alert('Demo promo codes SWEET10 (10% off), FREESHIP (Free delivery), and BAKERLOVE ($5 off) are active!')">+ New Promo Code</button>
+              </div>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Coupon Code</th>
+                      <th>Description</th>
+                      <th>Discount Value</th>
+                      <th>Min Order</th>
+                      <th>Usage Count</th>
+                      <th>Toggle State</th>
+                    </tr>
+                  </thead>
+                  <tbody id="couponsTableTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 7: EVENT INQUIRIES -->
+          <section id="tab-inquiries" class="tab-content-panel">
+            <div class="admin-card">
+              <div class="admin-card-header">
+                <h3>Custom Wedding & Corporate Event Inquiries</h3>
+              </div>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Client Name & Contact</th>
+                      <th>Event Date</th>
+                      <th>Guest Count</th>
+                      <th>Theme & Style</th>
+                      <th>Budget</th>
+                      <th>Quote Status</th>
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inquiriesTableTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div> <!-- End #adminViewContainer -->
+
+  <!-- =======================================================================
+       MODALS AND DRAWERS
+       ======================================================================= -->
+
+  <!-- 1. Shopping Bag Slide-Out Drawer -->
+  <div id="cartDrawerBackdrop" class="drawer-backdrop"></div>
+  <aside id="cartDrawer" class="cart-drawer" aria-label="Your Shopping Bag">
+    <div class="drawer-header">
+      <h3 class="drawer-title">
+        <span>👜</span> Your Bakery Bag
+      </h3>
+      <button class="drawer-close-btn close-cart-btn" aria-label="Close bag">✕</button>
+    </div>
+
+    <!-- Order Type Switcher -->
+    <div class="cart-order-type-switch">
+      <button class="type-switch-btn active" data-order-type="delivery">🚚 Local Delivery</button>
+      <button class="type-switch-btn" data-order-type="pickup">🏬 Store Pickup</button>
+    </div>
+
+    <!-- Items List -->
+    <div id="cartDrawerItemsList" class="cart-items-list">
+      <!-- Items dynamically populated by Cart.render() -->
+    </div>
+
+    <!-- Footer & Totals -->
+    <div class="cart-drawer-footer">
+      <!-- Promo code input -->
+      <form id="cartPromoForm" class="cart-promo-form">
+        <input type="text" id="cartPromoInput" placeholder="Promo code (SWEET10, FREESHIP)" style="text-transform: uppercase;">
+        <button class="btn btn-secondary btn-sm" type="submit">Apply</button>
+      </form>
+
+      <!-- Totals Breakdown -->
+      <div class="cart-totals-table">
+        <div class="cart-total-line">
+          <span>Subtotal</span>
+          <span id="cartDrawerSubtotal" style="font-weight: 600;">$0.00</span>
+        </div>
+        <div id="cartDrawerDiscountRow" class="cart-total-line" style="display: none; color: var(--color-success);">
+          <span>Promo Discount</span>
+          <span id="cartDrawerDiscount" style="font-weight: 600;">-$0.00</span>
+        </div>
+        <div class="cart-total-line">
+          <span>Delivery</span>
+          <span id="cartDrawerDelivery" style="font-weight: 600;">$5.00</span>
+        </div>
+        <div class="cart-total-line cart-total-grand">
+          <span>Estimated Total</span>
+          <span id="cartDrawerTotal">$0.00</span>
+        </div>
+      </div>
+
+      <button id="btnProceedToCheckout" class="btn btn-primary" style="width: 100%;">
+        Proceed to Checkout →
+      </button>
+    </div>
+  </aside>
+
+  <!-- 2. Interactive Custom Cake Studio Modal -->
+  <div id="cakeStudioModal" class="modal-backdrop">
+    <div class="modal-box modal-box-wide">
+      <div class="modal-header">
+        <h3 class="modal-title">🎂 Interactive Custom Cake Studio</h3>
+        <button class="modal-close-btn">✕</button>
+      </div>
+
+      <div class="cake-studio-modal-wrapper">
+        <!-- Live SVG Cake Canvas Stage -->
+        <div class="cake-stage-container">
+          <span class="stage-badge">Live Visualizer</span>
+          <div id="cakeVisualizerSvg" class="cake-svg-viewport">
+            <!-- Dynamic SVG generated by cake-builder.js -->
+          </div>
+
+          <div class="stage-specs-summary">
+            <div id="builderSpecsTitle" class="specs-title">8" Classic • Vanilla Bean</div>
+            <div id="builderSpecsSubtitle" class="specs-subtitle">Vintage Lambeth Piping | Parisian Macarons</div>
+          </div>
+        </div>
+
+        <!-- Customizer Controls -->
+        <div class="cake-builder-controls">
+          <div class="builder-header">
+            <h3>Configure Your Cake</h3>
+            <p>Select your base, tiers, frosting and personalized board inscription.</p>
+          </div>
+
+          <!-- Step 1: Sponge Base -->
+          <div class="builder-step-section">
+            <div class="step-header-label">
+              <span><span class="step-number-tag">1</span> Sponge Flavor</span>
+            </div>
+            <div class="option-cards-grid">
+              <div class="builder-opt-card active" data-sponge="vanilla" data-name="Madagascar Vanilla Bean" data-color="#F9E8B8" data-price="0">
+                <div class="opt-swatch" style="background: #F9E8B8;"></div>
+                <div class="opt-title">Vanilla Bean</div>
+                <div class="opt-price-tag">Standard</div>
+              </div>
+              <div class="builder-opt-card" data-sponge="chocolate" data-name="Valrhona 66% Dark Chocolate" data-color="#3D2314" data-price="4">
+                <div class="opt-swatch" style="background: #3D2314;"></div>
+                <div class="opt-title">Valrhona Chocolate</div>
+                <div class="opt-price-tag">+$4.00</div>
+              </div>
+              <div class="builder-opt-card" data-sponge="red-velvet" data-name="Red Velvet Cocoa" data-color="#8E2829" data-price="5">
+                <div class="opt-swatch" style="background: #8E2829;"></div>
+                <div class="opt-title">Red Velvet</div>
+                <div class="opt-price-tag">+$5.00</div>
+              </div>
+              <div class="builder-opt-card" data-sponge="matcha" data-name="Ceremonial Uji Matcha" data-color="#8FA382" data-price="6">
+                <div class="opt-swatch" style="background: #8FA382;"></div>
+                <div class="opt-title">Uji Matcha</div>
+                <div class="opt-price-tag">+$6.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Size & Tiers -->
+          <div class="builder-step-section">
+            <div class="step-header-label">
+              <span><span class="step-number-tag">2</span> Size & Tiers</span>
+            </div>
+            <div class="option-cards-grid">
+              <div class="builder-opt-card" data-size="6-inch" data-name="6&quot; Petit (4-6 Servings)" data-tiers="1" data-multiplier="0.85" data-baseprice="48">
+                <div class="opt-title">6" Petit</div>
+                <div class="opt-price-tag">4–6 Servings</div>
+              </div>
+              <div class="builder-opt-card active" data-size="8-inch" data-name="8&quot; Classic (10-14 Servings)" data-tiers="1" data-multiplier="1.0" data-baseprice="48">
+                <div class="opt-title">8" Classic</div>
+                <div class="opt-price-tag">10–14 Servings</div>
+              </div>
+              <div class="builder-opt-card" data-size="2-tier" data-name="2-Tier Grand Celebration (35-45 Servings)" data-tiers="2" data-multiplier="1.95" data-baseprice="48">
+                <div class="opt-title">2-Tier Grand</div>
+                <div class="opt-price-tag">35–45 Servings</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Frosting Palette -->
+          <div class="builder-step-section">
+            <div class="step-header-label">
+              <span><span class="step-number-tag">3</span> Frosting Finish</span>
+            </div>
+            <div class="option-cards-grid">
+              <div class="builder-opt-card active" data-frosting="vanilla-meringue" data-name="Silky Swiss Meringue" data-color="#FFFBF2" data-price="0">
+                <div class="opt-swatch" style="background: #FFFBF2;"></div>
+                <div class="opt-title">Swiss Meringue</div>
+                <div class="opt-price-tag">Standard</div>
+              </div>
+              <div class="builder-opt-card" data-frosting="chocolate-ganache" data-name="Dark Chocolate Ganache" data-color="#2D1A10" data-price="5">
+                <div class="opt-swatch" style="background: #2D1A10;"></div>
+                <div class="opt-title">Dark Ganache</div>
+                <div class="opt-price-tag">+$5.00</div>
+              </div>
+              <div class="builder-opt-card" data-frosting="blush-pink" data-name="Blush Strawberry Cream" data-color="#F8D9D6" data-price="3">
+                <div class="opt-swatch" style="background: #F8D9D6;"></div>
+                <div class="opt-title">Blush Pink</div>
+                <div class="opt-price-tag">+$3.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Design Style -->
+          <div class="builder-step-section">
+            <div class="step-header-label">
+              <span><span class="step-number-tag">4</span> Outer Aesthetic</span>
+            </div>
+            <div class="option-cards-grid">
+              <div class="builder-opt-card active" data-design="lambeth" data-name="Vintage Lambeth Piping" data-price="8">
+                <div class="opt-title">Lambeth Piping</div>
+                <div class="opt-price-tag">+$8.00</div>
+              </div>
+              <div class="builder-opt-card" data-design="drip" data-name="Belgian Chocolate Drip" data-price="5">
+                <div class="opt-title">Chocolate Drip</div>
+                <div class="opt-price-tag">+$5.00</div>
+              </div>
+              <div class="builder-opt-card" data-design="rustic" data-name="Semi-Naked Rustic" data-price="0">
+                <div class="opt-title">Semi-Naked</div>
+                <div class="opt-price-tag">$0.00</div>
+              </div>
+              <div class="builder-opt-card" data-design="botanical" data-name="24K Gold & Botanicals" data-price="10">
+                <div class="opt-title">Gold Leaf</div>
+                <div class="opt-price-tag">+$10.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5: Cake Toppers -->
+          <div class="builder-step-section">
+            <div class="step-header-label">
+              <span><span class="step-number-tag">5</span> Luxury Toppers</span>
+            </div>
+            <div class="option-cards-grid">
+              <div class="builder-opt-card active" data-topper="macarons" data-name="Parisian Macarons Crown" data-price="8">
+                <div class="opt-title">French Macarons</div>
+                <div class="opt-price-tag">+$8.00</div>
+              </div>
+              <div class="builder-opt-card" data-topper="candle" data-name="Gold Sparkler Candle" data-price="4">
+                <div class="opt-title">Sparkler Candle</div>
+                <div class="opt-price-tag">+$4.00</div>
+              </div>
+              <div class="builder-opt-card" data-topper="berries" data-name="Fresh Raspberry Medley" data-price="6">
+                <div class="opt-title">Fresh Berries</div>
+                <div class="opt-price-tag">+$6.00</div>
+              </div>
+              <div class="builder-opt-card" data-topper="none" data-name="No Topper" data-price="0">
+                <div class="opt-title">None</div>
+                <div class="opt-price-tag">$0.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 6: Inscription Plaque -->
+          <div class="builder-step-section">
+            <div class="step-header-label">
+              <span><span class="step-number-tag">6</span> Personalized Inscription Plaque</span>
+            </div>
+            <div class="inscription-input-box">
+              <input type="text" id="customCakeInscription" maxlength="32" placeholder="e.g. Happy 30th Birthday Sophia!" value="Happy Birthday!">
+              <div id="inscriptionCharCount" class="char-limit-count">15/32</div>
+            </div>
+          </div>
+
+          <!-- Bottom Dock -->
+          <div class="builder-bottom-dock">
+            <div>
+              <div class="builder-price-label">Custom Build Total</div>
+              <div id="builderCalcPrice" class="builder-calc-price">$64.00</div>
+            </div>
+            <button id="btnAddCustomCakeToBag" class="btn btn-primary btn-lg">
+              <span>+</span> Add Custom Cake to Bag
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Checkout Modal -->
+  <div id="checkoutModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Secure Bakery Checkout</h3>
+        <button class="modal-close-btn">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="checkoutForm">
+          <!-- Contact Details -->
+          <h4 style="margin-bottom: 0.85rem; font-size: 1.1rem;">1. Customer Information</h4>
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="checkoutName" class="form-control" required placeholder="Elena Rostova">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" id="checkoutEmail" class="form-control" required placeholder="elena@example.com">
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="tel" id="checkoutPhone" class="form-control" required placeholder="+1 (555) 321-9988">
+            </div>
+          </div>
+
+          <!-- Schedule & Logistics -->
+          <h4 style="margin: 1.25rem 0 0.85rem; font-size: 1.1rem;">2. Fulfillment & Schedule</h4>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Scheduled Date *</label>
+              <input type="date" id="checkoutDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Preferred Time Slot *</label>
+              <select id="checkoutTimeSlot" class="form-control" required>
+                <option value="10:00 - 11:30 AM">Morning (10:00 – 11:30 AM)</option>
+                <option value="12:00 - 1:30 PM">Midday (12:00 – 1:30 PM)</option>
+                <option value="2:30 - 4:00 PM">Afternoon (2:30 – 4:00 PM)</option>
+                <option value="5:00 - 6:30 PM">Evening (5:00 – 6:30 PM)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Delivery Address (If delivery selected)</label>
+            <input type="text" id="checkoutAddress" class="form-control" placeholder="1240 Magnolia Blvd, Apt 4B, Metro City">
+          </div>
+
+          <div class="form-group">
+            <label>Chef & Courier Special Instructions</label>
+            <textarea id="checkoutNotes" class="form-control" rows="2" placeholder="e.g. Ring bell, gate code #4012, or specific allergy notation"></textarea>
+          </div>
+
+          <!-- Payment Details -->
+          <h4 style="margin: 1.25rem 0 0.85rem; font-size: 1.1rem;">3. Payment Method</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.5rem;">
+            <label style="display: flex; align-items: center; gap: 0.65rem; padding: 0.75rem 1rem; border: 1px solid var(--color-cream-border); border-radius: var(--radius-sm); cursor: pointer;">
+              <input type="radio" name="paymentMethod" value="Credit Card" checked>
+              <strong>Credit Card / Debit</strong> (Visa, Mastercard, Amex)
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.65rem; padding: 0.75rem 1rem; border: 1px solid var(--color-cream-border); border-radius: var(--radius-sm); cursor: pointer;">
+              <input type="radio" name="paymentMethod" value="Apple Pay">
+              <strong>Apple Pay / Google Pay</strong> (1-Click Express Checkout)
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.65rem; padding: 0.75rem 1rem; border: 1px solid var(--color-cream-border); border-radius: var(--radius-sm); cursor: pointer;">
+              <input type="radio" name="paymentMethod" value="Pay on Pickup">
+              <strong>Pay on Counter Pickup</strong> (Cash / Card in person)
+            </label>
+          </div>
+
+          <!-- Order Summary in Checkout -->
+          <div style="background: var(--color-cream-bg); border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 1.5rem;">
+            <h5 style="margin-bottom: 0.65rem; font-size: 0.95rem;">Order Review:</h5>
+            <div id="checkoutOrderSummaryList"></div>
+            <div style="border-top: 1px dashed var(--color-cream-border); padding-top: 0.65rem; margin-top: 0.65rem; display: flex; justify-content: space-between; font-weight: 800; font-size: 1.15rem;">
+              <span>Total to Pay:</span>
+              <span id="checkoutFinalTotal">$0.00</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+            Place Bakery Order
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Order Confirmation Modal -->
+  <div id="orderConfirmationModal" class="modal-backdrop">
+    <div class="modal-box" style="text-align: center;">
+      <div class="modal-body" style="padding: 3rem 2rem;">
+        <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🎉</div>
+        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Thank You For Your Order!</h3>
+        <p style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
+          Your bakes have been assigned to our pâtissier team and the oven schedule is set.
+        </p>
+
+        <div style="background: var(--color-cream-bg); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 380px; margin: 0 auto 1.5rem; border: 1px solid var(--color-cream-border);">
+          <div style="font-size: 0.8rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 700;">Your Tracking Code</div>
+          <div id="confOrderNumber" style="font-family: monospace; font-size: 1.8rem; font-weight: 800; color: var(--color-espresso); margin: 0.35rem 0;">CT-89241</div>
+          <div id="confTotal" style="font-weight: 700; color: var(--color-espresso); font-size: 1.1rem;">$0.00</div>
+          <div id="confPoints" style="color: var(--color-warning); font-size: 0.85rem; font-weight: 700; margin-top: 0.5rem;">+54 Crumb Points Earned</div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+          <button class="btn btn-primary" onclick="UI.closeModal('orderConfirmationModal'); OrderTracker.track(document.getElementById('confOrderNumber').textContent);">Track Order Live</button>
+          <button class="btn btn-secondary" onclick="UI.closeModal('orderConfirmationModal');">Back to Bakery</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Live Order Tracking Modal -->
+  <div id="orderTrackingModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Live Bakery Order Status</h3>
+        <button class="modal-close-btn">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="order-tracking-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span style="font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase;">Order Number</span>
+              <h4 id="trackOrderCode" style="font-size: 1.4rem; color: var(--color-espresso);">CT-89241</h4>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase;">Customer</span>
+              <div id="trackCustomerName" style="font-weight: 700;">Elena Rostova</div>
+            </div>
+          </div>
+
+          <!-- Stepper Graphic -->
+          <div class="tracking-stepper">
+            <div class="step-item completed">
+              <div class="step-circle">✓</div>
+              <div class="step-label">Order Placed</div>
+            </div>
+            <div class="step-item active">
+              <div class="step-circle">2</div>
+              <div class="step-label">In Baking</div>
+            </div>
+            <div class="step-item">
+              <div class="step-circle">3</div>
+              <div class="step-label">Decorating</div>
+            </div>
+            <div class="step-item">
+              <div class="step-circle">4</div>
+              <div class="step-label">Ready / Out</div>
+            </div>
+          </div>
+
+          <div style="border-top: 1px dashed var(--color-cream-border); padding-top: 1rem; margin-top: 1rem; font-size: 0.85rem;">
+            <div><strong>Scheduled For:</strong> <span id="trackSchedule">2026-10-06 (14:30 - 15:30)</span></div>
+            <div style="margin-top: 4px;"><strong>Chef Note:</strong> <span id="trackChefNotes" style="color: var(--color-text-muted);">European cultured butter laminated at 4°C.</span></div>
+            <div style="margin-top: 4px;"><strong>Order Total:</strong> <span id="trackTotal" style="font-weight: 700;">$65.30</span></div>
+          </div>
+        </div>
+
+        <h5 style="margin-bottom: 0.5rem; font-size: 0.95rem;">Items in this Bake:</h5>
+        <div id="trackOrderItemsList" style="background: #fff; border: 1px solid var(--color-cream-border); border-radius: var(--radius-sm); padding: 0.85rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Order Tracking Search Modal -->
+  <div id="trackOrderSearchModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Track Your Cake Order</h3>
+        <button class="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="orderTrackForm">
+          <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">
+            Enter your 8-character CakeTalk order code found on your receipt (e.g. <code>CT-89241</code> or <code>CT-89242</code>).
+          </p>
+          <div class="form-group">
+            <input type="text" id="orderTrackInput" class="form-control" placeholder="CT-89241" required style="font-family: monospace; font-size: 1.1rem; text-transform: uppercase;">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            Locate My Order
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Write a Review Modal -->
+  <div id="writeReviewModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Share Your Experience</h3>
+        <button class="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="reviewSubmitForm">
+          <input type="hidden" id="revProductId" value="8">
+          <div class="form-group">
+            <label>Your Name *</label>
+            <input type="text" id="revName" class="form-control" required placeholder="Hannah S.">
+          </div>
+
+          <div class="form-group">
+            <label>Rating *</label>
+            <div style="display: flex; gap: 1rem; margin-top: 0.35rem;">
+              <label><input type="radio" name="revRating" value="5" checked> ★★★★★ (5/5)</label>
+              <label><input type="radio" name="revRating" value="4"> ★★★★☆ (4/5)</label>
+              <label><input type="radio" name="revRating" value="3"> ★★★☆☆ (3/5)</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Your Review *</label>
+            <textarea id="revComment" class="form-control" rows="3" required placeholder="Describe the flavors, texture, and how your guests enjoyed the bakes..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Post Review</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Auth Modal (Customer Registration & Login) -->
+  <div id="authModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Join The Crumb Club</h3>
+        <button class="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="customerAuthForm" onsubmit="event.preventDefault(); UI.showToast('Welcome to CakeTalk Crumb Club! 50 bonus points added.', 'success'); UI.closeModal('authModal');">
+          <p style="font-size: 0.88rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">
+            Earn points on every order, save delivery addresses, and track celebration histories.
+          </p>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" class="form-control" required placeholder="Sophie Martin">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="form-control" required placeholder="sophie@example.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account & Collect 50 Pts</button>
+          <p style="font-size: 0.78rem; text-align: center; color: var(--color-text-muted); margin-top: 1rem;">
+            Are you a bakery team member? <a href="/admin" style="color: var(--color-terracotta); font-weight: 700;">Staff Admin Login</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Product Form Modal (Admin) -->
+  <div id="productFormModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 id="productFormModalTitle" class="modal-title">Add Bakery Product</h3>
+        <button class="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="productForm">
+          <input type="hidden" id="productEditId">
+
+          <div class="form-group">
+            <label>Product Title *</label>
+            <input type="text" id="prodTitleInput" class="form-control" required placeholder="e.g. Lavender Honey Chiffon Cake">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="prodCategorySelect" class="form-control" required>
+                <option value="Artisan Breads">Artisan Breads</option>
+                <option value="Viennoiserie">Viennoiserie & Pastries</option>
+                <option value="Custom Cakes">Custom Cakes</option>
+                <option value="Savory & Sandwiches">Savory & Sandwiches</option>
+                <option value="Gluten-Free & Vegan">Gluten-Free & Vegan</option>
+                <option value="Gift Sets">Gift Sets & Hampers</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Price ($ USD) *</label>
+              <input type="number" id="prodPriceInput" class="form-control" step="0.25" min="1" required placeholder="48.00">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea id="prodDescInput" class="form-control" rows="2" required placeholder="Ingredients, flavor profile, and baking notes..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>High-Res Image URL *</label>
+            <input type="url" id="prodImageUrlInput" class="form-control" required placeholder="https://images.unsplash.com/photo-...">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Badge Label (Optional)</label>
+              <input type="text" id="prodBadgeInput" class="form-control" placeholder="e.g. Bestseller, Chef's Special">
+            </div>
+            <div class="form-group">
+              <label>Dietary Tags</label>
+              <input type="text" id="prodDietaryInput" class="form-control" placeholder="e.g. Vegetarian, Gluten-Free, Vegan">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Current Stock Units</label>
+              <input type="number" id="prodStockInput" class="form-control" value="25" min="0">
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; margin-top: 1.6rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" id="prodFeaturedCheckbox">
+                <strong>Feature on Homepage</strong>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+            Save Bakery Product
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Admin Login Overlay (Optional gate if needed) -->
+  <div id="adminLoginOverlay" class="admin-login-overlay" style="display: none;">
+    <div class="admin-login-card">
+      <div class="admin-login-logo">🎂</div>
+      <h2 class="admin-login-title">CakeTalk Bakery Admin</h2>
+      <p class="admin-login-desc">Sign in with owner or head pastry chef credentials to manage orders, inventory, and menu.</p>
+      
+      <form id="adminLoginForm">
+        <div class="form-group" style="text-align: left;">
+          <label>Staff Email</label>
+          <input type="email" id="adminEmailInput" class="form-control" value="admin@caketalk.com" required>
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label>Password</label>
+          <input type="password" id="adminPasswordInput" class="form-control" value="admin123" required>
+        </div>
+        <div id="adminLoginError" style="color: var(--color-danger); font-size: 0.85rem; margin-bottom: 1rem;"></div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In to Dashboard</button>
+      </form>
+
+      <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--color-text-muted);">
+        Demo Login: <code>admin@caketalk.com</code> / <code>admin123</code><br>
+        <button onclick="switchWebsiteMode('customer'); document.getElementById('adminLoginOverlay').style.display='none';" style="background:none; border:none; color: var(--color-terracotta); text-decoration: underline; margin-top: 6px; cursor: pointer;">
+          Return to Customer Storefront
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/cake-builder.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    // Unified Role Switcher Controller
+    function switchWebsiteMode(mode) {
+      const customerContainer = document.getElementById('customerViewContainer');
+      const adminContainer = document.getElementById('adminViewContainer');
+      const btnCustomer = document.getElementById('btnModeCustomer');
+      const btnAdmin = document.getElementById('btnModeAdmin');
+
+      if (!customerContainer || !adminContainer) return;
+
+      if (mode === 'admin') {
+        customerContainer.classList.add('hidden');
+        adminContainer.classList.remove('hidden');
+        if (btnCustomer) btnCustomer.classList.remove('active');
+        if (btnAdmin) btnAdmin.classList.add('active');
+        window.location.hash = '#admin';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (window.AdminApp) {
+          // If not logged in, auto-login with default admin credentials for effortless 1-click evaluation
+          const savedUser = localStorage.getItem('caketalk_user');
+          if (!savedUser) {
+            API.login('admin@caketalk.com', 'admin123')
+              .then(() => {
+                AdminApp.init();
+              })
+              .catch(() => {
+                AdminApp.init();
+              });
+          } else {
+            AdminApp.init();
+          }
+        }
+      } else {
+        adminContainer.classList.add('hidden');
+        customerContainer.classList.remove('hidden');
+        if (btnAdmin) btnAdmin.classList.remove('active');
+        if (btnCustomer) btnCustomer.classList.add('active');
+        if (window.location.hash === '#admin') {
+          history.pushState(null, null, ' ');
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          if (window.refreshScrollspy) window.refreshScrollspy();
+        }, 150);
+      }
+    }
+    window.switchWebsiteMode = switchWebsiteMode;
+
+    // Listen for hash changes
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.location.hash === '#admin') {
+        switchWebsiteMode('admin');
+      }
+    });
+
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#admin') {
+        switchWebsiteMode('admin');
+      } else if (window.location.hash === '#customer' || window.location.hash === '') {
+        switchWebsiteMode('customer');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CakeTalk — Bakery Management & Owner Dashboard</title>
+  
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥐</text></svg>">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Login Overlay Gate -->
+  <div id="adminLoginOverlay" class="admin-login-overlay" style="display: none;">
+    <div class="admin-login-card">
+      <div class="admin-login-logo">🎂</div>
+      <h2 class="admin-login-title">CakeTalk Bakery Admin</h2>
+      <p class="admin-login-desc">Sign in with owner or head pastry chef credentials to manage orders, inventory, and menu.</p>
+      
+      <form id="adminLoginForm">
+        <div class="form-group" style="text-align: left;">
+          <label>Staff Email</label>
+          <input type="email" id="adminEmailInput" class="form-control" value="admin@caketalk.com" required>
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label>Password</label>
+          <input type="password" id="adminPasswordInput" class="form-control" value="admin123" required>
+        </div>
+        <div id="adminLoginError" style="color: var(--color-danger); font-size: 0.85rem; margin-bottom: 1rem;"></div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In to Dashboard</button>
+      </form>
+
+      <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--color-text-muted);">
+        Demo Login: <code>admin@caketalk.com</code> / <code>admin123</code><br>
+        <a href="/" style="color: var(--color-terracotta); text-decoration: underline; margin-top: 6px; display: inline-block;">Return to Customer Store</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand-box">
+      <div class="sidebar-logo">🎂</div>
+      <div>
+        <div class="sidebar-title">CakeTalk</div>
+        <span class="sidebar-badge">Owner Suite</span>
+      </div>
+    </div>
+
+    <ul class="sidebar-nav-menu">
+      <li class="sidebar-nav-item active">
+        <button data-admin-tab="analytics">
+          <span class="sidebar-icon">📊</span>
+          <span class="sidebar-text">Analytics Overview</span>
+        </button>
+      </li>
+      <li class="sidebar-nav-item">
+        <button data-admin-tab="orders">
+          <span class="sidebar-icon">🧾</span>
+          <span class="sidebar-text">Order Management</span>
+        </button>
+      </li>
+      <li class="sidebar-nav-item">
+        <button data-admin-tab="products">
+          <span class="sidebar-icon">🥐</span>
+          <span class="sidebar-text">Products & Menu</span>
+        </button>
+      </li>
+      <li class="sidebar-nav-item">
+        <button data-admin-tab="inventory">
+          <span class="sidebar-icon">📦</span>
+          <span class="sidebar-text">Inventory & Pantry</span>
+        </button>
+      </li>
+      <li class="sidebar-nav-item">
+        <button data-admin-tab="customers">
+          <span class="sidebar-icon">👥</span>
+          <span class="sidebar-text">Customer Directory</span>
+        </button>
+      </li>
+      <li class="sidebar-nav-item">
+        <button data-admin-tab="coupons">
+          <span class="sidebar-icon">🏷️</span>
+          <span class="sidebar-text">Promotions & Deals</span>
+        </button>
+      </li>
+      <li class="sidebar-nav-item">
+        <button data-admin-tab="inquiries">
+          <span class="sidebar-icon">💌</span>
+          <span class="sidebar-text">Event Inquiries</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-user-footer">
+      <div class="admin-avatar-info">
+        <div class="avatar-circle">EV</div>
+        <div>
+          <div class="admin-name">Eleanor Vance</div>
+          <div class="admin-role">Head Pâtissier</div>
+        </div>
+      </div>
+      <button id="btnAdminLogout" title="Sign out" style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">
+        🚪
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="admin-main-wrapper">
+    <!-- Top Bar -->
+    <header class="admin-top-header">
+      <div class="header-title-box">
+        <h2 id="adminHeaderTitle">Analytics Overview</h2>
+      </div>
+
+      <div class="admin-header-actions">
+        <a href="/" target="_blank" class="btn btn-secondary btn-sm" style="display: flex; align-items: center; gap: 4px;">
+          <span>🌐</span> View Customer Store
+        </a>
+        <button class="btn btn-primary btn-sm" onclick="AdminApp.openAddProductModal()">
+          <span>+</span> Add Product
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-content-area">
+
+      <!-- ===================================================================
+           TAB 1: ANALYTICS OVERVIEW
+           =================================================================== -->
+      <section id="tab-analytics" class="tab-content-panel active">
+        <!-- KPI Cards -->
+        <div class="kpi-cards-grid">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>Total Revenue</span>
+              <div class="kpi-icon-box green">💰</div>
+            </div>
+            <div id="kpiRevenue" class="kpi-value">$0.00</div>
+            <div class="kpi-trend">↑ +18.4% vs last week</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>Total Orders</span>
+              <div class="kpi-icon-box orange">🧾</div>
+            </div>
+            <div id="kpiOrders" class="kpi-value">0</div>
+            <div class="kpi-trend">↑ 12 active today</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>Avg Order Value</span>
+              <div class="kpi-icon-box blue">📈</div>
+            </div>
+            <div id="kpiAOV" class="kpi-value">$0.00</div>
+            <div class="kpi-trend">↑ $58.20 average basket</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span>Active Patrons</span>
+              <div class="kpi-icon-box purple">👥</div>
+            </div>
+            <div id="kpiCustomers" class="kpi-value">0</div>
+            <div class="kpi-trend">↑ 92% retention rate</div>
+          </div>
+        </div>
+
+        <!-- Live Orders Status Summary Strip -->
+        <h4 style="font-size: 1rem; margin-bottom: 0.85rem; color: #4A5568;">Real-Time Oven & Dispatch Pipeline</h4>
+        <div id="kpiOrderStatusStrip" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <!-- Populated by admin.js -->
+        </div>
+
+        <!-- Category Breakdown & Recent Orders Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 1.75rem;">
+          <!-- Category Sales -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>Bakes by Category</h3>
+            </div>
+            <div style="padding: 1.25rem;">
+              <div id="analyticsCategoryList"></div>
+            </div>
+          </div>
+
+          <!-- Recent Orders Preview -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>Recent Incoming Orders</h3>
+              <button class="btn btn-secondary btn-sm" onclick="document.querySelector('[data-admin-tab=\\'orders\\']').click()">View All</button>
+            </div>
+            <div class="admin-table-container">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="analyticsRecentOrdersTbody">
+                  <!-- Populated by admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: ORDER MANAGEMENT
+           =================================================================== -->
+      <section id="tab-orders" class="tab-content-panel">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Active Bakery Orders</h3>
+            <button class="btn btn-secondary btn-sm" onclick="AdminApp.loadOrders()">🔄 Refresh Orders</button>
+          </div>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order Code</th>
+                  <th>Customer Info</th>
+                  <th>Fulfillment Schedule</th>
+                  <th>Order Items</th>
+                  <th>Total</th>
+                  <th>Status Workflow</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableTbody">
+                <!-- Orders populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: PRODUCT CATALOG CRUD
+           =================================================================== -->
+      <section id="tab-products" class="tab-content-panel">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Bakery Menu & Catalog Management</h3>
+            <button class="btn btn-primary btn-sm" onclick="AdminApp.openAddProductModal()">+ Add New Product</button>
+          </div>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Title & Badge</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Stock Available</th>
+                  <th>Rating</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableTbody">
+                <!-- Products populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: INVENTORY & PANTRY
+           =================================================================== -->
+      <section id="tab-inventory" class="tab-content-panel">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>Bakery Ingredient & Supply Inventory</h3>
+              <p style="font-size: 0.8rem; color: #718096; margin-top: 2px;">Track French butter, Valrhona chocolate, organic flours, and packaging stock.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="AdminApp.loadInventory()">🔄 Refresh Stock</button>
+          </div>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Ingredient / Supply</th>
+                  <th>Category</th>
+                  <th>Current Stock</th>
+                  <th>Min Reorder Threshold</th>
+                  <th>Stock Health</th>
+                  <th>Quick Restock</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableTbody">
+                <!-- Inventory populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: CUSTOMER DIRECTORY
+           =================================================================== -->
+      <section id="tab-customers" class="tab-content-panel">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Customer Profiles & Loyalty Club</h3>
+          </div>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Crumb Club Tier</th>
+                  <th>Order History</th>
+                  <th>Lifetime Spend</th>
+                </tr>
+              </thead>
+              <tbody id="customersTableTbody">
+                <!-- Customers populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 6: PROMOTIONS & COUPONS
+           =================================================================== -->
+      <section id="tab-coupons" class="tab-content-panel">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Active Promotions & Promo Codes</h3>
+            <button class="btn btn-primary btn-sm" onclick="alert('Demo: Use active promo codes SWEET10, FREESHIP, or BAKERLOVE on checkout!')">+ New Promo Code</button>
+          </div>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Coupon Code</th>
+                  <th>Description</th>
+                  <th>Discount Value</th>
+                  <th>Min Order</th>
+                  <th>Usage Count</th>
+                  <th>Toggle State</th>
+                </tr>
+              </thead>
+              <tbody id="couponsTableTbody">
+                <!-- Coupons populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 7: EVENT INQUIRIES
+           =================================================================== -->
+      <section id="tab-inquiries" class="tab-content-panel">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Custom Wedding & Corporate Event Inquiries</h3>
+          </div>
+          <div class="admin-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Client Name & Contact</th>
+                  <th>Event Date</th>
+                  <th>Guest Count</th>
+                  <th>Theme & Style</th>
+                  <th>Budget</th>
+                  <th>Quote Status</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="inquiriesTableTbody">
+                <!-- Inquiries populated by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =======================================================================
+       ADMIN MODALS
+       ======================================================================= -->
+
+  <!-- Add / Edit Product Modal -->
+  <div id="productFormModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 id="productFormModalTitle" class="modal-title">Add Bakery Product</h3>
+        <button class="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="productForm">
+          <input type="hidden" id="productEditId">
+
+          <div class="form-group">
+            <label>Product Title *</label>
+            <input type="text" id="prodTitleInput" class="form-control" required placeholder="e.g. Lavender Honey Chiffon Cake">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="prodCategorySelect" class="form-control" required>
+                <option value="Artisan Breads">Artisan Breads</option>
+                <option value="Viennoiserie">Viennoiserie & Pastries</option>
+                <option value="Custom Cakes">Custom Cakes</option>
+                <option value="Savory & Sandwiches">Savory & Sandwiches</option>
+                <option value="Gluten-Free & Vegan">Gluten-Free & Vegan</option>
+                <option value="Gift Sets">Gift Sets & Hampers</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Price ($ USD) *</label>
+              <input type="number" id="prodPriceInput" class="form-control" step="0.25" min="1" required placeholder="48.00">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea id="prodDescInput" class="form-control" rows="2" required placeholder="Ingredients, flavor profile, and baking notes..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>High-Res Image URL *</label>
+            <input type="url" id="prodImageUrlInput" class="form-control" required placeholder="https://images.unsplash.com/photo-...">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Badge Label (Optional)</label>
+              <input type="text" id="prodBadgeInput" class="form-control" placeholder="e.g. Bestseller, Chef's Special">
+            </div>
+            <div class="form-group">
+              <label>Dietary Tags</label>
+              <input type="text" id="prodDietaryInput" class="form-control" placeholder="e.g. Vegetarian, Gluten-Free, Vegan">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Current Stock Units</label>
+              <input type="number" id="prodStockInput" class="form-control" value="25" min="0">
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; margin-top: 1.6rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" id="prodFeaturedCheckbox">
+                <strong>Feature on Homepage</strong>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+            Save Bakery Product
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
