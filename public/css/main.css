@@ -969,6 +969,13 @@ h1, h2, h3, h4, h5 {
   color: var(--color-espresso);
 }
 
+.card-action-slot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 38px;
+}
+
 .btn-add-bag {
   background-color: var(--color-terracotta);
   color: #fff;
@@ -979,16 +986,100 @@ h1, h2, h3, h4, h5 {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  box-shadow: 0 2px 8px rgba(200, 105, 60, 0.25);
+  box-shadow: 0 3px 10px rgba(200, 105, 60, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .btn-add-bag:hover {
   background-color: var(--color-terracotta-hover);
   transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(200, 105, 60, 0.35);
+}
+
+.btn-add-bag:active {
+  transform: translateY(0);
 }
 
 .btn-add-bag.added {
   background-color: var(--color-success);
+}
+
+/* Interactive Card Quantity Stepper (Glassmorphic) */
+.card-qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--glass-bg-base);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1.5px solid var(--color-terracotta);
+  border-radius: var(--radius-full);
+  padding: 3px;
+  box-shadow: 0 4px 14px rgba(200, 105, 60, 0.2);
+  gap: 6px;
+  transition: all var(--transition-fast);
+  animation: cardQtyPop 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes cardQtyPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.card-qty-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--color-terracotta);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(200, 105, 60, 0.3);
+  user-select: none;
+}
+
+.card-qty-btn:hover {
+  background: var(--color-terracotta-hover);
+  transform: scale(1.12);
+  box-shadow: 0 4px 10px rgba(200, 105, 60, 0.4);
+}
+
+.card-qty-btn:active {
+  transform: scale(0.92);
+}
+
+.card-qty-value {
+  min-width: 22px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-espresso);
+  font-family: var(--font-sans);
+  padding: 0 4px;
+  user-select: none;
+  animation: cardValPulse 0.15s ease-out;
+}
+
+@keyframes cardValPulse {
+  0% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 /* ==========================================================================

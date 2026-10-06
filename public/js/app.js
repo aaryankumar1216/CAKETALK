@@ -144,6 +144,88 @@ const Cart = {
     }
   },
 
+  getProductQty(productId) {
+    const item = this.items.find(it => it.id === productId && !it.isCustom);
+    return item ? item.quantity : 0;
+  },
+
+  addProductById(productId) {
+    let prod = (window.productsMap && window.productsMap[productId]) || null;
+    if (!prod) {
+      const card = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+      if (card) {
+        const title = card.querySelector('.card-title')?.textContent || 'Bakery Item';
+        const priceText = card.querySelector('.card-price')?.textContent.replace(/[^0-9.]/g, '') || '0';
+        const img = card.querySelector('.card-image-box img')?.src || '';
+        const cat = card.querySelector('.card-category-meta')?.textContent || 'Bakery';
+        prod = { id: productId, title, price: parseFloat(priceText), image_url: img, category: cat };
+      }
+    }
+    if (prod) {
+      if (prod.stock !== undefined && prod.stock <= 0) {
+        UI.showToast(`"${prod.title}" is currently out of stock`, 'error');
+        return;
+      }
+      this.addItem({
+        id: prod.id,
+        title: prod.title,
+        price: prod.price,
+        image_url: prod.image_url,
+        category: prod.category
+      }, 1);
+    }
+  },
+
+  updateProductQty(productId, delta) {
+    const index = this.items.findIndex(it => it.id === productId && !it.isCustom);
+    if (index > -1) {
+      const prod = (window.productsMap && window.productsMap[productId]) || null;
+      if (delta > 0 && prod && prod.stock !== undefined && this.items[index].quantity >= prod.stock) {
+        UI.showToast(`Only ${prod.stock} units available in stock`, 'info');
+        return;
+      }
+      this.updateQty(index, delta);
+    } else if (delta > 0) {
+      this.addProductById(productId);
+    }
+  },
+
+  syncProductCards() {
+    document.querySelectorAll('.product-card[data-product-id]').forEach(card => {
+      const pid = parseInt(card.getAttribute('data-product-id'), 10);
+      const slot = card.querySelector('.card-action-slot');
+      if (!slot) return;
+
+      const qty = this.getProductQty(pid);
+      const prod = window.productsMap && window.productsMap[pid];
+
+      if (qty > 0) {
+        slot.innerHTML = `
+          <div class="card-qty-stepper" data-product-id="${pid}">
+            <button type="button" class="card-qty-btn minus" onclick="event.stopPropagation(); Cart.updateProductQty(${pid}, -1)" title="Decrease quantity" aria-label="Decrease quantity">−</button>
+            <span class="card-qty-value">${qty}</span>
+            <button type="button" class="card-qty-btn plus" onclick="event.stopPropagation(); Cart.updateProductQty(${pid}, 1)" title="Increase quantity" aria-label="Increase quantity">+</button>
+          </div>
+        `;
+      } else {
+        const isOutOfStock = prod && prod.stock !== undefined && prod.stock <= 0;
+        if (isOutOfStock) {
+          slot.innerHTML = `
+            <button type="button" class="btn-add-bag" disabled style="opacity: 0.6; cursor: not-allowed; background: var(--color-text-muted);">
+              Sold Out
+            </button>
+          `;
+        } else {
+          slot.innerHTML = `
+            <button type="button" class="btn-add-bag" onclick="event.stopPropagation(); Cart.addProductById(${pid})">
+              <span>+</span> Add to Bag
+            </button>
+          `;
+        }
+      }
+    });
+  },
+
   setOrderType(type) {
     this.orderType = type;
     this.deliveryFee = type === 'pickup' ? 0.00 : 5.00;
@@ -233,6 +315,9 @@ const Cart = {
     if (stickyCountEl) {
       stickyCountEl.textContent = `Bag (${count})`;
     }
+
+    // Synchronize stepper controls on storefront product cards
+    this.syncProductCards();
 
     // Render Drawer Items List
     const listEl = document.getElementById('cartDrawerItemsList');
@@ -519,7 +604,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      grid.innerHTML = res.products.map(p => `
+      window.productsMap = window.productsMap || {};
+      res.products.forEach(p => {
+        window.productsMap[p.id] = p;
+      });
+
+      grid.innerHTML = res.products.map(p => {
+        const qty = Cart.getProductQty(p.id);
+        const isOutOfStock = p.stock !== undefined && p.stock <= 0;
+        return `
         <div class="product-card" data-product-id="${p.id}">
           <div class="card-image-box">
             <img src="${p.image_url}" alt="${p.title}" loading="lazy">
@@ -536,19 +629,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             <div class="card-footer">
               <div class="card-price">$${p.price.toFixed(2)}</div>
-              <button class="btn-add-bag" onclick='Cart.addItem(${JSON.stringify({
-                id: p.id,
-                title: p.title,
-                price: p.price,
-                image_url: p.image_url,
-                category: p.category
-              })})'>
-                <span>+</span> Add to Bag
-              </button>
+              <div class="card-action-slot" data-product-id="${p.id}">
+                ${qty > 0 ? `
+                  <div class="card-qty-stepper" data-product-id="${p.id}">
+                    <button type="button" class="card-qty-btn minus" onclick="event.stopPropagation(); Cart.updateProductQty(${p.id}, -1)" title="Decrease quantity" aria-label="Decrease quantity">−</button>
+                    <span class="card-qty-value">${qty}</span>
+                    <button type="button" class="card-qty-btn plus" onclick="event.stopPropagation(); Cart.updateProductQty(${p.id}, 1)" title="Increase quantity" aria-label="Increase quantity">+</button>
+                  </div>
+                ` : isOutOfStock ? `
+                  <button type="button" class="btn-add-bag" disabled style="opacity: 0.6; cursor: not-allowed; background: var(--color-text-muted);">
+                    Sold Out
+                  </button>
+                ` : `
+                  <button type="button" class="btn-add-bag" onclick="event.stopPropagation(); Cart.addProductById(${p.id})">
+                    <span>+</span> Add to Bag
+                  </button>
+                `}
+              </div>
             </div>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     } catch (err) {
       grid.innerHTML = `<div style="grid-column: 1 / -1; color: var(--color-danger); text-align: center;">Error loading products: ${err.message}</div>`;
     }
