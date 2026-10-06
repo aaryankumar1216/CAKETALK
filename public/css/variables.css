@@ -69,4 +69,29 @@
   /* Max widths */
   --container-max: 1280px;
   --header-height: 76px;
+
+  /* Glassmorphism System Tokens */
+  --glass-bg-base: rgba(255, 255, 255, 0.72);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.48);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.85);
+  --glass-bg-warm: rgba(250, 246, 240, 0.76);
+  --glass-bg-dark: rgba(32, 19, 12, 0.82);
+  --glass-bg-dark-elevated: rgba(23, 12, 7, 0.88);
+  --glass-bg-accent: rgba(200, 105, 60, 0.12);
+  --glass-bg-honey: rgba(224, 159, 90, 0.14);
+
+  --glass-border-light: rgba(255, 255, 255, 0.75);
+  --glass-border-subtle: rgba(232, 222, 210, 0.55);
+  --glass-border-dark: rgba(255, 255, 255, 0.15);
+  --glass-border-accent: rgba(200, 105, 60, 0.35);
+
+  --glass-blur-sm: blur(10px) saturate(160%);
+  --glass-blur-md: blur(16px) saturate(180%);
+  --glass-blur-lg: blur(24px) saturate(190%);
+  --glass-blur-dark: blur(20px) saturate(175%);
+
+  --glass-shadow-sm: 0 4px 16px rgba(32, 19, 12, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --glass-shadow-md: 0 8px 30px rgba(32, 19, 12, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --glass-shadow-lg: 0 16px 48px rgba(32, 19, 12, 0.11), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --glass-shadow-dark: 0 12px 40px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }

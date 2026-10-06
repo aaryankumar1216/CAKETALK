@@ -1,33 +1,42 @@
 /* ==========================================================================
-   CakeTalk - Interactive Custom Cake Studio Styles
+   CakeTalk - Interactive Custom Cake Studio Styles (Glassmorphism Enhanced)
    ========================================================================== */
 
 .cake-studio-modal-wrapper {
   display: grid;
   grid-template-columns: 1fr 1.15fr;
   min-height: 580px;
-  background: #fff;
+  background: var(--glass-bg-base);
+  backdrop-filter: var(--glass-blur-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  border: 1px solid var(--glass-border-light);
   border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow-lg);
   overflow: hidden;
 }
 
 /* Cake Visualizer Canvas Stage */
 .cake-stage-container {
-  background: radial-gradient(circle at 50% 50%, #FAF5EE 0%, #EFE5D6 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(250, 245, 238, 0.75) 0%, rgba(239, 229, 214, 0.65) 100%);
+  backdrop-filter: var(--glass-blur-md);
+  -webkit-backdrop-filter: var(--glass-blur-md);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2.5rem 2rem;
   position: relative;
-  border-right: 1px solid var(--color-cream-border);
+  border-right: 1px solid var(--glass-border-light);
 }
 
 .stage-badge {
   position: absolute;
   top: 1.5rem;
   left: 1.5rem;
-  background: rgba(32, 19, 12, 0.85);
+  background: var(--glass-bg-dark);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border-dark);
   color: #fff;
   padding: 0.35rem 0.85rem;
   border-radius: var(--radius-full);
@@ -35,6 +44,7 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  box-shadow: var(--glass-shadow-sm);
 }
 
 .cake-svg-viewport {
@@ -47,11 +57,13 @@
 
 .stage-specs-summary {
   margin-top: 1.5rem;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
+  background: var(--glass-bg-elevated);
+  backdrop-filter: var(--glass-blur-md);
+  -webkit-backdrop-filter: var(--glass-blur-md);
   padding: 0.85rem 1.4rem;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(232, 222, 210, 0.8);
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--glass-shadow-sm);
   text-align: center;
   width: 90%;
   max-width: 300px;
@@ -77,12 +89,15 @@
   max-height: 85vh;
   display: flex;
   flex-direction: column;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
 }
 
 .builder-header {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--color-cream-border);
+  border-bottom: 1px solid var(--glass-border-subtle);
 }
 
 .builder-header h3 {
@@ -110,7 +125,10 @@
 }
 
 .step-number-tag {
-  background: var(--color-honey-soft);
+  background: var(--glass-bg-warm);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid rgba(224, 159, 90, 0.3);
   color: var(--color-warning);
   padding: 0.15rem 0.55rem;
   border-radius: var(--radius-sm);
@@ -125,8 +143,10 @@
 }
 
 .builder-opt-card {
-  border: 1.5px solid var(--color-cream-border);
-  background: #fff;
+  border: 1px solid var(--glass-border-light);
+  background: var(--glass-bg-elevated);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: var(--radius-md);
   padding: 0.85rem;
   text-align: center;
@@ -136,17 +156,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--glass-shadow-sm);
 }
 
 .builder-opt-card:hover {
   border-color: var(--color-terracotta);
-  background: var(--color-cream-bg);
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .builder-opt-card.active {
   border-color: var(--color-terracotta);
-  background: var(--color-honey-soft);
-  box-shadow: 0 0 0 2px rgba(200, 105, 60, 0.25);
+  background: var(--glass-bg-warm);
+  box-shadow: 0 0 0 2px rgba(200, 105, 60, 0.35), var(--glass-shadow-sm);
 }
 
 .opt-swatch {
@@ -154,7 +177,7 @@
   height: 28px;
   border-radius: var(--radius-full);
   margin-bottom: 0.5rem;
-  border: 2px solid #fff;
+  border: 2px solid rgba(255, 255, 255, 0.9);
   box-shadow: var(--shadow-xs);
 }
 
@@ -184,14 +207,20 @@
 .inscription-input-box input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1.5px solid var(--color-cream-border);
+  border: 1px solid var(--glass-border-light);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: var(--radius-md);
   font-size: 0.95rem;
   outline: none;
+  transition: all var(--transition-fast);
 }
 
 .inscription-input-box input:focus {
+  background: #ffffff;
   border-color: var(--color-terracotta);
+  box-shadow: 0 0 0 3px rgba(200, 105, 60, 0.15);
 }
 
 .char-limit-count {
@@ -205,7 +234,7 @@
 .builder-bottom-dock {
   margin-top: auto;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--color-cream-border);
+  border-top: 1px solid var(--glass-border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -232,7 +261,7 @@
   }
   .cake-stage-container {
     border-right: none;
-    border-bottom: 1px solid var(--color-cream-border);
+    border-bottom: 1px solid var(--glass-border-light);
     padding: 1.5rem;
   }
   .cake-svg-viewport {

@@ -1,21 +1,30 @@
 /* ==========================================================================
-   CakeTalk - Owner/Admin Management Dashboard Stylesheet
+   CakeTalk - Owner/Admin Management Dashboard Stylesheet (Glassmorphism Enhanced)
    ========================================================================== */
 
 @import url('./variables.css');
 
 .admin-body {
-  background-color: #F8F9FA;
+  background-color: #F8F6F2;
+  background-image: 
+    radial-gradient(at 10% 15%, rgba(200, 105, 60, 0.08) 0px, transparent 45%),
+    radial-gradient(at 90% 10%, rgba(224, 159, 90, 0.10) 0px, transparent 40%),
+    radial-gradient(at 50% 85%, rgba(243, 210, 206, 0.12) 0px, transparent 50%),
+    radial-gradient(at 85% 75%, rgba(200, 105, 60, 0.06) 0px, transparent 40%);
+  background-attachment: fixed;
   color: #2D3748;
   font-family: var(--font-sans);
   min-height: 100vh;
   display: flex;
 }
 
-/* Sidebar Layout */
+/* Sidebar Layout - Smoked Frosted Glass */
 .admin-sidebar {
   width: 260px;
-  background-color: var(--color-espresso);
+  background-color: var(--glass-bg-dark);
+  backdrop-filter: var(--glass-blur-dark);
+  -webkit-backdrop-filter: var(--glass-blur-dark);
+  border-right: 1px solid var(--glass-border-dark);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -24,26 +33,28 @@
   bottom: 0;
   left: 0;
   z-index: 100;
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.05);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
 }
 
 .sidebar-brand-box {
   padding: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   gap: 0.85rem;
 }
 
 .sidebar-logo {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, var(--color-terracotta), var(--color-honey));
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, rgba(200, 105, 60, 0.9), rgba(224, 159, 90, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(200, 105, 60, 0.3);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
 .sidebar-title {
@@ -51,13 +62,16 @@
   font-size: 1.35rem;
   font-weight: 700;
   color: #fff;
+  letter-spacing: -0.02em;
 }
 
 .sidebar-badge {
   font-size: 0.65rem;
-  background: rgba(224, 159, 90, 0.25);
+  background: rgba(224, 159, 90, 0.22);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(224, 159, 90, 0.4);
   color: var(--color-honey);
-  padding: 0.15rem 0.5rem;
+  padding: 0.15rem 0.55rem;
   border-radius: var(--radius-full);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -69,7 +83,7 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
   overflow-y: auto;
 }
 
@@ -85,18 +99,25 @@
   font-weight: 500;
   transition: all var(--transition-fast);
   text-align: left;
+  border: 1px solid transparent;
 }
 
 .sidebar-nav-item button:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
 .sidebar-nav-item.active button {
-  background-color: var(--color-terracotta);
+  background: linear-gradient(135deg, rgba(200, 105, 60, 0.92), rgba(224, 159, 90, 0.82));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   color: #fff;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(200, 105, 60, 0.3);
+  box-shadow: 0 4px 16px rgba(200, 105, 60, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .sidebar-icon {
@@ -105,7 +126,9 @@
 
 .sidebar-user-footer {
   padding: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -121,13 +144,15 @@
   width: 36px;
   height: 36px;
   border-radius: var(--radius-full);
-  background-color: var(--color-honey);
-  color: var(--color-espresso);
+  background: linear-gradient(135deg, var(--color-honey), var(--color-terracotta));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .admin-name {
@@ -139,7 +164,7 @@
 
 .admin-role {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* Main Admin Layout */
@@ -153,8 +178,10 @@
 
 .admin-top-header {
   height: 70px;
-  background-color: #fff;
-  border-bottom: 1px solid #E2E8F0;
+  background-color: var(--glass-bg-base);
+  backdrop-filter: var(--glass-blur-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  border-bottom: 1px solid var(--glass-border-light);
   padding: 0 2rem;
   display: flex;
   align-items: center;
@@ -162,6 +189,7 @@
   position: sticky;
   top: 0;
   z-index: 90;
+  box-shadow: 0 4px 16px rgba(32, 19, 12, 0.03);
 }
 
 .header-title-box h2 {
@@ -197,7 +225,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* KPI Summary Cards */
+/* KPI Summary Cards - Frosted Glass */
 .kpi-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -206,13 +234,23 @@
 }
 
 .kpi-card {
-  background-color: #fff;
+  background-color: var(--glass-bg-base);
+  backdrop-filter: var(--glass-blur-md);
+  -webkit-backdrop-filter: var(--glass-blur-md);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--glass-shadow-sm);
   display: flex;
   flex-direction: column;
+  transition: all var(--transition-fast);
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  background-color: var(--glass-bg-elevated);
+  box-shadow: var(--glass-shadow-md);
+  border-color: rgba(255, 255, 255, 0.95);
 }
 
 .kpi-header {
@@ -228,19 +266,23 @@
 }
 
 .kpi-icon-box {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-xs);
 }
 
-.kpi-icon-box.green { background: #E6FFFA; color: #319795; }
-.kpi-icon-box.orange { background: #FFFAF0; color: #DD6B20; }
-.kpi-icon-box.blue { background: #EBF8FF; color: #3182CE; }
-.kpi-icon-box.purple { background: #FAF5FF; color: #805AD5; }
+.kpi-icon-box.green { background: rgba(230, 255, 250, 0.85); color: #319795; }
+.kpi-icon-box.orange { background: rgba(255, 250, 240, 0.85); color: #DD6B20; }
+.kpi-icon-box.blue { background: rgba(235, 248, 255, 0.85); color: #3182CE; }
+.kpi-icon-box.purple { background: rgba(250, 245, 255, 0.85); color: #805AD5; }
 
 .kpi-value {
   font-size: 1.85rem;
@@ -252,25 +294,29 @@
 
 .kpi-trend {
   font-size: 0.78rem;
-  color: #38A169;
+  color: #2F855A;
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  font-weight: 600;
 }
 
-/* Admin Tables & Cards */
+/* Admin Tables & Cards - Frosted Glass Container */
 .admin-card {
-  background-color: #fff;
+  background-color: var(--glass-bg-base);
+  backdrop-filter: var(--glass-blur-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
   border-radius: var(--radius-lg);
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--glass-shadow-md);
   margin-bottom: 2rem;
   overflow: hidden;
 }
 
 .admin-card-header {
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #E2E8F0;
+  background-color: rgba(255, 255, 255, 0.45);
+  border-bottom: 1px solid var(--glass-border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -295,71 +341,90 @@
 }
 
 .admin-table th {
-  background-color: #F7FAFC;
+  background-color: rgba(247, 250, 252, 0.7);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: #4A5568;
   padding: 0.85rem 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.72rem;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--glass-border-subtle);
 }
 
 .admin-table td {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid #EDF2F7;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.55);
   color: #2D3748;
   vertical-align: middle;
 }
 
 .admin-table tr:hover td {
-  background-color: #F8FAFC;
+  background-color: rgba(255, 255, 255, 0.65);
 }
 
-/* Status Badges */
+/* Status Badges - Frosted Glass Style */
 .status-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.25rem 0.65rem;
+  padding: 0.28rem 0.75rem;
   border-radius: var(--radius-full);
   font-size: 0.75rem;
   font-weight: 700;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid transparent;
 }
 
-.status-pill.pending { background: #FEFCBF; color: #B7791F; }
-.status-pill.in-baking { background: #EBF8FF; color: #2B6CB0; }
-.status-pill.decorating { background: #FAF5FF; color: #6B46C1; }
-.status-pill.ready { background: #C6F6D5; color: #22543D; }
-.status-pill.delivered { background: #EDF2F7; color: #4A5568; }
+.status-pill.pending { background: rgba(254, 252, 191, 0.85); color: #B7791F; border-color: rgba(214, 158, 46, 0.4); }
+.status-pill.in-baking { background: rgba(235, 248, 255, 0.85); color: #2B6CB0; border-color: rgba(49, 130, 206, 0.4); }
+.status-pill.decorating { background: rgba(250, 245, 255, 0.85); color: #6B46C1; border-color: rgba(128, 90, 213, 0.4); }
+.status-pill.ready { background: rgba(198, 246, 213, 0.85); color: #22543D; border-color: rgba(56, 161, 105, 0.4); }
+.status-pill.delivered { background: rgba(237, 242, 247, 0.85); color: #4A5568; border-color: rgba(160, 174, 192, 0.4); }
 
 .status-select-dropdown {
-  padding: 0.35rem 0.65rem;
+  padding: 0.4rem 0.75rem;
   border-radius: var(--radius-sm);
-  border: 1px solid #CBD5E0;
+  border: 1px solid var(--glass-border-light);
   font-size: 0.82rem;
   font-weight: 600;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.status-select-dropdown:focus {
+  outline: none;
+  border-color: var(--color-terracotta);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(200, 105, 60, 0.15);
 }
 
 /* Inventory Alerts */
 .low-stock-alert-tag {
-  background-color: #FFF5F5;
+  background-color: rgba(255, 245, 245, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   color: #E53E3E;
-  border: 1px solid #FEB2B2;
-  padding: 0.15rem 0.45rem;
+  border: 1px solid rgba(254, 178, 178, 0.6);
+  padding: 0.2rem 0.55rem;
   border-radius: var(--radius-xs);
   font-size: 0.72rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
-/* Login Gate for Admin */
+/* Login Gate for Admin - Frosted Smoked Glass */
 .admin-login-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(32, 19, 12, 0.95);
-  backdrop-filter: blur(8px);
+  background: rgba(32, 19, 12, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   z-index: 999;
   display: flex;
   align-items: center;
@@ -368,12 +433,15 @@
 }
 
 .admin-login-card {
-  background: #fff;
+  background: var(--glass-bg-base);
+  backdrop-filter: var(--glass-blur-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  border: 1px solid var(--glass-border-light);
   width: 100%;
   max-width: 420px;
   padding: 2.5rem;
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--glass-shadow-lg);
   text-align: center;
 }
 

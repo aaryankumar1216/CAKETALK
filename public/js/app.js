@@ -41,22 +41,26 @@ const UI = {
     }
 
     const toast = document.createElement('div');
-    const bg = type === 'success' ? '#2D7A4D' : type === 'error' ? '#C23934' : '#20130C';
+    const bg = type === 'success' ? 'rgba(34, 107, 65, 0.88)' : type === 'error' ? 'rgba(180, 45, 45, 0.88)' : 'rgba(32, 19, 12, 0.84)';
+    const borderColor = type === 'success' ? 'rgba(120, 220, 160, 0.45)' : type === 'error' ? 'rgba(255, 140, 140, 0.45)' : 'rgba(255, 255, 255, 0.28)';
     toast.style.cssText = `
       background: ${bg};
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid ${borderColor};
+      box-shadow: 0 12px 32px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.3);
       color: #fff;
-      padding: 12px 20px;
+      padding: 12px 22px;
       border-radius: 9999px;
       font-size: 0.9rem;
       font-weight: 600;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
       opacity: 0;
       transform: translateY(12px);
-      transition: all 0.25s ease;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: auto;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     `;
     toast.innerHTML = `<span>${type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'}</span> ${message}`;
     container.appendChild(toast);
