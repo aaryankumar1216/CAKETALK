@@ -1083,6 +1083,21 @@ function initScrollspy() {
     if (active) moveIndicatorToLink(active);
   }, { passive: true });
 
+  // Smooth horizontal scroll for header on mouse wheel when overflow exists
+  if (header) {
+    header.addEventListener('wheel', (e) => {
+      if (header.scrollWidth > header.clientWidth) {
+        const canScrollLeft = header.scrollLeft > 0;
+        const canScrollRight = header.scrollLeft < (header.scrollWidth - header.clientWidth - 1);
+
+        if ((e.deltaY > 0 && canScrollRight) || (e.deltaY < 0 && canScrollLeft)) {
+          header.scrollLeft += e.deltaY;
+          e.preventDefault();
+        }
+      }
+    }, { passive: false });
+  }
+
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => {
       const active = document.querySelector('.main-nav .nav-link.active') || navLinks[0];
