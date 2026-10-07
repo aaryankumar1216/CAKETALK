@@ -474,3 +474,67 @@
     margin-left: 70px;
   }
 }
+
+/* Dark Mode Overrides for Admin Suite */
+[data-theme="dark"] .admin-body {
+  background-color: #120C08;
+  background-image: 
+    radial-gradient(at 10% 15%, rgba(226, 123, 76, 0.12) 0px, transparent 45%),
+    radial-gradient(at 90% 10%, rgba(242, 179, 109, 0.10) 0px, transparent 40%),
+    radial-gradient(at 50% 85%, rgba(180, 80, 50, 0.12) 0px, transparent 50%),
+    radial-gradient(at 85% 75%, rgba(226, 123, 76, 0.08) 0px, transparent 40%);
+  color: var(--color-text-main);
+}
+
+[data-theme="dark"] .admin-top-header {
+  background-color: rgba(20, 13, 9, 0.88);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .header-title-box h2 {
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .admin-card {
+  background-color: var(--glass-bg-base);
+  border-color: var(--glass-border-light);
+}
+
+[data-theme="dark"] .admin-card-header {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-bottom-color: var(--glass-border-subtle);
+}
+
+[data-theme="dark"] .admin-card-header h3 {
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .admin-table th {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-muted);
+  border-bottom-color: var(--glass-border-subtle);
+}
+
+[data-theme="dark"] .admin-table td {
+  color: var(--color-text-main);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .admin-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .kpi-card {
+  background-color: var(--glass-bg-base);
+  border-color: var(--glass-border-light);
+}
+
+[data-theme="dark"] .kpi-value {
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .status-select-dropdown {
+  background-color: rgba(30, 20, 15, 0.85);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.15);
+}

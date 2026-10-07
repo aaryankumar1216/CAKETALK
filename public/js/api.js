@@ -210,3 +210,54 @@ const API = {
     return this.request('/customers');
   }
 };
+window.API = API;
+
+// -----------------------------------------------------------------------------
+// 10. Theme Manager (Dark & Light Mode Switcher)
+// -----------------------------------------------------------------------------
+const ThemeManager = {
+  THEME_KEY: 'caketalk_theme',
+
+  init() {
+    const saved = localStorage.getItem(this.THEME_KEY);
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || (prefersDark ? 'dark' : 'light');
+    this.setTheme(theme, false);
+  },
+
+  getTheme() {
+    return document.documentElement.getAttribute('data-theme') || 'light';
+  },
+
+  setTheme(theme, notify = true) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(this.THEME_KEY, theme);
+    this.updateToggleIcons(theme);
+    if (notify && window.UI && typeof window.UI.showToast === 'function') {
+      window.UI.showToast(`Switched to ${theme === 'dark' ? 'Dark Mode 🌙' : 'Light Mode ☀️'}`, 'info');
+    }
+  },
+
+  toggleTheme() {
+    const next = this.getTheme() === 'dark' ? 'light' : 'dark';
+    this.setTheme(next, true);
+  },
+
+  updateToggleIcons(theme) {
+    document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+      btn.setAttribute('title', theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+    });
+    document.querySelectorAll('.theme-toggle-icon').forEach(icon => {
+      icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    });
+  }
+};
+window.ThemeManager = ThemeManager;
+
+// Auto-initialize theme on DOM load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => ThemeManager.init());
+} else {
+  ThemeManager.init();
+}

@@ -9,6 +9,16 @@
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥐</text></svg>">
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('caketalk_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="admin-body">
 
@@ -117,6 +127,9 @@
       </div>
 
       <div class="admin-header-actions">
+        <button id="adminThemeToggleBtn" class="action-icon-btn theme-toggle-btn" onclick="ThemeManager.toggleTheme()" title="Switch Light / Dark Theme" aria-label="Toggle Dark Mode" style="width: 36px; height: 36px;">
+          <span class="theme-toggle-icon">🌙</span>
+        </button>
         <a href="/" target="_blank" class="btn btn-secondary btn-sm" style="display: flex; align-items: center; gap: 4px;">
           <span>🌐</span> View Customer Store
         </a>

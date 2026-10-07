@@ -479,6 +479,18 @@ const Checkout = {
 
       const res = await API.createOrder(orderData);
       if (res.success) {
+        // Save to Customer Orders History
+        if (window.CustomerOrders) {
+          CustomerOrders.saveOrder({
+            order_number: res.order_number,
+            scheduled_date: formData.date,
+            scheduled_time: formData.timeSlot,
+            total_amount: res.total_amount,
+            items: Cart.items,
+            status: 'Pending'
+          });
+        }
+
         // Clear Cart
         Cart.items = [];
         Cart.coupon = null;
@@ -519,6 +531,16 @@ const OrderTracker = {
     try {
       const res = await API.getOrderByNumber(orderNumber.trim().toUpperCase());
       if (res.success && res.order) {
+        if (window.CustomerOrders) {
+          CustomerOrders.saveOrder({
+            order_number: res.order.order_number,
+            scheduled_date: res.order.scheduled_date,
+            scheduled_time: res.order.scheduled_time,
+            total_amount: res.order.total_amount,
+            items: res.order.items,
+            status: res.order.status
+          });
+        }
         this.renderTrackingModal(res.order);
         UI.openModal('orderTrackingModal');
       }
@@ -561,6 +583,104 @@ const OrderTracker = {
   }
 };
 window.OrderTracker = OrderTracker;
+
+// -----------------------------------------------------------------------------
+// 4b. Customer Orders Management & Live Tracking History
+// -----------------------------------------------------------------------------
+const CustomerOrders = {
+  ORDERS_KEY: 'caketalk_customer_orders',
+
+  getOrders() {
+    try {
+      const data = localStorage.getItem(this.ORDERS_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      return [];
+    }
+  },
+
+  saveOrder(order) {
+    const orders = this.getOrders();
+    const existingIdx = orders.findIndex(o => o.order_number === order.order_number);
+    const entry = {
+      order_number: order.order_number,
+      date: order.scheduled_date || order.date || new Date().toISOString().split('T')[0],
+      time: order.scheduled_time || order.time || 'Standard Delivery',
+      total_amount: order.total_amount,
+      items_summary: order.items_summary || (order.items && order.items.map(it => `${it.quantity}x ${it.title}`).join(', ')) || 'Artisan Bakery Order',
+      status: order.status || 'Pending',
+      updated_at: new Date().toISOString()
+    };
+    if (existingIdx > -1) {
+      orders[existingIdx] = { ...orders[existingIdx], ...entry };
+    } else {
+      orders.unshift(entry);
+    }
+    localStorage.setItem(this.ORDERS_KEY, JSON.stringify(orders.slice(0, 15)));
+    this.renderOrdersList();
+  },
+
+  openOrdersModal() {
+    this.renderOrdersList();
+    UI.openModal('customerOrdersModal');
+  },
+
+  renderOrdersList() {
+    const listEl = document.getElementById('customerOrdersList');
+    if (!listEl) return;
+
+    const orders = this.getOrders();
+    if (orders.length === 0) {
+      listEl.innerHTML = `
+        <div style="text-align: center; padding: 1.5rem; background: var(--glass-bg-subtle); border-radius: var(--radius-md); border: 1px dashed var(--glass-border-light); margin-bottom: 0.5rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥐</div>
+          <p style="font-size: 0.92rem; font-weight: 700; color: var(--color-espresso); margin-bottom: 0.25rem;">No recent orders on this device</p>
+          <p style="font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: 1rem;">When you order artisan bakes or custom cakes, they will be saved here for real-time tracking.</p>
+          <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="OrderTracker.track('CT-89241'); UI.closeModal('customerOrdersModal');">
+              🔍 Track Demo Order #CT-89241
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="OrderTracker.track('CT-89242'); UI.closeModal('customerOrdersModal');">
+              🔍 Track Demo Order #CT-89242
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      listEl.innerHTML = orders.map(ord => {
+        const statusClass = (ord.status || 'pending').toLowerCase().replace(/\s+/g, '-');
+        const formattedTotal = typeof ord.total_amount === 'number' ? `$${ord.total_amount.toFixed(2)}` : ord.total_amount;
+        return `
+        <div class="customer-order-card" style="background: var(--glass-bg-elevated); border: 1px solid var(--glass-border-light); border-radius: var(--radius-md); padding: 1.1rem; margin-bottom: 0.85rem; box-shadow: var(--shadow-xs);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+            <span style="font-family: monospace; font-weight: 800; font-size: 1.05rem; color: var(--color-espresso);">
+              ${ord.order_number}
+            </span>
+            <span class="status-pill ${statusClass}">
+              ${ord.status || 'Pending'}
+            </span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: 0.35rem;">
+            📅 ${ord.date} ${ord.time ? `• ⏰ ${ord.time}` : ''}
+          </div>
+          <div style="font-size: 0.86rem; color: var(--color-espresso); margin-bottom: 0.65rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            📦 ${ord.items_summary}
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--glass-border-subtle); padding-top: 0.65rem;">
+            <span style="font-weight: 800; color: var(--color-espresso); font-size: 0.95rem;">
+              Total: ${formattedTotal}
+            </span>
+            <button type="button" class="btn btn-primary btn-sm" style="padding: 0.35rem 0.9rem; font-size: 0.8rem;" onclick="OrderTracker.track('${ord.order_number}'); UI.closeModal('customerOrdersModal');">
+              Track Live ➔
+            </button>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+  }
+};
+window.CustomerOrders = CustomerOrders;
 
 // -----------------------------------------------------------------------------
 // 5. Main App Startup & Catalog Filters

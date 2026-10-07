@@ -268,3 +268,41 @@
     height: 240px;
   }
 }
+
+/* Dark Mode Overrides for Custom Cake Studio */
+[data-theme="dark"] .cake-stage-container {
+  background: radial-gradient(circle at 50% 50%, rgba(42, 28, 20, 0.85) 0%, rgba(20, 13, 9, 0.95) 100%);
+}
+
+[data-theme="dark"] .cake-builder-controls {
+  background: rgba(26, 17, 12, 0.8);
+}
+
+[data-theme="dark"] .builder-opt-card {
+  background: rgba(36, 23, 17, 0.7);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .builder-opt-card:hover {
+  background: rgba(55, 35, 26, 0.85);
+  border-color: var(--color-terracotta);
+}
+
+[data-theme="dark"] .builder-opt-card.active {
+  background: rgba(226, 123, 76, 0.25);
+  border-color: var(--color-terracotta);
+}
+
+[data-theme="dark"] .builder-calc-price {
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .inscription-input-box input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .inscription-input-box input:focus {
+  background: rgba(255, 255, 255, 0.14);
+}

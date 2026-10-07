@@ -11,6 +11,16 @@
   <link rel="stylesheet" href="/css/custom-builder.css">
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('caketalk_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -40,6 +50,7 @@
         <a href="#gifting" class="nav-link">Gifting</a>
         <a href="#locations" class="nav-link">Locations</a>
         <a href="#inquiry" class="nav-link">Inquiries</a>
+        <a href="#orders" class="nav-link" onclick="event.preventDefault(); CustomerOrders.openOrdersModal();">My Orders</a>
         <span class="nav-indicator-bar" id="navIndicatorBar"></span>
       </nav>
 
@@ -54,9 +65,14 @@
           </button>
         </div>
 
-        <!-- Quick Order Lookup -->
-        <button class="action-icon-btn" onclick="UI.openModal('trackOrderSearchModal')" title="Track Your Order" aria-label="Track Your Order">
-          🔍
+        <!-- Customer View Orders Button -->
+        <button class="action-icon-btn btn-view-orders" onclick="CustomerOrders.openOrdersModal()" title="View Your Orders & Live Tracking" aria-label="View Orders">
+          <span>📦</span> <span class="orders-btn-label">Orders</span>
+        </button>
+
+        <!-- Dark / Light Theme Toggle Button -->
+        <button id="themeToggleBtn" class="action-icon-btn theme-toggle-btn" onclick="ThemeManager.toggleTheme()" title="Switch Light / Dark Theme" aria-label="Toggle Dark Mode">
+          <span id="themeToggleIcon" class="theme-toggle-icon">🌙</span>
         </button>
 
         <!-- Cart Bag Button -->
@@ -554,6 +570,7 @@
           <ul class="footer-nav-list">
             <li><a href="#locations">Store Locations & Hours</a></li>
             <li><a href="#locations">Local Delivery Checker</a></li>
+            <li><a href="#orders" onclick="event.preventDefault(); CustomerOrders.openOrdersModal();">Track & View Orders</a></li>
             <li><a href="#reviews">Customer Testimonials</a></li>
             <li><a href="#gifting">Crumb Club Loyalty</a></li>
             <li><a href="/admin">Owner Management Portal</a></li>
@@ -1348,7 +1365,43 @@
     </div>
   </div>
 
-  <!-- 6. Order Tracking Search Modal -->
+  <!-- 6. View My Orders & Live Tracking Modal -->
+  <div id="customerOrdersModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 540px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">My Orders & Tracking</h3>
+          <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 2px;">Review bakery receipts or track live oven status</p>
+        </div>
+        <button class="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Quick Lookup Bar -->
+        <form id="orderLookupForm" style="margin-bottom: 1.5rem;" onsubmit="event.preventDefault(); const val=document.getElementById('orderLookupInput').value; if(val){ OrderTracker.track(val); UI.closeModal('customerOrdersModal'); }">
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--color-espresso); display: block; margin-bottom: 0.4rem;">
+            Order ID Lookup
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="orderLookupInput" class="form-control" placeholder="e.g. CT-89241" style="font-family: monospace; font-size: 0.95rem; text-transform: uppercase;" required>
+            <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.15rem; white-space: nowrap;">
+              Track Order
+            </button>
+          </div>
+        </form>
+
+        <!-- Orders List on this Device -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h5 style="font-size: 0.95rem; color: var(--color-espresso); margin: 0;">Recent Orders on this Device</h5>
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Auto-saved locally</span>
+        </div>
+        <div id="customerOrdersList">
+          <!-- Populated dynamically by CustomerOrders.renderOrdersList() -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6b. Order Tracking Search Modal -->
   <div id="trackOrderSearchModal" class="modal-backdrop">
     <div class="modal-box" style="max-width: 440px;">
       <div class="modal-header">
