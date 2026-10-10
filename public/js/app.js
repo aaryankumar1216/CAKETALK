@@ -306,14 +306,26 @@ const Cart = {
       el.style.display = count > 0 ? 'flex' : 'none';
     });
 
-    // Mobile sticky bar total
+    // Mobile sticky bar total and state toggle
     const stickyTotalEl = document.getElementById('stickyCartTotal');
     if (stickyTotalEl) {
       stickyTotalEl.textContent = `$${total.toFixed(2)}`;
     }
     const stickyCountEl = document.getElementById('stickyCartCount');
     if (stickyCountEl) {
-      stickyCountEl.textContent = `Bag (${count})`;
+      stickyCountEl.textContent = `${count} ${count === 1 ? 'item' : 'items'} in bag`;
+    }
+
+    const stickyActiveView = document.getElementById('stickyCartActiveView');
+    const stickyNavTabs = document.getElementById('stickyNavTabs');
+    if (stickyActiveView && stickyNavTabs) {
+      if (count > 0) {
+        stickyActiveView.style.display = 'flex';
+        stickyNavTabs.style.display = 'none';
+      } else {
+        stickyActiveView.style.display = 'none';
+        stickyNavTabs.style.display = 'flex';
+      }
     }
 
     // Synchronize stepper controls on storefront product cards

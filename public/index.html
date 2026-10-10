@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
   <title>CakeTalk — Artisanal Bakes & Custom Celebration Cakes</title>
   <meta name="description" content="Handcrafted artisan sourdough, flaky French viennoiserie, and bespoke custom celebration cakes baked fresh daily with European butter and wild levain.">
+  <meta name="theme-color" content="#FAF6F0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1A110C" media="(prefers-color-scheme: dark)">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="CakeTalk">
+  <meta name="format-detection" content="telephone=no">
   
   <link rel="stylesheet" href="/css/variables.css">
   <link rel="stylesheet" href="/css/main.css">
@@ -58,10 +64,10 @@
         <!-- Unified Role Mode Switcher (Customer vs Admin) -->
         <div class="view-mode-toggle" role="group" aria-label="Website View Mode">
           <button id="btnModeCustomer" class="view-mode-btn active" onclick="switchWebsiteMode('customer')" title="View bakery as customer">
-            <span>🥐</span> Customer View
+            <span>🥐</span> <span class="mode-btn-text">Customer View</span>
           </button>
           <button id="btnModeAdmin" class="view-mode-btn" onclick="switchWebsiteMode('admin')" title="Access Owner / Admin Suite">
-            <span>⚙️</span> Owner & Admin Suite
+            <span>⚙️</span> <span class="mode-btn-text">Owner Suite</span>
           </button>
         </div>
 
@@ -80,9 +86,84 @@
           👜
           <span class="cart-counter-badge" style="display: none;">0</span>
         </button>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <button class="action-icon-btn mobile-menu-toggle" id="mobileMenuToggleBtn" aria-label="Open Navigation Menu" title="Menu" onclick="openMobileDrawer()">
+          <span>☰</span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobileNavDrawer" class="mobile-nav-drawer-backdrop" aria-hidden="true" onclick="if(event.target===this) closeMobileDrawer()">
+    <div class="mobile-nav-drawer-sheet">
+      <div class="mobile-drawer-header">
+        <div class="mobile-drawer-brand">
+          <span class="brand-logo-icon" style="width: 34px; height: 34px; font-size: 1.15rem;">🎂</span>
+          <span class="brand-title" style="font-size: 1.45rem;">CakeTalk</span>
+        </div>
+        <button class="mobile-drawer-close-btn" id="mobileDrawerCloseBtn" onclick="closeMobileDrawer()" aria-label="Close Navigation Menu">✕</button>
+      </div>
+
+      <div class="mobile-drawer-role-switcher">
+        <div class="view-mode-toggle mobile-view-mode-toggle" role="group" aria-label="Mobile View Mode">
+          <button class="view-mode-btn active" id="drawerBtnModeCustomer" onclick="switchWebsiteMode('customer'); closeMobileDrawer();">
+            <span>🥐</span> Customer View
+          </button>
+          <button class="view-mode-btn" id="drawerBtnModeAdmin" onclick="switchWebsiteMode('admin'); closeMobileDrawer();">
+            <span>⚙️</span> Owner Suite
+          </button>
+        </div>
+      </div>
+
+      <nav class="mobile-drawer-nav">
+        <a href="#catalog" class="mobile-drawer-link" onclick="closeMobileDrawer();">
+          <span class="drawer-icon">🥐</span>
+          <span class="drawer-link-text">Daily Bakes & Pastries</span>
+        </a>
+        <a href="#cake-studio" class="mobile-drawer-link" onclick="closeMobileDrawer();">
+          <span class="drawer-icon">🎂</span>
+          <span class="drawer-link-text">Custom Cake Studio</span>
+        </a>
+        <a href="#reviews" class="mobile-drawer-link" onclick="closeMobileDrawer();">
+          <span class="drawer-icon">⭐</span>
+          <span class="drawer-link-text">Customer Reviews</span>
+        </a>
+        <a href="#gifting" class="mobile-drawer-link" onclick="closeMobileDrawer();">
+          <span class="drawer-icon">🎁</span>
+          <span class="drawer-link-text">Gifting & Perks</span>
+        </a>
+        <a href="#locations" class="mobile-drawer-link" onclick="closeMobileDrawer();">
+          <span class="drawer-icon">📍</span>
+          <span class="drawer-link-text">Bakery Locations</span>
+        </a>
+        <a href="#inquiry" class="mobile-drawer-link" onclick="closeMobileDrawer();">
+          <span class="drawer-icon">💌</span>
+          <span class="drawer-link-text">Inquiries & Catering</span>
+        </a>
+        <a href="#orders" class="mobile-drawer-link" onclick="closeMobileDrawer(); CustomerOrders.openOrdersModal();">
+          <span class="drawer-icon">📦</span>
+          <span class="drawer-link-text">Track My Orders</span>
+        </a>
+      </nav>
+
+      <div class="mobile-drawer-footer">
+        <div class="mobile-drawer-actions">
+          <button class="btn btn-secondary btn-sm" onclick="ThemeManager.toggleTheme()" style="flex: 1; justify-content: center; gap: 0.4rem;">
+            <span class="drawer-theme-icon">🌙</span> <span class="drawer-theme-text">Toggle Theme</span>
+          </button>
+          <button class="btn btn-primary btn-sm open-cart-btn" onclick="closeMobileDrawer();" style="flex: 1; justify-content: center; gap: 0.4rem;">
+            <span>👜</span> View Bag
+          </button>
+        </div>
+        <div class="mobile-drawer-info">
+          <p>🥐 Morning bakes fresh daily at 7:00 AM</p>
+          <p>📍 142 Artisan Boulevard, NY • Same-Day Local Delivery</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- =======================================================================
        CUSTOMER STOREFRONT CONTAINER (VIEW 1)
@@ -600,16 +681,43 @@
     </div>
   </footer>
 
-  <!-- Mobile Sticky Order Bar (Matching the iPhone mockup in reference image) -->
-  <div class="mobile-sticky-order-bar">
-    <div style="display: flex; align-items: center; gap: 0.5rem;">
-      <span style="font-size: 1.3rem;">👜</span>
-      <div>
-        <div id="stickyCartTotal" style="font-weight: 800; font-size: 1rem; color: var(--color-espresso);">$0.00</div>
-        <div id="stickyCartCount" style="font-size: 0.72rem; color: var(--color-text-muted);">Bag (0 items)</div>
+  <!-- Mobile Sticky Bottom Bar (App-like Bottom Tabs & Active Cart Bar) -->
+  <div class="mobile-sticky-order-bar" id="mobileStickyBar">
+    <!-- Active Cart Bar: shown dynamically when bag has items -->
+    <div class="sticky-cart-active-view" id="stickyCartActiveView" style="display: none;" onclick="Cart.openDrawer()">
+      <div class="sticky-cart-info">
+        <span class="sticky-cart-bag-icon">👜</span>
+        <div>
+          <div id="stickyCartTotal" class="sticky-cart-total-val">$0.00</div>
+          <div id="stickyCartCount" class="sticky-cart-count-lbl">0 items in bag</div>
+        </div>
       </div>
+      <button class="btn btn-primary btn-sm sticky-checkout-btn">View Bag & Checkout →</button>
     </div>
-    <button class="btn btn-primary btn-sm open-cart-btn">Order Sticky 🛒</button>
+
+    <!-- Quick Navigation Tabs: shown when bag is empty -->
+    <div class="sticky-nav-tabs" id="stickyNavTabs">
+      <a href="#catalog" class="sticky-tab-item active">
+        <span class="sticky-tab-icon">🥐</span>
+        <span class="sticky-tab-label">Bakes</span>
+      </a>
+      <a href="#cake-studio" class="sticky-tab-item">
+        <span class="sticky-tab-icon">🎂</span>
+        <span class="sticky-tab-label">Studio</span>
+      </a>
+      <button class="sticky-tab-item" onclick="CustomerOrders.openOrdersModal()">
+        <span class="sticky-tab-icon">📦</span>
+        <span class="sticky-tab-label">Orders</span>
+      </button>
+      <button class="sticky-tab-item open-cart-btn">
+        <span class="sticky-tab-icon">👜</span>
+        <span class="sticky-tab-label">Bag</span>
+      </button>
+      <button class="sticky-tab-item" onclick="switchWebsiteMode('admin')">
+        <span class="sticky-tab-icon">⚙️</span>
+        <span class="sticky-tab-label">Admin</span>
+      </button>
+    </div>
   </div>
 
   </div> <!-- End #customerViewContainer -->
@@ -1609,6 +1717,8 @@
       const adminContainer = document.getElementById('adminViewContainer');
       const btnCustomer = document.getElementById('btnModeCustomer');
       const btnAdmin = document.getElementById('btnModeAdmin');
+      const drawerBtnCustomer = document.getElementById('drawerBtnModeCustomer');
+      const drawerBtnAdmin = document.getElementById('drawerBtnModeAdmin');
 
       if (!customerContainer || !adminContainer) return;
 
@@ -1617,6 +1727,8 @@
         adminContainer.classList.remove('hidden');
         if (btnCustomer) btnCustomer.classList.remove('active');
         if (btnAdmin) btnAdmin.classList.add('active');
+        if (drawerBtnCustomer) drawerBtnCustomer.classList.remove('active');
+        if (drawerBtnAdmin) drawerBtnAdmin.classList.add('active');
         window.location.hash = '#admin';
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -1640,6 +1752,8 @@
         customerContainer.classList.remove('hidden');
         if (btnAdmin) btnAdmin.classList.remove('active');
         if (btnCustomer) btnCustomer.classList.add('active');
+        if (drawerBtnAdmin) drawerBtnAdmin.classList.remove('active');
+        if (drawerBtnCustomer) drawerBtnCustomer.classList.add('active');
         if (window.location.hash === '#admin') {
           history.pushState(null, null, ' ');
         }
@@ -1650,6 +1764,32 @@
       }
     }
     window.switchWebsiteMode = switchWebsiteMode;
+
+    // Mobile Navigation Drawer Controller
+    function openMobileDrawer() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      if (drawer) {
+        drawer.classList.add('active');
+        drawer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeMobileDrawer() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      if (drawer) {
+        drawer.classList.remove('active');
+        drawer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    }
+    window.openMobileDrawer = openMobileDrawer;
+    window.closeMobileDrawer = closeMobileDrawer;
+
+    // Close mobile drawer on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMobileDrawer();
+    });
 
     // Listen for hash changes
     window.addEventListener('DOMContentLoaded', () => {
