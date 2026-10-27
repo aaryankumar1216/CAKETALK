@@ -3464,3 +3464,299 @@ h1, h2, h3, h4, h5 {
   color: var(--color-honey);
 }
 
+/* ==========================================================================
+   CAKETALK ENTRY LOGIN PAGE STYLES (START VIEW)
+   ========================================================================== */
+.login-page-wrapper {
+  min-height: calc(100vh - var(--header-height));
+  padding: 3rem 1.25rem 5rem;
+  background: radial-gradient(circle at 80% 20%, rgba(199, 91, 63, 0.08), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(217, 155, 38, 0.06), transparent 50%),
+              var(--color-creamy-bg);
+  display: flex;
+  align-items: center;
+}
+
+[data-theme="dark"] .login-page-wrapper {
+  background: radial-gradient(circle at 80% 20%, rgba(199, 91, 63, 0.12), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(217, 155, 38, 0.08), transparent 50%),
+              #14100D;
+}
+
+.login-page-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.login-page-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .login-page-grid {
+    grid-template-columns: 1fr;
+    max-width: 580px;
+    margin: 0 auto;
+    gap: 2rem;
+  }
+}
+
+.login-brand-card {
+  background: var(--color-surface);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-xl);
+  padding: 2.25rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  background: rgba(199, 91, 63, 0.1);
+  color: var(--color-terracotta);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+.login-brand-headline {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  color: var(--color-espresso);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.login-brand-subheadline {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.login-highlights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--glass-border-light);
+  border-bottom: 1px solid var(--glass-border-light);
+}
+
+.login-highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.highlight-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.highlight-text strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--color-espresso);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.highlight-text span {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  display: block;
+}
+
+.login-demo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.demo-section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-espresso);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.demo-cards-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.demo-pill-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border-light);
+  background: var(--glass-bg-subtle);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.demo-pill-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.demo-pill-btn.customer-pill:hover {
+  border-color: var(--color-terracotta);
+  background: rgba(199, 91, 63, 0.05);
+}
+
+.demo-pill-btn.owner-pill:hover {
+  border-color: #226B41;
+  background: rgba(34, 107, 65, 0.05);
+}
+
+.demo-pill-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.demo-pill-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-pill-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-espresso);
+}
+
+.demo-pill-cred {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+
+.demo-pill-action {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-terracotta);
+  color: #fff;
+  white-space: nowrap;
+}
+
+.demo-pill-btn.owner-pill .demo-pill-action {
+  background: #226B41;
+}
+
+.login-auth-card {
+  background: var(--color-surface);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-xl);
+  padding: 2.25rem;
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 600px) {
+  .login-brand-card,
+  .login-auth-card {
+    padding: 1.5rem 1.15rem;
+  }
+}
+
+.active-session-banner {
+  background: rgba(56, 161, 105, 0.08);
+  border: 1px solid rgba(56, 161, 105, 0.25);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.session-banner-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.session-avatar {
+  font-size: 1.5rem;
+}
+
+.session-meta {
+  flex: 1;
+}
+
+.session-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--color-espresso);
+}
+
+.session-sub {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.session-banner-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.login-guest-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.login-guest-divider::before,
+.login-guest-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--glass-border-light);
+}
+
+.login-guest-divider span {
+  padding: 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.btn-guest-browse {
+  width: 100%;
+  justify-content: center;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+}
+
+

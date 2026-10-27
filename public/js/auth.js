@@ -10,7 +10,33 @@ const AuthApp = {
   init() {
     this.currentUser = API.getCurrentUser();
     this.updateUI();
+    this.updateSessionBanner();
     this.attachEvents();
+  },
+
+  updateSessionBanner() {
+    const banner = document.getElementById('loginActiveSessionBanner');
+    const nameEl = document.getElementById('sessionUserName');
+    const roleEl = document.getElementById('sessionUserRole');
+    const resumeBtn = document.getElementById('btnResumeSession');
+
+    if (!banner) return;
+
+    if (this.currentUser && this.currentUser.name) {
+      const isOwner = this.currentUser.role === 'admin' || this.currentUser.role === 'owner';
+      banner.style.display = 'flex';
+      if (nameEl) nameEl.textContent = this.currentUser.name;
+      if (roleEl) {
+        roleEl.textContent = isOwner 
+          ? '👑 Bakery Owner Suite (Active Staff Session)' 
+          : `🛍️ Customer Account • ${this.currentUser.loyalty_points || 50} Crumb Points`;
+      }
+      if (resumeBtn) {
+        resumeBtn.textContent = isOwner ? 'Enter Owner Suite 👑' : 'Resume Storefront 🛍️';
+      }
+    } else {
+      banner.style.display = 'none';
+    }
   },
 
   updateUI() {
@@ -114,7 +140,9 @@ const AuthApp = {
   openModal(tab = 'customer-login') {
     this.clearError();
     this.switchTab(tab);
-    if (window.UI) {
+    if (window.switchWebsiteMode) {
+      switchWebsiteMode('login', tab);
+    } else if (window.UI) {
       UI.openModal('authModal');
     }
   },
@@ -201,9 +229,13 @@ const AuthApp = {
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();
+        this.updateSessionBanner();
         if (window.UI) {
           UI.closeModal('authModal');
           UI.showToast(`Welcome back, ${res.user.name}!`, 'success');
+        }
+        if (window.switchWebsiteMode) {
+          switchWebsiteMode('customer');
         }
       }
     } catch (err) {
@@ -223,6 +255,7 @@ const AuthApp = {
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();
+        this.updateSessionBanner();
         if (window.UI) {
           UI.closeModal('authModal');
           UI.showToast(`Owner verified. Welcome to Management Suite, ${res.user.name}!`, 'success');
@@ -271,9 +304,13 @@ const AuthApp = {
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();
+        this.updateSessionBanner();
         if (window.UI) {
           UI.closeModal('authModal');
           UI.showToast(`Welcome to CakeTalk Crumb Club, ${res.user.name}! 50 Welcome Points added.`, 'success');
+        }
+        if (window.switchWebsiteMode) {
+          switchWebsiteMode('customer');
         }
       }
     } catch (err) {
@@ -311,6 +348,7 @@ const AuthApp = {
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();
+        this.updateSessionBanner();
         if (window.UI) {
           UI.closeModal('authModal');
           UI.showToast(`Owner account activated for ${res.user.name}!`, 'success');
@@ -328,14 +366,37 @@ const AuthApp = {
     API.logout();
     this.currentUser = null;
     this.updateUI();
+    this.updateSessionBanner();
 
     if (window.UI) {
       UI.showToast('You have been signed out successfully.', 'info');
     }
 
-    // If currently on owner suite, return to customer storefront
+    // Return to the login entry page
     if (window.switchWebsiteMode) {
-      switchWebsiteMode('customer');
+      switchWebsiteMode('login');
+    }
+  },
+
+  resumeSession() {
+    if (this.currentUser) {
+      const isOwner = this.currentUser.role === 'admin' || this.currentUser.role === 'owner';
+      if (window.switchWebsiteMode) {
+        switchWebsiteMode(isOwner ? 'admin' : 'customer');
+      }
+    }
+  },
+
+  handleLogoClick() {
+    if (this.currentUser) {
+      const isOwner = this.currentUser.role === 'admin' || this.currentUser.role === 'owner';
+      if (window.switchWebsiteMode) {
+        switchWebsiteMode(isOwner ? 'admin' : 'customer');
+      }
+    } else {
+      if (window.switchWebsiteMode) {
+        switchWebsiteMode('login');
+      }
     }
   },
 
@@ -349,14 +410,22 @@ const AuthApp = {
       if (window.UI) {
         UI.showToast('Owner / Staff credentials required to enter Owner Suite.', 'info');
       }
-      this.openModal('owner-login');
+      if (window.switchWebsiteMode) {
+        switchWebsiteMode('login', 'owner-login');
+      } else {
+        this.openModal('owner-login');
+      }
     }
   },
 
   handleAccountClick() {
     const user = this.currentUser;
     if (!user) {
-      this.openModal('customer-login');
+      if (window.switchWebsiteMode) {
+        switchWebsiteMode('login', 'customer-login');
+      } else {
+        this.openModal('customer-login');
+      }
     } else if (user.role === 'admin' || user.role === 'owner') {
       this.openOwnerSuite();
     } else {
