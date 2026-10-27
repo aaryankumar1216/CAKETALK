@@ -2902,6 +2902,380 @@ h1, h2, h3, h4, h5 {
   border-color: var(--color-terracotta);
 }
 
+/* ==========================================================================
+   Header Auth & User Profile Widget
+   ========================================================================== */
+
+.auth-header-container {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.btn-auth-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1.05rem;
+  background: var(--glass-bg-subtle);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-full);
+  color: var(--color-espresso);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--glass-shadow-sm);
+}
+
+.btn-auth-pill:hover {
+  background: var(--color-terracotta);
+  color: #fff;
+  border-color: var(--color-terracotta);
+  transform: translateY(-1px);
+}
+
+.user-profile-widget {
+  position: relative;
+}
+
+.user-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.45rem;
+  background: var(--glass-bg-subtle);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-full);
+  color: var(--color-espresso);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.user-menu-btn:hover {
+  background: var(--glass-bg-elevated);
+  border-color: var(--color-terracotta);
+}
+
+.user-avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-terracotta), var(--color-honey));
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.user-name-label {
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role-pill {
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: rgba(199, 91, 63, 0.12);
+  color: var(--color-terracotta);
+}
+
+.user-role-pill.owner {
+  background: rgba(34, 107, 65, 0.14);
+  color: #226B41;
+}
+
+.user-menu-caret {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: var(--glass-bg-elevated);
+  backdrop-filter: var(--glass-blur-md);
+  -webkit-backdrop-filter: var(--glass-blur-md);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg), var(--glass-shadow-sm);
+  z-index: 1000;
+  padding: 0.5rem;
+  animation: fadeInDown 0.18s ease-out;
+}
+
+.user-dropdown-info {
+  padding: 0.65rem 0.75rem 0.75rem;
+  border-bottom: 1px solid var(--glass-border-subtle);
+  margin-bottom: 0.4rem;
+}
+
+.user-dropdown-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--color-espresso);
+}
+
+.user-dropdown-email {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+
+.user-dropdown-points {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-honey);
+  margin-top: 3px;
+}
+
+.user-dropdown-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  color: var(--color-espresso);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+.user-dropdown-link:hover {
+  background: rgba(199, 91, 63, 0.08);
+  color: var(--color-terracotta);
+}
+
+.user-dropdown-link.owner-link {
+  color: #226B41;
+  font-weight: 700;
+}
+
+.user-dropdown-link.owner-link:hover {
+  background: rgba(34, 107, 65, 0.1);
+}
+
+.user-dropdown-link.logout-link {
+  color: var(--color-danger);
+  border-top: 1px solid var(--glass-border-subtle);
+  margin-top: 4px;
+  padding-top: 0.55rem;
+}
+
+.user-dropdown-link.logout-link:hover {
+  background: rgba(229, 62, 62, 0.08);
+}
+
+/* ==========================================================================
+   Auth Portal Tabs & Forms (Customer & Owner Login / Registration)
+   ========================================================================== */
+
+.auth-modal-portal {
+  max-width: 520px !important;
+  width: 100%;
+}
+
+.auth-tabs-nav {
+  display: flex;
+  background: var(--glass-bg-subtle);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 1.25rem;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.auth-tab-btn.active {
+  background: var(--color-espresso);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(32, 19, 12, 0.2);
+}
+
+.auth-tab-btn.owner-tab.active {
+  background: linear-gradient(135deg, #226B41, #134B2A);
+  color: #fff;
+}
+
+.auth-pane {
+  display: none;
+}
+
+.auth-pane.active {
+  display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.auth-pane-header {
+  margin-bottom: 1.15rem;
+  text-align: center;
+}
+
+.auth-pane-header h4 {
+  font-size: 1.25rem;
+  color: var(--color-espresso);
+  margin-bottom: 0.25rem;
+}
+
+.auth-pane-header p {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.demo-creds-box {
+  background: var(--glass-bg-subtle);
+  border: 1px dashed var(--color-terracotta);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.demo-creds-box.owner-box {
+  border-color: #38A169;
+  background: rgba(56, 161, 105, 0.05);
+}
+
+.demo-creds-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-espresso);
+}
+
+.demo-creds-text {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.demo-creds-text code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-weight: 700;
+  color: var(--color-espresso);
+}
+
+.btn-demo-autofill {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-terracotta);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 2px;
+  transition: all var(--transition-fast);
+}
+
+.btn-demo-autofill:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.demo-creds-box.owner-box .btn-demo-autofill {
+  background: #226B41;
+}
+
+.auth-error-banner {
+  display: none;
+  background: rgba(229, 62, 62, 0.1);
+  border: 1px solid rgba(229, 62, 62, 0.3);
+  color: #C53030;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  margin-bottom: 1rem;
+}
+
+.auth-form-footer {
+  margin-top: 1.15rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.auth-form-footer a {
+  color: var(--color-terracotta);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+[data-theme="dark"] .user-menu-btn,
+[data-theme="dark"] .btn-auth-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #FAF6F0;
+}
+
+[data-theme="dark"] .user-menu-dropdown {
+  background: rgba(26, 17, 12, 0.94);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .user-dropdown-name {
+  color: #FAF6F0;
+}
+
+[data-theme="dark"] .user-dropdown-link {
+  color: #FAF6F0;
+}
+
+[data-theme="dark"] .demo-creds-text code {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FAF6F0;
+}
+
 [data-theme="dark"] .view-mode-toggle {
   background-color: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.15);

@@ -136,5 +136,61 @@ class TestCakeTalk(unittest.TestCase):
         self.assertGreater(len(res["inventory"]), 0)
         print("✓ GET /api/inventory passed. Items:", len(res["inventory"]))
 
+    def test_customer_login(self):
+        login_req = MockRequest("POST", "/api/auth/login", body={
+            "identifier": "customer@caketalk.com",
+            "password": "customer123",
+            "role": "customer"
+        })
+        login_req.do_POST()
+        res = login_req.get_response_json()
+        self.assertTrue(res.get("success"))
+        self.assertEqual(res["user"]["role"], "customer")
+        self.assertEqual(res["user"]["email"], "customer@caketalk.com")
+        print("✓ POST /api/auth/login (Customer) passed.")
+
+    def test_owner_login(self):
+        login_req = MockRequest("POST", "/api/auth/login", body={
+            "identifier": "owner@caketalk.com",
+            "password": "owner123",
+            "role": "owner"
+        })
+        login_req.do_POST()
+        res = login_req.get_response_json()
+        self.assertTrue(res.get("success"))
+        self.assertIn(res["user"]["role"], ("admin", "owner"))
+        self.assertEqual(res["user"]["email"], "owner@caketalk.com")
+        print("✓ POST /api/auth/login (Owner) passed.")
+
+    def test_customer_registration(self):
+        import random
+        rand_id = random.randint(10000, 99999)
+        reg_req = MockRequest("POST", "/api/auth/register", body={
+            "name": f"New Patron {rand_id}",
+            "email": f"newpatron{rand_id}@example.com",
+            "phone": f"98765{rand_id}",
+            "password": "mypassword123",
+            "role": "customer"
+        })
+        reg_req.do_POST()
+        res = reg_req.get_response_json()
+        self.assertTrue(res.get("success"))
+        self.assertEqual(res["user"]["role"], "customer")
+        self.assertEqual(res["user"]["loyalty_points"], 50)
+        print("✓ POST /api/auth/register (New Customer) passed.")
+
+    def test_owner_role_restriction(self):
+        # Customer trying to authenticate into owner suite
+        bad_req = MockRequest("POST", "/api/auth/login", body={
+            "identifier": "customer@caketalk.com",
+            "password": "customer123",
+            "role": "owner"
+        })
+        bad_req.do_POST()
+        res = bad_req.get_response_json()
+        self.assertFalse(res.get("success", False))
+        self.assertIn("Access Denied", res.get("error", ""))
+        print("✓ Role restriction passed (Customer denied on Owner portal).")
+
 if __name__ == "__main__":
     unittest.main()

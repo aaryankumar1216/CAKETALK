@@ -56,19 +56,47 @@
         <a href="#gifting" class="nav-link">Gifting</a>
         <a href="#locations" class="nav-link">Locations</a>
         <a href="#inquiry" class="nav-link">Inquiries</a>
-        <a href="#orders" class="nav-link" onclick="event.preventDefault(); CustomerOrders.openOrdersModal();">My Orders</a>
         <span class="nav-indicator-bar" id="navIndicatorBar"></span>
       </nav>
 
       <div class="header-actions">
-        <!-- Unified Role Mode Switcher (Customer vs Admin) -->
-        <div class="view-mode-toggle" role="group" aria-label="Website View Mode">
-          <button id="btnModeCustomer" class="view-mode-btn active" onclick="switchWebsiteMode('customer')" title="View bakery as customer">
-            <span>🥐</span> <span class="mode-btn-text">Customer View</span>
+        <!-- Authenticated Account & Login Portal Trigger -->
+        <div id="authHeaderContainer" class="auth-header-container">
+          <!-- Button shown when logged out -->
+          <button id="btnHeaderLogin" class="btn-auth-pill" onclick="AuthApp.openModal('customer-login')" title="Customer or Owner Login">
+            <span class="auth-icon">👤</span>
+            <span class="auth-label">Login</span>
           </button>
-          <button id="btnModeAdmin" class="view-mode-btn" onclick="switchWebsiteMode('admin')" title="Access Owner / Admin Suite">
-            <span>⚙️</span> <span class="mode-btn-text">Owner Suite</span>
-          </button>
+
+          <!-- Dropdown shown when logged in -->
+          <div id="userProfileWidget" class="user-profile-widget" style="display: none;">
+            <button id="btnUserMenu" class="user-menu-btn" onclick="AuthApp.toggleMenu()" aria-haspopup="true">
+              <span class="user-avatar-circle" id="userAvatarCircle">👤</span>
+              <span class="user-name-label" id="userNameLabel">Account</span>
+              <span class="user-role-pill" id="userRolePill">Customer</span>
+              <span class="user-menu-caret">▾</span>
+            </button>
+            <div id="userMenuDropdown" class="user-menu-dropdown" style="display: none;">
+              <div class="user-dropdown-info">
+                <div class="user-dropdown-name" id="dropdownUserName">Customer Name</div>
+                <div class="user-dropdown-email" id="dropdownUserEmail">customer@caketalk.com</div>
+                <div class="user-dropdown-points" id="dropdownUserPoints">🏅 50 Crumb Points</div>
+              </div>
+              <div class="user-dropdown-actions">
+                <button type="button" class="user-dropdown-link" onclick="CustomerOrders.openOrdersModal(); AuthApp.closeMenu();">
+                  <span>📦</span> Orders & Live Tracking
+                </button>
+                <div id="ownerSuiteLinkWrapper" style="display: none;">
+                  <button type="button" class="user-dropdown-link owner-link" onclick="AuthApp.openOwnerSuite(); AuthApp.closeMenu();">
+                    <span>👑</span> Owner Dashboard
+                  </button>
+                </div>
+                <button type="button" class="user-dropdown-link logout-link" onclick="AuthApp.logout(); AuthApp.closeMenu();">
+                  <span>🚪</span> Sign Out
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Customer View Orders Button -->
@@ -106,14 +134,30 @@
         <button class="mobile-drawer-close-btn" id="mobileDrawerCloseBtn" onclick="closeMobileDrawer()" aria-label="Close Navigation Menu">✕</button>
       </div>
 
-      <div class="mobile-drawer-role-switcher">
-        <div class="view-mode-toggle mobile-view-mode-toggle" role="group" aria-label="Mobile View Mode">
-          <button class="view-mode-btn active" id="drawerBtnModeCustomer" onclick="switchWebsiteMode('customer'); closeMobileDrawer();">
-            <span>🥐</span> Customer View
+      <!-- Mobile Drawer Authenticated Profile & Login -->
+      <div class="mobile-drawer-auth-box" style="padding: 1rem 1.25rem 0.75rem; border-bottom: 1px solid var(--glass-border-subtle);">
+        <!-- Logged out -->
+        <div id="mobileDrawerLoggedOut">
+          <button class="btn btn-primary btn-sm" style="width: 100%; justify-content: center; gap: 0.5rem;" onclick="closeMobileDrawer(); AuthApp.openModal('customer-login');">
+            <span>👤</span> Sign In / Register
           </button>
-          <button class="view-mode-btn" id="drawerBtnModeAdmin" onclick="switchWebsiteMode('admin'); closeMobileDrawer();">
-            <span>⚙️</span> Owner Suite
-          </button>
+        </div>
+        <!-- Logged in -->
+        <div id="mobileDrawerLoggedIn" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <div>
+              <div id="drawerUserName" style="font-weight: 700; color: var(--color-espresso); font-size: 0.95rem;">Customer</div>
+              <div id="drawerUserRole" style="font-size: 0.75rem; color: var(--color-text-muted);">Customer Account</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;" onclick="closeMobileDrawer(); AuthApp.logout();">
+              Sign Out
+            </button>
+          </div>
+          <div id="drawerOwnerLinkWrapper" style="display: none; margin-top: 0.4rem;">
+            <button class="btn btn-dark btn-sm" style="width: 100%; justify-content: center; background: #226B41;" onclick="closeMobileDrawer(); AuthApp.openOwnerSuite();">
+              <span>👑</span> Access Owner Suite
+            </button>
+          </div>
         </div>
       </div>
 
@@ -144,7 +188,7 @@
         </a>
         <a href="#orders" class="mobile-drawer-link" onclick="closeMobileDrawer(); CustomerOrders.openOrdersModal();">
           <span class="drawer-icon">📦</span>
-          <span class="drawer-link-text">Track My Orders</span>
+          <span class="drawer-link-text">Orders</span>
         </a>
       </nav>
 
@@ -712,9 +756,9 @@
         <span class="sticky-tab-icon">👜</span>
         <span class="sticky-tab-label">Bag</span>
       </button>
-      <button class="sticky-tab-item" onclick="switchWebsiteMode('admin')">
-        <span class="sticky-tab-icon">⚙️</span>
-        <span class="sticky-tab-label">Admin</span>
+      <button class="sticky-tab-item" onclick="AuthApp.handleAccountClick()">
+        <span class="sticky-tab-icon">👤</span>
+        <span class="sticky-tab-label" id="stickyTabAccountLabel">Account</span>
       </button>
     </div>
   </div>
@@ -1472,12 +1516,12 @@
     </div>
   </div>
 
-  <!-- 6. View My Orders & Live Tracking Modal -->
+  <!-- 6. View Orders & Live Tracking Modal -->
   <div id="customerOrdersModal" class="modal-backdrop">
     <div class="modal-box" style="max-width: 540px;">
       <div class="modal-header">
         <div>
-          <h3 class="modal-title">My Orders & Tracking</h3>
+          <h3 class="modal-title">Orders & Live Tracking</h3>
           <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 2px;">Review bakery receipts or track live oven status</p>
         </div>
         <button class="modal-close-btn">✕</button>
@@ -1566,35 +1610,203 @@
     </div>
   </div>
 
-  <!-- 8. Auth Modal (Customer Registration & Login) -->
+  <!-- 8. Unified Authenticated Login & Registration Portal -->
   <div id="authModal" class="modal-backdrop">
-    <div class="modal-box" style="max-width: 440px;">
-      <div class="modal-header">
-        <h3 class="modal-title">Join The Crumb Club</h3>
-        <button class="modal-close-btn">✕</button>
+    <div class="modal-box auth-modal-portal">
+      <div class="modal-header" style="border-bottom: none; padding-bottom: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.6rem;">🎂</span>
+          <div>
+            <h3 class="modal-title" style="font-size: 1.25rem;">CakeTalk Portal</h3>
+            <p style="font-size: 0.78rem; color: var(--color-text-muted);">Sign in to your customer account or owner dashboard</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="UI.closeModal('authModal')">✕</button>
       </div>
-      <div class="modal-body">
-        <form id="customerAuthForm" onsubmit="event.preventDefault(); UI.showToast('Welcome to CakeTalk Crumb Club! 50 bonus points added.', 'success'); UI.closeModal('authModal');">
-          <p style="font-size: 0.88rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">
-            Earn points on every order, save delivery addresses, and track celebration histories.
-          </p>
-          <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" class="form-control" required placeholder="Sophie Martin">
+
+      <div class="modal-body" style="padding-top: 0.75rem;">
+        <!-- Tab Navigation -->
+        <div class="auth-tabs-nav">
+          <button type="button" class="auth-tab-btn active" id="tabBtnCustomerLogin" onclick="AuthApp.switchTab('customer-login')">
+            <span>🛍️</span> Customer Sign In
+          </button>
+          <button type="button" class="auth-tab-btn owner-tab" id="tabBtnOwnerLogin" onclick="AuthApp.switchTab('owner-login')">
+            <span>👑</span> Owner Suite
+          </button>
+          <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="AuthApp.switchTab('customer-register')">
+            <span>✍️</span> New Customer
+          </button>
+        </div>
+
+        <!-- Error Banner -->
+        <div id="authErrorBanner" class="auth-error-banner"></div>
+
+        <!-- TAB 1: CUSTOMER LOGIN -->
+        <div id="authPaneCustomerLogin" class="auth-pane active">
+          <div class="demo-creds-box">
+            <div class="demo-creds-title">🔑 Customer Demo Credentials:</div>
+            <div class="demo-creds-text">
+              ID / Phone: <code>customer@caketalk.com</code> (or <code>9876543210</code>)<br>
+              Password: <code>customer123</code>
+            </div>
+            <button type="button" class="btn-demo-autofill" onclick="AuthApp.autofillCustomer()">⚡ Autofill Customer</button>
           </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" class="form-control" required placeholder="sophie@example.com">
+
+          <form id="customerLoginForm" onsubmit="AuthApp.submitCustomerLogin(event)">
+            <div class="form-group">
+              <label>Email Address or Mobile Phone *</label>
+              <input type="text" id="custLoginIdentifier" class="form-control" placeholder="e.g. customer@caketalk.com or 9876543210" required>
+            </div>
+            <div class="form-group">
+              <label>Password *</label>
+              <input type="password" id="custLoginPassword" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
+              Sign In as Customer →
+            </button>
+          </form>
+
+          <div class="auth-form-footer">
+            New to CakeTalk? <a onclick="AuthApp.switchTab('customer-register')">Register as New Customer</a>
           </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" class="form-control" required placeholder="••••••••">
+        </div>
+
+        <!-- TAB 2: OWNER / STAFF LOGIN -->
+        <div id="authPaneOwnerLogin" class="auth-pane">
+          <div class="demo-creds-box owner-box">
+            <div class="demo-creds-title">👑 Bakery Owner Demo Credentials:</div>
+            <div class="demo-creds-text">
+              Staff ID: <code>owner@caketalk.com</code><br>
+              Password: <code>owner123</code> &nbsp;|&nbsp; Security PIN: <code>1216</code>
+            </div>
+            <button type="button" class="btn-demo-autofill" onclick="AuthApp.autofillOwner()">⚡ Autofill Owner</button>
           </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account & Collect 50 Pts</button>
-          <p style="font-size: 0.78rem; text-align: center; color: var(--color-text-muted); margin-top: 1rem;">
-            Are you a bakery team member? <a href="/admin" style="color: var(--color-terracotta); font-weight: 700;">Staff Admin Login</a>
-          </p>
-        </form>
+
+          <form id="ownerLoginForm" onsubmit="AuthApp.submitOwnerLogin(event)">
+            <div class="form-group">
+              <label>Owner Work Email or Staff ID *</label>
+              <input type="text" id="ownerLoginIdentifier" class="form-control" placeholder="e.g. owner@caketalk.com" required>
+            </div>
+            <div class="form-group">
+              <label>Password *</label>
+              <input type="password" id="ownerLoginPassword" class="form-control" placeholder="••••••••" required>
+            </div>
+            <div class="form-group">
+              <label>Bakery Store Security PIN</label>
+              <input type="password" id="ownerLoginPin" class="form-control" placeholder="1216" value="1216">
+              <span style="font-size: 0.72rem; color: var(--color-text-muted);">Default store terminal PIN is 1216</span>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem; background: linear-gradient(135deg, #226B41, #1A4D2E);">
+              Authenticate & Enter Owner Suite 👑
+            </button>
+          </form>
+
+          <div class="auth-form-footer">
+            New Bakery Manager? <a onclick="AuthApp.switchTab('owner-register')">Staff Key Onboarding</a>
+          </div>
+        </div>
+
+        <!-- TAB 3: NEW CUSTOMER REGISTRATION -->
+        <div id="authPaneCustomerRegister" class="auth-pane">
+          <div style="background: rgba(199, 91, 63, 0.08); border-radius: var(--radius-sm); padding: 0.6rem 0.85rem; margin-bottom: 1rem; font-size: 0.82rem; color: var(--color-terracotta);">
+            ✨ <strong>Welcome Perk:</strong> Get 50 Crumb Points upon signing up for discounts & birthday bakes!
+          </div>
+
+          <form id="customerRegisterForm" onsubmit="AuthApp.submitCustomerRegister(event)">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="custRegName" class="form-control" placeholder="e.g. Pooja Sharma" required>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Email ID *</label>
+                <input type="email" id="custRegEmail" class="form-control" placeholder="pooja@gmail.com" required>
+              </div>
+              <div class="form-group">
+                <label>Mobile Phone Number *</label>
+                <input type="tel" id="custRegPhone" class="form-control" placeholder="e.g. 9876543210" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Delivery Address / Landmark (Optional)</label>
+              <input type="text" id="custRegAddress" class="form-control" placeholder="e.g. 42 MG Road, Anekal, Bangalore">
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Create Password *</label>
+                <input type="password" id="custRegPassword" class="form-control" minlength="6" placeholder="Min 6 characters" required>
+              </div>
+              <div class="form-group">
+                <label>Confirm Password *</label>
+                <input type="password" id="custRegConfirmPassword" class="form-control" minlength="6" placeholder="Re-enter password" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
+              Create Customer Account & Collect 50 Pts
+            </button>
+          </form>
+
+          <div class="auth-form-footer">
+            Already have an account? <a onclick="AuthApp.switchTab('customer-login')">Sign in here</a>
+          </div>
+        </div>
+
+        <!-- TAB 4: OWNER / STAFF ONBOARDING -->
+        <div id="authPaneOwnerRegister" class="auth-pane">
+          <div style="background: rgba(34, 107, 65, 0.08); border-radius: var(--radius-sm); padding: 0.6rem 0.85rem; margin-bottom: 1rem; font-size: 0.82rem; color: #226B41;">
+            🛡️ <strong>Authorized Staff Registration:</strong> Requires Master Bakery Security Key.
+          </div>
+
+          <form id="ownerRegisterForm" onsubmit="AuthApp.submitOwnerRegister(event)">
+            <div class="form-group">
+              <label>Staff Full Name *</label>
+              <input type="text" id="ownerRegName" class="form-control" placeholder="e.g. Chef Vikram Patel" required>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Work Email *</label>
+                <input type="email" id="ownerRegEmail" class="form-control" placeholder="vikram@caketalk.com" required>
+              </div>
+              <div class="form-group">
+                <label>Staff Contact Phone *</label>
+                <input type="tel" id="ownerRegPhone" class="form-control" placeholder="9876501234" required>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Bakery Role *</label>
+                <select id="ownerRegRole" class="form-control" required>
+                  <option value="owner">Bakery Owner / Proprietor</option>
+                  <option value="admin">Master Pâtissier / Head Baker</option>
+                  <option value="admin">Store Operations Manager</option>
+                  <option value="admin">Inventory & Kitchen Lead</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Master Security Key *</label>
+                <input type="password" id="ownerRegKey" class="form-control" placeholder="CAKETALK-OWNER-2026" value="CAKETALK-OWNER-2026" required>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Password *</label>
+                <input type="password" id="ownerRegPassword" class="form-control" minlength="6" placeholder="Min 6 characters" required>
+              </div>
+              <div class="form-group">
+                <label>Confirm Password *</label>
+                <input type="password" id="ownerRegConfirmPassword" class="form-control" minlength="6" placeholder="Re-enter password" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem; background: linear-gradient(135deg, #226B41, #1A4D2E);">
+              Verify Key & Register Staff Account
+            </button>
+          </form>
+
+          <div class="auth-form-footer">
+            Already have staff credentials? <a onclick="AuthApp.switchTab('owner-login')">Sign in to Owner Suite</a>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1674,84 +1886,46 @@
     </div>
   </div>
 
-  <!-- 10. Admin Login Overlay (Optional gate if needed) -->
-  <div id="adminLoginOverlay" class="admin-login-overlay" style="display: none;">
-    <div class="admin-login-card">
-      <div class="admin-login-logo">🎂</div>
-      <h2 class="admin-login-title">CakeTalk Bakery Admin</h2>
-      <p class="admin-login-desc">Sign in with owner or head pastry chef credentials to manage orders, inventory, and menu.</p>
-      
-      <form id="adminLoginForm">
-        <div class="form-group" style="text-align: left;">
-          <label>Staff Email</label>
-          <input type="email" id="adminEmailInput" class="form-control" value="admin@caketalk.com" required>
-        </div>
-        <div class="form-group" style="text-align: left;">
-          <label>Password</label>
-          <input type="password" id="adminPasswordInput" class="form-control" value="admin123" required>
-        </div>
-        <div id="adminLoginError" style="color: var(--color-danger); font-size: 0.85rem; margin-bottom: 1rem;"></div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In to Dashboard</button>
-      </form>
-
-      <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--color-text-muted);">
-        Demo Login: <code>admin@caketalk.com</code> / <code>admin123</code><br>
-        <button onclick="switchWebsiteMode('customer'); document.getElementById('adminLoginOverlay').style.display='none';" style="background:none; border:none; color: var(--color-terracotta); text-decoration: underline; margin-top: 6px; cursor: pointer;">
-          Return to Customer Storefront
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Scripts -->
   <script src="/js/api.js"></script>
   <script src="/js/cake-builder.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/admin.js"></script>
+  <script src="/js/auth.js"></script>
   <script>
-    // Unified Role Switcher Controller
+    // Unified Role Switcher Controller with Strict Authenticated Gate
     function switchWebsiteMode(mode) {
       const customerContainer = document.getElementById('customerViewContainer');
       const adminContainer = document.getElementById('adminViewContainer');
-      const btnCustomer = document.getElementById('btnModeCustomer');
-      const btnAdmin = document.getElementById('btnModeAdmin');
-      const drawerBtnCustomer = document.getElementById('drawerBtnModeCustomer');
-      const drawerBtnAdmin = document.getElementById('drawerBtnModeAdmin');
 
       if (!customerContainer || !adminContainer) return;
 
       if (mode === 'admin') {
+        const user = window.API ? API.getCurrentUser() : null;
+        if (!user || (user.role !== 'admin' && user.role !== 'owner')) {
+          if (window.UI) {
+            UI.showToast('Bakery Owner credentials required to enter Owner Suite.', 'info');
+          }
+          if (window.AuthApp) {
+            AuthApp.openModal('owner-login');
+          }
+          if (window.location.hash === '#admin') {
+            history.pushState(null, null, ' ');
+          }
+          return;
+        }
+
         customerContainer.classList.add('hidden');
         adminContainer.classList.remove('hidden');
-        if (btnCustomer) btnCustomer.classList.remove('active');
-        if (btnAdmin) btnAdmin.classList.add('active');
-        if (drawerBtnCustomer) drawerBtnCustomer.classList.remove('active');
-        if (drawerBtnAdmin) drawerBtnAdmin.classList.add('active');
         window.location.hash = '#admin';
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         if (window.AdminApp) {
-          // If not logged in, auto-login with default admin credentials for effortless 1-click evaluation
-          const savedUser = localStorage.getItem('caketalk_user');
-          if (!savedUser) {
-            API.login('admin@caketalk.com', 'admin123')
-              .then(() => {
-                AdminApp.init();
-              })
-              .catch(() => {
-                AdminApp.init();
-              });
-          } else {
-            AdminApp.init();
-          }
+          AdminApp.init();
         }
       } else {
         adminContainer.classList.add('hidden');
         customerContainer.classList.remove('hidden');
-        if (btnAdmin) btnAdmin.classList.remove('active');
-        if (btnCustomer) btnCustomer.classList.add('active');
-        if (drawerBtnAdmin) drawerBtnAdmin.classList.remove('active');
-        if (drawerBtnCustomer) drawerBtnCustomer.classList.add('active');
         if (window.location.hash === '#admin') {
           history.pushState(null, null, ' ');
         }
@@ -1793,12 +1967,16 @@
     window.addEventListener('DOMContentLoaded', () => {
       if (window.location.hash === '#admin') {
         switchWebsiteMode('admin');
+      } else if (window.location.hash === '#login') {
+        if (window.AuthApp) AuthApp.openModal('customer-login');
       }
     });
 
     window.addEventListener('hashchange', () => {
       if (window.location.hash === '#admin') {
         switchWebsiteMode('admin');
+      } else if (window.location.hash === '#login') {
+        if (window.AuthApp) AuthApp.openModal('customer-login');
       } else if (window.location.hash === '#customer' || window.location.hash === '') {
         switchWebsiteMode('customer');
       }

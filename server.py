@@ -244,6 +244,11 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header("Location", "/#admin")
             self.end_headers()
             return
+        elif path == "/login" or path == "/login/":
+            self.send_response(302)
+            self.send_header("Location", "/#login")
+            self.end_headers()
+            return
         elif path == "/admin.html":
             file_path = os.path.join(PUBLIC_DIR, "index.html")
         elif path == "/hero-reference.png":
@@ -277,51 +282,96 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
         cursor = conn.cursor()
 
         try:
-            # 1. Auth: Login
+            # 1. Auth: Login (Supports Customer or Owner/Admin by Email or Phone)
             if path == "/api/auth/login":
-                email = body.get("email", "").strip().lower()
+                identifier = (body.get("email") or body.get("identifier") or body.get("phone") or "").strip()
                 password = body.get("password", "")
-                if not email or not password:
-                    self.send_error_json("Email and password are required")
-                    return
+                role_requested = body.get("role", "").strip().lower() # 'customer' or 'owner'/'admin'
 
-                hashed = hash_password(password)
-                cursor.execute("SELECT id, name, email, role, phone, loyalty_points, tier FROM users WHERE email = ? AND password_hash = ?", (email, hashed))
-                user = cursor.fetchone()
-                if not user:
-                    self.send_error_json("Invalid email or password", 401)
-                    return
-                user_dict = dict(user)
-                self.send_json({"success": True, "user": user_dict, "token": f"mock_token_{user_dict['id']}_{random.randint(1000, 9999)}"})
-                return
-
-            # 2. Auth: Register
-            elif path == "/api/auth/register":
-                name = body.get("name", "").strip()
-                email = body.get("email", "").strip().lower()
-                password = body.get("password", "")
-                phone = body.get("phone", "").strip()
-                if not name or not email or not password:
-                    self.send_error_json("Name, email and password are required")
-                    return
-
-                cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
-                if cursor.fetchone():
-                    self.send_error_json("Email is already registered")
+                if not identifier or not password:
+                    self.send_error_json("ID/Email/Phone and password are required")
                     return
 
                 hashed = hash_password(password)
                 cursor.execute("""
+                SELECT id, name, email, role, phone, loyalty_points, tier 
+                FROM users 
+                WHERE (lower(email) = lower(?) OR phone = ? OR phone = ?) AND password_hash = ?
+                """, (identifier, identifier, "+91 " + identifier, hashed))
+                user = cursor.fetchone()
+                if not user:
+                    self.send_error_json("Invalid credentials. Please verify your Email/Phone and password.", 401)
+                    return
+
+                user_dict = dict(user)
+
+                # Enforce owner/admin role restriction when logging into owner portal
+                if role_requested in ("admin", "owner"):
+                    if user_dict.get("role") not in ("admin", "owner"):
+                        self.send_error_json("Access Denied: This account is a Customer account. Please log in through the Customer portal.", 403)
+                        return
+
+                token = f"ct_token_{user_dict['id']}_{random.randint(100000, 999999)}"
+                self.send_json({"success": True, "user": user_dict, "token": token})
+                return
+
+            # 2. Auth: Register (Supports New Customer with Phone & Email, or Owner/Staff with Security Key)
+            elif path == "/api/auth/register":
+                name = body.get("name", "").strip()
+                email = body.get("email", "").strip().lower()
+                phone = body.get("phone", "").strip()
+                password = body.get("password", "")
+                role = body.get("role", "customer").strip().lower()
+                store_key = body.get("store_key", "").strip()
+
+                if not name or not email or not password:
+                    self.send_error_json("Full Name, email, and password are required")
+                    return
+
+                if len(password) < 6:
+                    self.send_error_json("Password must be at least 6 characters")
+                    return
+
+                if role in ("owner", "admin"):
+                    # Validate Owner Master Security Key
+                    valid_keys = ("CAKETALK-OWNER-2026", "1216", "owner123", "admin123")
+                    if store_key not in valid_keys:
+                        self.send_error_json("Invalid Bakery Owner Master Key. Please check the security key or contact management.")
+                        return
+                    assigned_role = "admin"
+                else:
+                    assigned_role = "customer"
+                    if not phone:
+                        self.send_error_json("Phone number is required for customer registration")
+                        return
+
+                # Check if email already registered
+                cursor.execute("SELECT id FROM users WHERE lower(email) = ?", (email,))
+                if cursor.fetchone():
+                    self.send_error_json("An account with this email address already exists. Please sign in.")
+                    return
+
+                # Check if phone already registered (for customers)
+                if phone:
+                    cursor.execute("SELECT id FROM users WHERE phone = ? OR phone = ?", (phone, "+91 " + phone))
+                    if cursor.fetchone():
+                        self.send_error_json("An account with this phone number already exists. Please sign in.")
+                        return
+
+                hashed = hash_password(password)
+                cursor.execute("""
                 INSERT INTO users (name, email, password_hash, role, phone, loyalty_points, tier)
-                VALUES (?, ?, ?, 'customer', ?, 50, 'Silver Baker')
-                """, (name, email, hashed, phone))
+                VALUES (?, ?, ?, ?, ?, 50, 'Silver Baker')
+                """, (name, email, hashed, assigned_role, phone))
                 conn.commit()
+
                 user_id = cursor.lastrowid
                 user_dict = {
-                    "id": user_id, "name": name, "email": email, "role": "customer",
+                    "id": user_id, "name": name, "email": email, "role": assigned_role,
                     "phone": phone, "loyalty_points": 50, "tier": "Silver Baker"
                 }
-                self.send_json({"success": True, "user": user_dict, "token": f"mock_token_{user_id}_{random.randint(1000, 9999)}"})
+                token = f"ct_token_{user_id}_{random.randint(100000, 999999)}"
+                self.send_json({"success": True, "user": user_dict, "token": token, "message": "Account created successfully!"})
                 return
 
             # 3. Create Order

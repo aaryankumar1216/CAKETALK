@@ -181,10 +181,17 @@ const API = {
   },
 
   // 8. Authentication
-  async login(email, password) {
+  async login(identifier, password, role = null) {
+    const payload = {
+      identifier: identifier,
+      email: identifier,
+      password: password
+    };
+    if (role) payload.role = role;
+
     const res = await this.request('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify(payload)
     });
     if (res.success && res.token) {
       localStorage.setItem('caketalk_token', res.token);
@@ -203,6 +210,20 @@ const API = {
       localStorage.setItem('caketalk_user', JSON.stringify(res.user));
     }
     return res;
+  },
+
+  logout() {
+    localStorage.removeItem('caketalk_token');
+    localStorage.removeItem('caketalk_user');
+  },
+
+  getCurrentUser() {
+    try {
+      const saved = localStorage.getItem('caketalk_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
   },
 
   // 9. Customers (Admin)

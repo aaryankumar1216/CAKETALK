@@ -178,18 +178,26 @@ def init_db():
 
 def seed_users(conn):
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM users")
-    if cursor.fetchone()[0] == 0:
-        admin_pass = hash_password("admin123")
-        cust_pass = hash_password("customer123")
-        cursor.execute("""
-        INSERT INTO users (name, email, password_hash, role, phone, loyalty_points, tier)
-        VALUES 
-        ('Eleanor Vance (Head Baker)', 'admin@caketalk.com', ?, 'admin', '+1 (555) 234-5678', 500, 'Master Baker'),
-        ('Sophie Martin', 'sophie@example.com', ?, 'customer', '+1 (555) 876-5432', 180, 'Golden Sweet Tooth'),
-        ('Liam Chen', 'liam@example.com', ?, 'customer', '+1 (555) 345-6789', 95, 'Silver Baker')
-        """, (admin_pass, cust_pass, cust_pass))
-        conn.commit()
+    admin_pass = hash_password("admin123")
+    owner_pass = hash_password("owner123")
+    cust_pass = hash_password("customer123")
+
+    users_to_seed = [
+        ('Aaryan Kumar (Bakery Owner)', 'owner@caketalk.com', owner_pass, 'admin', '9988776655', 500, 'Master Baker'),
+        ('Eleanor Vance (Head Baker)', 'admin@caketalk.com', admin_pass, 'admin', '+1 (555) 234-5678', 500, 'Master Baker'),
+        ('Pooja Sharma (Patron)', 'customer@caketalk.com', cust_pass, 'customer', '9876543210', 150, 'Golden Sweet Tooth'),
+        ('Sophie Martin', 'sophie@example.com', cust_pass, 'customer', '+1 (555) 876-5432', 180, 'Golden Sweet Tooth'),
+        ('Liam Chen', 'liam@example.com', cust_pass, 'customer', '+1 (555) 345-6789', 95, 'Silver Baker')
+    ]
+
+    for name, email, pw_hash, role, phone, points, tier in users_to_seed:
+        cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+        if not cursor.fetchone():
+            cursor.execute("""
+            INSERT INTO users (name, email, password_hash, role, phone, loyalty_points, tier)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (name, email, pw_hash, role, phone, points, tier))
+    conn.commit()
 
 def seed_products(conn):
     cursor = conn.cursor()
