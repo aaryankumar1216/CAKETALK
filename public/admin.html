@@ -257,8 +257,18 @@
       <section id="tab-products" class="tab-content-panel">
         <div class="admin-card">
           <div class="admin-card-header">
-            <h3>Bakery Menu & Catalog Management</h3>
-            <button class="btn btn-primary btn-sm" onclick="AdminApp.openAddProductModal()">+ Add New Product</button>
+            <div>
+              <h3 style="margin: 0;">Bakery Menu & Catalog Management</h3>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted); margin: 3px 0 0;">Manage item prices, stock inventory, and photo URLs</p>
+            </div>
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+              <button class="btn btn-secondary btn-sm" style="border-color: var(--color-terracotta); color: var(--color-terracotta);" onclick="AdminApp.openBatchImageModal()">
+                <span>🖼️</span> Batch Edit Images
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="AdminApp.openAddProductModal()">
+                <span>+</span> Add New Product
+              </button>
+            </div>
           </div>
           <div class="admin-table-container">
             <table class="admin-table">
@@ -477,6 +487,89 @@
             Save Bakery Product
           </button>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Single Product Image Modal -->
+  <div id="quickImageModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Change Product Image</h3>
+          <p id="quickImgProdTitle" style="font-size: 0.82rem; color: var(--color-espresso); font-weight: 700; margin-top: 2px;">Product Title</p>
+        </div>
+        <button class="modal-close-btn" onclick="UI.closeModal('quickImageModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="quickImageForm" onsubmit="AdminApp.handleQuickImageSubmit(event)">
+          <input type="hidden" id="quickImgProdId">
+          
+          <div style="text-align: center; margin-bottom: 1.25rem;">
+            <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 700;">Live Image Preview</div>
+            <div style="width: 140px; height: 140px; margin: 0 auto; border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--color-terracotta); box-shadow: var(--shadow-sm); background: #eee;">
+              <img id="quickImgPreview" src="" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80'">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Image Address / URL *</label>
+            <input type="url" id="quickImgUrlInput" class="form-control" required placeholder="https://images.unsplash.com/photo-..." oninput="document.getElementById('quickImgPreview').src = this.value;">
+            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Paste any direct image link (.jpg, .png, Unsplash, etc.)</span>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="UI.closeModal('quickImageModal')">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="flex: 2;">Save Image URL</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch Product Image Studio Modal (Edit Multiple Images) -->
+  <div id="batchImageModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 840px; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header" style="flex-shrink: 0;">
+        <div>
+          <h3 class="modal-title">🖼️ Batch Product Image Studio</h3>
+          <p style="font-size: 0.82rem; color: var(--color-text-muted); margin-top: 2px;">
+            Update image addresses for multiple products at once. Changes are previewed live below.
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="UI.closeModal('batchImageModal')">✕</button>
+      </div>
+
+      <!-- Batch Toolbar: Search & Category Filter -->
+      <div style="padding: 0.75rem 1.5rem; background: var(--glass-bg-subtle); border-bottom: 1px solid var(--glass-border-subtle); display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; flex-shrink: 0;">
+        <input type="text" id="batchImgSearchInput" class="form-control" placeholder="Search products..." style="flex: 1; min-width: 180px; padding: 0.45rem 0.8rem; font-size: 0.85rem;" oninput="AdminApp.renderBatchImageRows()">
+        <select id="batchImgCategorySelect" class="form-control" style="width: auto; min-width: 160px; padding: 0.45rem 0.8rem; font-size: 0.85rem;" onchange="AdminApp.renderBatchImageRows()">
+          <option value="All">All Categories</option>
+          <option value="Snacks">Snacks</option>
+          <option value="Cookies">Cookies</option>
+          <option value="LJ Specials">LJ Specials</option>
+          <option value="Special Mixer with Shanks">Special Mixer with Shanks</option>
+          <option value="Birthday Cake">Birthday Cake</option>
+        </select>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="AdminApp.resetBatchChanges()">Reset Changes</button>
+      </div>
+
+      <!-- Scrollable List of Products with Image Inputs -->
+      <div class="modal-body" id="batchImageListContainer" style="flex: 1; overflow-y: auto; padding: 1rem 1.5rem;">
+        <!-- Rows populated by AdminApp.renderBatchImageRows() -->
+      </div>
+
+      <!-- Bottom Action Dock -->
+      <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--glass-border-light); background: var(--glass-bg-elevated); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <div id="batchModifiedCountBadge" style="font-weight: 700; font-size: 0.88rem; color: var(--color-espresso);">
+          0 images modified
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="UI.closeModal('batchImageModal')">Close</button>
+          <button type="button" id="btnSaveAllBatchImages" class="btn btn-primary" onclick="AdminApp.saveAllBatchImages()" disabled style="opacity: 0.6;">
+            Save All Changed Images
+          </button>
+        </div>
       </div>
     </div>
   </div>

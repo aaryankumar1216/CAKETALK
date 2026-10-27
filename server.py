@@ -623,7 +623,41 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json({"success": True, "message": f"Order {order_number} status updated to {status}"})
                 return
 
-            # 2. Update Product (Admin)
+            # 2a. Batch Image Update (Admin - Multiple Products at once)
+            elif path == "/api/products/batch-images":
+                updates = body.get("updates", [])
+                if not isinstance(updates, list) or len(updates) == 0:
+                    self.send_error_json("A list of product image updates is required")
+                    return
+
+                updated_count = 0
+                for item in updates:
+                    p_id = item.get("id")
+                    img_url = (item.get("image_url") or "").strip()
+                    if p_id and img_url:
+                        cursor.execute("UPDATE products SET image_url = ? WHERE id = ?", (img_url, p_id))
+                        updated_count += 1
+                conn.commit()
+                self.send_json({"success": True, "updated_count": updated_count, "message": f"Successfully updated images for {updated_count} products!"})
+                return
+
+            # 2b. Quick Single Product Image Update (Admin)
+            elif path.startswith("/api/products/") and path.endswith("/image"):
+                try:
+                    product_id = int(path.split("/")[3])
+                    img_url = (body.get("image_url") or "").strip()
+                    if not img_url:
+                        self.send_error_json("Image URL is required")
+                        return
+                    cursor.execute("UPDATE products SET image_url = ? WHERE id = ?", (img_url, product_id))
+                    conn.commit()
+                    self.send_json({"success": True, "message": "Product image updated successfully", "image_url": img_url})
+                    return
+                except ValueError:
+                    self.send_error_json("Invalid product ID")
+                    return
+
+            # 2c. Update Product Full Details (Admin)
             elif path.startswith("/api/products/"):
                 try:
                     product_id = int(path.split("/")[3])

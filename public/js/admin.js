@@ -239,6 +239,10 @@ const AdminApp = {
   },
 
   // 3. Products Tab
+  products: [],
+  productsMap: {},
+  batchModified: {}, // map of { [productId]: newUrl }
+
   async loadProducts() {
     const tbody = document.getElementById('productsTableTbody');
     if (!tbody) return;
@@ -248,10 +252,19 @@ const AdminApp = {
       const res = await API.getProducts({ sort: 'featured' });
       if (!res.success) return;
 
+      this.products = res.products;
+      this.productsMap = {};
+      res.products.forEach(p => {
+        this.productsMap[p.id] = p;
+      });
+
       tbody.innerHTML = res.products.map(p => `
         <tr>
           <td>
-            <img src="${p.image_url}" style="width: 44px; height: 44px; border-radius: 6px; object-fit: cover;">
+            <div class="table-img-cell" onclick="AdminApp.openQuickImageModal(${p.id})" title="Click to change photo URL" style="position: relative; display: inline-block; cursor: pointer;">
+              <img src="${p.image_url}" id="tableProdImg-${p.id}" style="width: 46px; height: 46px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(0,0,0,0.1); transition: transform 0.2s;" onerror="this.src='https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80'">
+              <span style="position: absolute; bottom: -3px; right: -3px; background: var(--color-espresso); color: #fff; font-size: 0.65rem; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">📷</span>
+            </div>
           </td>
           <td>
             <div style="font-weight: 700;">${p.title}</div>
@@ -265,7 +278,8 @@ const AdminApp = {
           <td>★ ${p.rating.toFixed(1)} (${p.review_count})</td>
           <td>
             <div style="display: flex; gap: 6px;">
-              <button class="btn btn-secondary btn-sm" onclick='AdminApp.openEditProductModal(${JSON.stringify(p)})'>Edit</button>
+              <button class="btn btn-secondary btn-sm" onclick="AdminApp.openQuickImageModal(${p.id})" title="Change photo URL">📷 Photo</button>
+              <button class="btn btn-secondary btn-sm" onclick="AdminApp.openEditProductModalById(${p.id})">Edit</button>
               <button class="btn btn-secondary btn-sm" style="color: var(--color-danger);" onclick="AdminApp.deleteProduct(${p.id})">Delete</button>
             </div>
           </td>
@@ -283,7 +297,23 @@ const AdminApp = {
     UI.openModal('productFormModal');
   },
 
+  openEditProductModalById(id) {
+    const p = this.productsMap && this.productsMap[id];
+    if (p) {
+      this.openEditProductModal(p);
+    } else {
+      API.getProductById(id).then(res => {
+        if (res.success && res.product) this.openEditProductModal(res.product);
+      }).catch(err => UI.showToast(err.message, 'error'));
+    }
+  },
+
   openEditProductModal(p) {
+    if (typeof p === 'number' || typeof p === 'string') {
+      p = this.productsMap && this.productsMap[p];
+    }
+    if (!p) return;
+
     document.getElementById('productFormModalTitle').textContent = 'Edit Bakery Product';
     document.getElementById('productEditId').value = p.id;
     document.getElementById('prodTitleInput').value = p.title;
@@ -296,6 +326,271 @@ const AdminApp = {
     document.getElementById('prodStockInput').value = p.stock;
     document.getElementById('prodFeaturedCheckbox').checked = p.is_featured === 1;
     UI.openModal('productFormModal');
+  },
+
+  // Quick Single Image Editor
+  openQuickImageModal(productId) {
+    const p = this.productsMap && this.productsMap[productId];
+    if (!p) return;
+
+    const idEl = document.getElementById('quickImgProdId');
+    const titleEl = document.getElementById('quickImgProdTitle');
+    const inputEl = document.getElementById('quickImgUrlInput');
+    const prevEl = document.getElementById('quickImgPreview');
+
+    if (idEl) idEl.value = p.id;
+    if (titleEl) titleEl.textContent = `${p.title} (${p.category} • ₹${p.price.toFixed(0)})`;
+    if (inputEl) inputEl.value = p.image_url;
+    if (prevEl) prevEl.src = p.image_url;
+
+    UI.openModal('quickImageModal');
+  },
+
+  async handleQuickImageSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('quickImgProdId').value;
+    const newUrl = document.getElementById('quickImgUrlInput').value.trim();
+
+    if (!id || !newUrl) return;
+
+    try {
+      const res = await API.updateProductImage(id, newUrl);
+      if (res.success) {
+        UI.showToast('Product photo updated successfully!', 'success');
+        UI.closeModal('quickImageModal');
+
+        // Update local cache
+        if (this.productsMap[id]) {
+          this.productsMap[id].image_url = newUrl;
+        }
+
+        // Update thumbnail in table immediately without reloading
+        const imgEl = document.getElementById(`tableProdImg-${id}`);
+        if (imgEl) imgEl.src = newUrl;
+
+        // Update storefront cards if visible
+        document.querySelectorAll(`.product-card[data-product-id="${id}"] img`).forEach(img => {
+          img.src = newUrl;
+        });
+      }
+    } catch (err) {
+      UI.showToast(err.message || 'Failed to update image', 'error');
+    }
+  },
+
+  // Batch Image Studio
+  openBatchImageModal() {
+    this.batchModified = {};
+    const countBadge = document.getElementById('batchModifiedCountBadge');
+    const saveBtn = document.getElementById('btnSaveAllBatchImages');
+    if (countBadge) countBadge.textContent = '0 images modified';
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.style.opacity = '0.6';
+    }
+
+    this.renderBatchImageRows();
+    UI.openModal('batchImageModal');
+  },
+
+  renderBatchImageRows() {
+    const container = document.getElementById('batchImageListContainer');
+    if (!container) return;
+
+    const search = (document.getElementById('batchImgSearchInput')?.value || '').toLowerCase().trim();
+    const category = document.getElementById('batchImgCategorySelect')?.value || 'All';
+
+    let list = this.products || [];
+    if (category !== 'All') {
+      list = list.filter(p => p.category === category);
+    }
+    if (search) {
+      list = list.filter(p => p.title.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
+    }
+
+    if (list.length === 0) {
+      container.innerHTML = '<div style="text-align: center; padding: 2.5rem; color: var(--color-text-muted);">No products match filter.</div>';
+      return;
+    }
+
+    container.innerHTML = list.map(p => {
+      const currentVal = this.batchModified[p.id] !== undefined ? this.batchModified[p.id] : p.image_url;
+      const isModified = this.batchModified[p.id] !== undefined && this.batchModified[p.id] !== p.image_url;
+
+      return `
+        <div class="batch-product-row ${isModified ? 'modified' : ''}" id="batchRow-${p.id}">
+          <div class="batch-thumb-wrap">
+            <img src="${currentVal}" id="batchImgPreview-${p.id}" alt="${p.title}" onerror="this.src='https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80'">
+          </div>
+          <div class="batch-info-col">
+            <div class="batch-info-title" title="${p.title}">${p.title}</div>
+            <div class="batch-info-meta">${p.category} • ₹${p.price.toFixed(0)}</div>
+            <span class="batch-status-badge ${isModified ? 'pending' : 'saved'}" id="batchBadge-${p.id}">
+              ${isModified ? 'Modified ⚠️' : 'Current ✓'}
+            </span>
+          </div>
+          <div class="batch-input-col">
+            <input type="url" class="form-control batch-url-input" id="batchInput-${p.id}" value="${currentVal}" placeholder="https://images.unsplash.com/..." oninput="AdminApp.handleBatchInput(${p.id}, this.value)">
+          </div>
+          <div class="batch-action-col">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="AdminApp.saveSingleBatchImage(${p.id})">
+              Save
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  },
+
+  handleBatchInput(productId, newUrl) {
+    const p = this.productsMap && this.productsMap[productId];
+    if (!p) return;
+
+    const trimmed = newUrl.trim();
+    if (trimmed !== p.image_url) {
+      this.batchModified[productId] = trimmed;
+    } else {
+      delete this.batchModified[productId];
+    }
+
+    // Update live preview image
+    const previewEl = document.getElementById(`batchImgPreview-${productId}`);
+    if (previewEl && trimmed) {
+      previewEl.src = trimmed;
+    }
+
+    // Update row highlight & badge
+    const rowEl = document.getElementById(`batchRow-${productId}`);
+    const badgeEl = document.getElementById(`batchBadge-${productId}`);
+    const isModified = this.batchModified[productId] !== undefined;
+
+    if (rowEl) {
+      if (isModified) rowEl.classList.add('modified');
+      else rowEl.classList.remove('modified');
+    }
+    if (badgeEl) {
+      badgeEl.className = isModified ? 'batch-status-badge pending' : 'batch-status-badge saved';
+      badgeEl.textContent = isModified ? 'Modified ⚠️' : 'Current ✓';
+    }
+
+    // Update save button and count
+    const modCount = Object.keys(this.batchModified).length;
+    const countBadge = document.getElementById('batchModifiedCountBadge');
+    const saveBtn = document.getElementById('btnSaveAllBatchImages');
+
+    if (countBadge) {
+      countBadge.textContent = `${modCount} ${modCount === 1 ? 'image' : 'images'} modified`;
+      countBadge.style.color = modCount > 0 ? 'var(--color-terracotta)' : 'var(--color-espresso)';
+    }
+
+    if (saveBtn) {
+      saveBtn.disabled = modCount === 0;
+      saveBtn.style.opacity = modCount > 0 ? '1' : '0.6';
+      saveBtn.textContent = modCount > 0 ? `Save All Changed Images (${modCount})` : 'Save All Changed Images';
+    }
+  },
+
+  async saveSingleBatchImage(productId) {
+    const inputEl = document.getElementById(`batchInput-${productId}`);
+    if (!inputEl) return;
+    const newUrl = inputEl.value.trim();
+    if (!newUrl) {
+      UI.showToast('Please provide a valid image URL', 'error');
+      return;
+    }
+
+    try {
+      const res = await API.updateProductImage(productId, newUrl);
+      if (res.success) {
+        UI.showToast(`Updated image for ${this.productsMap[productId]?.title}!`, 'success');
+        if (this.productsMap[productId]) {
+          this.productsMap[productId].image_url = newUrl;
+        }
+        delete this.batchModified[productId];
+
+        const rowEl = document.getElementById(`batchRow-${productId}`);
+        const badgeEl = document.getElementById(`batchBadge-${productId}`);
+        if (rowEl) rowEl.classList.remove('modified');
+        if (badgeEl) {
+          badgeEl.className = 'batch-status-badge saved';
+          badgeEl.textContent = 'Saved ✓';
+        }
+
+        // Update table image
+        const imgEl = document.getElementById(`tableProdImg-${productId}`);
+        if (imgEl) imgEl.src = newUrl;
+
+        // Update count
+        const modCount = Object.keys(this.batchModified).length;
+        const countBadge = document.getElementById('batchModifiedCountBadge');
+        const saveBtn = document.getElementById('btnSaveAllBatchImages');
+        if (countBadge) countBadge.textContent = `${modCount} images modified`;
+        if (saveBtn) {
+          saveBtn.disabled = modCount === 0;
+          saveBtn.style.opacity = modCount > 0 ? '1' : '0.6';
+        }
+      }
+    } catch (err) {
+      UI.showToast(err.message || 'Failed to save image', 'error');
+    }
+  },
+
+  async saveAllBatchImages() {
+    const updates = Object.entries(this.batchModified).map(([id, url]) => ({
+      id: parseInt(id),
+      image_url: url
+    }));
+
+    if (updates.length === 0) {
+      UI.showToast('No image changes to save', 'info');
+      return;
+    }
+
+    const saveBtn = document.getElementById('btnSaveAllBatchImages');
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving images...';
+    }
+
+    try {
+      const res = await API.updateBatchProductImages(updates);
+      if (res.success) {
+        UI.showToast(res.message || `Successfully updated ${updates.length} product images!`, 'success');
+
+        // Apply to local cache
+        updates.forEach(u => {
+          if (this.productsMap[u.id]) {
+            this.productsMap[u.id].image_url = u.image_url;
+          }
+          const imgEl = document.getElementById(`tableProdImg-${u.id}`);
+          if (imgEl) imgEl.src = u.image_url;
+        });
+
+        this.batchModified = {};
+        UI.closeModal('batchImageModal');
+        this.loadProducts();
+      }
+    } catch (err) {
+      UI.showToast(err.message || 'Batch update failed', 'error');
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = `Save All Changed Images (${updates.length})`;
+      }
+    }
+  },
+
+  resetBatchChanges() {
+    this.batchModified = {};
+    this.renderBatchImageRows();
+    const countBadge = document.getElementById('batchModifiedCountBadge');
+    const saveBtn = document.getElementById('btnSaveAllBatchImages');
+    if (countBadge) countBadge.textContent = '0 images modified';
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.style.opacity = '0.6';
+      saveBtn.textContent = 'Save All Changed Images';
+    }
+    UI.showToast('Reset all pending image changes', 'info');
   },
 
   async handleProductFormSubmit(e) {

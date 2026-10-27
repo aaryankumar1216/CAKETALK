@@ -3276,6 +3276,127 @@ h1, h2, h3, h4, h5 {
   color: #FAF6F0;
 }
 
+/* ==========================================================================
+   Batch & Quick Product Image Studio Styles
+   ========================================================================== */
+
+.table-img-cell:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.batch-product-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem;
+  background: var(--glass-bg-subtle);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.batch-product-row:hover {
+  background: var(--glass-bg-elevated);
+}
+
+.batch-product-row.modified {
+  border-color: var(--color-terracotta);
+  background: rgba(199, 91, 63, 0.05);
+}
+
+.batch-thumb-wrap {
+  width: 60px;
+  height: 60px;
+  min-width: 60px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: #eee;
+  flex-shrink: 0;
+}
+
+.batch-thumb-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.batch-info-col {
+  width: 180px;
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+.batch-info-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--color-espresso);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.batch-info-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.batch-input-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.batch-url-input {
+  font-size: 0.82rem;
+  font-family: monospace;
+  padding: 0.45rem 0.7rem;
+  width: 100%;
+}
+
+.batch-action-col {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.batch-status-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
+.batch-status-badge.saved {
+  background: rgba(56, 161, 105, 0.12);
+  color: #2F855A;
+}
+
+.batch-status-badge.pending {
+  background: rgba(221, 107, 32, 0.16);
+  color: #C05621;
+}
+
+@media (max-width: 768px) {
+  .batch-product-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+  .batch-info-col {
+    width: 100%;
+  }
+  .batch-action-col {
+    justify-content: space-between;
+  }
+}
+
 [data-theme="dark"] .view-mode-toggle {
   background-color: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.15);

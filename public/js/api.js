@@ -65,6 +65,20 @@ const API = {
     });
   },
 
+  async updateProductImage(id, imageUrl) {
+    return this.request(`/products/${id}/image`, {
+      method: 'PUT',
+      body: JSON.stringify({ image_url: imageUrl })
+    });
+  },
+
+  async updateBatchProductImages(updates) {
+    return this.request('/products/batch-images', {
+      method: 'PUT',
+      body: JSON.stringify({ updates })
+    });
+  },
+
   async deleteProduct(id) {
     return this.request(`/products/${id}`, {
       method: 'DELETE'
