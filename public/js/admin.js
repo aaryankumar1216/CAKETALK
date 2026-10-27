@@ -118,9 +118,9 @@ const AdminApp = {
       if (!res.success) return;
       const data = res.analytics;
 
-      document.getElementById('kpiRevenue').textContent = `$${data.total_revenue.toFixed(2)}`;
+      document.getElementById('kpiRevenue').textContent = `₹${data.total_revenue.toLocaleString('en-IN')}`;
       document.getElementById('kpiOrders').textContent = data.total_orders;
-      document.getElementById('kpiAOV').textContent = `$${data.avg_order_value.toFixed(2)}`;
+      document.getElementById('kpiAOV').textContent = `₹${data.avg_order_value.toFixed(0)}`;
       document.getElementById('kpiCustomers').textContent = data.total_customers;
 
       // Status pill counts
@@ -140,7 +140,7 @@ const AdminApp = {
         catList.innerHTML = data.categories.map(c => `
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #EDF2F7; font-size: 0.88rem;">
             <span style="font-weight: 600;">${c.category}</span>
-            <span style="color: #718096;">${c.count} items • Avg $${c.avg_price.toFixed(2)}</span>
+            <span style="color: #718096;">${c.count} items • Avg ₹${c.avg_price.toFixed(0)}</span>
           </div>
         `).join('');
       }
@@ -153,7 +153,7 @@ const AdminApp = {
             <td style="font-weight: 700;">${o.order_number}</td>
             <td>${o.customer_name}</td>
             <td style="text-transform: capitalize;">${o.order_type}</td>
-            <td style="font-weight: 700;">$${o.total_amount.toFixed(2)}</td>
+            <td style="font-weight: 700;">₹${o.total_amount.toFixed(0)}</td>
             <td><span class="status-pill ${o.status.toLowerCase().replace(' ', '-')}">${o.status}</span></td>
           </tr>
         `).join('');
@@ -192,7 +192,7 @@ const AdminApp = {
               ${o.items.map(it => `<div>• <strong>${it.quantity}x</strong> ${it.title} ${it.custom_details ? `<span style="color: var(--color-terracotta);">(${it.custom_details})</span>` : ''}</div>`).join('')}
             </div>
           </td>
-          <td style="font-weight: 800; font-size: 0.95rem;">$${o.total_amount.toFixed(2)}</td>
+          <td style="font-weight: 800; font-size: 0.95rem;">₹${o.total_amount.toFixed(0)}</td>
           <td>
             <select class="status-select-dropdown" onchange="AdminApp.handleStatusChange('${o.order_number}', this.value)">
               <option value="Pending" ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
@@ -256,7 +256,7 @@ const AdminApp = {
             <div style="font-size: 0.75rem; color: #718096;">${p.badge || ''}</div>
           </td>
           <td>${p.category}</td>
-          <td style="font-weight: 700;">$${p.price.toFixed(2)}</td>
+          <td style="font-weight: 700;">₹${p.price.toFixed(0)}</td>
           <td>
             <span style="font-weight: 600; color: ${p.stock <= 5 ? '#E53E3E' : '#2D3748'};">${p.stock} units</span>
           </td>
@@ -418,7 +418,7 @@ const AdminApp = {
             <div style="font-size: 0.72rem; color: #718096; margin-top: 2px;">Tier: ${c.tier}</div>
           </td>
           <td>${c.order_count} orders</td>
-          <td style="font-weight: 800;">$${c.total_spent.toFixed(2)}</td>
+          <td style="font-weight: 800;">₹${c.total_spent.toFixed(0)}</td>
         </tr>
       `).join('');
     } catch (e) {
@@ -440,8 +440,8 @@ const AdminApp = {
         <tr>
           <td style="font-weight: 800; font-family: monospace; font-size: 1rem; color: var(--color-espresso);">${cp.code}</td>
           <td>${cp.description || '—'}</td>
-          <td style="font-weight: 700;">${cp.discount_percent > 0 ? `${cp.discount_percent}% OFF` : `$${cp.flat_discount} OFF`}</td>
-          <td>$${cp.min_order.toFixed(2)}</td>
+          <td style="font-weight: 700;">${cp.discount_percent > 0 ? `${cp.discount_percent}% OFF` : `₹${cp.flat_discount} OFF`}</td>
+          <td>₹${cp.min_order.toFixed(0)}</td>
           <td>${cp.usage_count} uses</td>
           <td>
             <button class="btn btn-sm ${cp.active ? 'btn-secondary' : 'btn-dark'}" onclick="AdminApp.toggleCoupon(${cp.id})">

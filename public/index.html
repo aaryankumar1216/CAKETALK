@@ -32,7 +32,7 @@
 
   <!-- Top Announcement Bar -->
   <aside class="announcement-bar" aria-label="Bakery Announcements">
-    <span>✨ <strong>FREE ARTISAN DELIVERY</strong> on orders over $40 with code <strong>FREESHIP</strong></span>
+    <span>✨ <strong>FREE ARTISAN DELIVERY</strong> on orders over ₹300 with code <strong>FREESHIP</strong></span>
     <span>•</span>
     <span>Morning oven bakes ready daily at 7:00 AM</span>
     <span>•</span>
@@ -246,12 +246,11 @@
       <div class="container">
       <div class="category-pill-container" role="tablist">
         <button class="category-pill active" data-category="All" role="tab">All Items</button>
-        <button class="category-pill" data-category="Artisan Breads" role="tab">Artisan Breads</button>
-        <button class="category-pill" data-category="Viennoiserie" role="tab">Viennoiserie & Pastries</button>
-        <button class="category-pill" data-category="Custom Cakes" role="tab">Custom Cakes</button>
-        <button class="category-pill" data-category="Savory & Sandwiches" role="tab">Savory & Sandwiches</button>
-        <button class="category-pill" data-category="Gluten-Free & Vegan" role="tab">Gluten-Free & Vegan</button>
-        <button class="category-pill" data-category="Gift Sets" role="tab">Gift Sets & Hampers</button>
+        <button class="category-pill" data-category="Snacks" role="tab">Snacks</button>
+        <button class="category-pill" data-category="Cookies" role="tab">Cookies</button>
+        <button class="category-pill" data-category="LJ Specials" role="tab">LJ Specials</button>
+        <button class="category-pill" data-category="Special Mixer with Shanks" role="tab">Special Mixer with Shanks</button>
+        <button class="category-pill" data-category="Birthday Cake" role="tab">Birthday Cake</button>
       </div>
 
       <!-- Secondary Filter & Search Toolbar -->
@@ -428,7 +427,7 @@
           </div>
           <p class="review-comment">"I lived in Paris for 3 years, and CakeTalk's croissants are genuinely the only ones in the country that rival the French bakeries. The flakiness is unreal!"</p>
           <div class="review-footer-meta">
-            <span>Verified Buyer • Viennoiserie</span>
+            <span>Verified Buyer • Snacks</span>
             <span>2 weeks ago</span>
           </div>
         </div>
@@ -444,7 +443,7 @@
         <div class="callout-icon">🏅</div>
         <h3 class="callout-title">The CakeTalk Crumb Club</h3>
         <p class="callout-desc">
-          Join our artisan loyalty circle. Earn 1 Crumb Point for every $1 spent and unlock delicious sweet rewards on birthdays and holidays.
+          Join our artisan loyalty circle. Earn 1 Crumb Point for every ₹10 spent and unlock delicious sweet rewards on birthdays and holidays.
         </p>
         <ul class="callout-perks-list">
           <li><span class="bullet">✓</span> 50 Welcome Crumb Points upon signing up</li>
@@ -459,14 +458,14 @@
         <div class="callout-icon">🎁</div>
         <h3 class="callout-title">Curated Bakery Gifting</h3>
         <p class="callout-desc">
-          Celebrate life's precious milestones with our Parisian macaron boxes, breakfast hampers, and digital gift cards with personalized handwritten notes.
+          Celebrate life's precious milestones with our special bakery treats, gift hampers, and digital gift cards with personalized handwritten notes.
         </p>
         <ul class="callout-perks-list">
           <li><span class="bullet">✓</span> Hand-tied silk terracotta ribbon & custom foil gift tags</li>
-          <li><span class="bullet">✓</span> Nationwide express gift delivery with fresh insulated coolers</li>
+          <li><span class="bullet">✓</span> Express bakery delivery with fresh insulated coolers</li>
           <li><span class="bullet">✓</span> Instant digital e-gift cards with customizable message</li>
         </ul>
-        <a href="#catalog" class="btn btn-primary btn-sm" onclick="document.querySelector('[data-category=\\'Gift Sets\\']')?.click();">Explore Gift Hampers</a>
+        <a href="#catalog" class="btn btn-primary btn-sm" onclick="document.querySelector('[data-category=\\'LJ Specials\\']')?.click();">Explore LJ Specials</a>
       </div>
     </div>
   </section>
@@ -596,9 +595,9 @@
           <div class="form-group">
             <label>Budget Range</label>
             <select id="inqBudget" class="form-control">
-              <option value="$250 - $450">$250 – $450 (Intimate Celebration)</option>
-              <option value="$500 - $850">$500 – $850 (Multi-Tier Wedding)</option>
-              <option value="$1,000+">$1,000+ (Grand Gala / Corporate)</option>
+              <option value="₹1,500 - ₹3,000">₹1,500 – ₹3,000 (Intimate Celebration)</option>
+              <option value="₹3,000 - ₹6,000">₹3,000 – ₹6,000 (Multi-Tier Celebration)</option>
+              <option value="₹6,000+">₹6,000+ (Grand Gala / Corporate)</option>
             </select>
           </div>
         </div>
@@ -688,7 +687,7 @@
       <div class="sticky-cart-info">
         <span class="sticky-cart-bag-icon">👜</span>
         <div>
-          <div id="stickyCartTotal" class="sticky-cart-total-val">$0.00</div>
+          <div id="stickyCartTotal" class="sticky-cart-total-val">₹0</div>
           <div id="stickyCartCount" class="sticky-cart-count-lbl">0 items in bag</div>
         </div>
       </div>
@@ -839,7 +838,7 @@
                   <span>Total Revenue</span>
                   <div class="kpi-icon-box green">💰</div>
                 </div>
-                <div id="kpiRevenue" class="kpi-value">$0.00</div>
+                <div id="kpiRevenue" class="kpi-value">₹0</div>
                 <div class="kpi-trend">↑ +18.4% vs last week</div>
               </div>
 
@@ -857,8 +856,8 @@
                   <span>Avg Order Value</span>
                   <div class="kpi-icon-box blue">📈</div>
                 </div>
-                <div id="kpiAOV" class="kpi-value">$0.00</div>
-                <div class="kpi-trend">↑ $58.20 average basket</div>
+                <div id="kpiAOV" class="kpi-value">₹0</div>
+                <div class="kpi-trend">↑ ₹120.00 average basket</div>
               </div>
 
               <div class="kpi-card">
@@ -1016,7 +1015,7 @@
             <div class="admin-card">
               <div class="admin-card-header">
                 <h3>Active Promotions & Promo Codes</h3>
-                <button class="btn btn-primary btn-sm" onclick="alert('Demo promo codes SWEET10 (10% off), FREESHIP (Free delivery), and BAKERLOVE ($5 off) are active!')">+ New Promo Code</button>
+                <button class="btn btn-primary btn-sm" onclick="alert('Demo promo codes SWEET10 (10% off), FREESHIP (Free delivery over ₹300), and BAKERLOVE (15% off) are active!')">+ New Promo Code</button>
               </div>
               <div class="admin-table-container">
                 <table class="admin-table">
@@ -1102,19 +1101,19 @@
       <div class="cart-totals-table">
         <div class="cart-total-line">
           <span>Subtotal</span>
-          <span id="cartDrawerSubtotal" style="font-weight: 600;">$0.00</span>
+          <span id="cartDrawerSubtotal" style="font-weight: 600;">₹0</span>
         </div>
         <div id="cartDrawerDiscountRow" class="cart-total-line" style="display: none; color: var(--color-success);">
           <span>Promo Discount</span>
-          <span id="cartDrawerDiscount" style="font-weight: 600;">-$0.00</span>
+          <span id="cartDrawerDiscount" style="font-weight: 600;">-₹0</span>
         </div>
         <div class="cart-total-line">
           <span>Delivery</span>
-          <span id="cartDrawerDelivery" style="font-weight: 600;">$5.00</span>
+          <span id="cartDrawerDelivery" style="font-weight: 600;">₹40</span>
         </div>
         <div class="cart-total-line cart-total-grand">
           <span>Estimated Total</span>
-          <span id="cartDrawerTotal">$0.00</span>
+          <span id="cartDrawerTotal">₹0</span>
         </div>
       </div>
 
@@ -1164,20 +1163,20 @@
                 <div class="opt-title">Vanilla Bean</div>
                 <div class="opt-price-tag">Standard</div>
               </div>
-              <div class="builder-opt-card" data-sponge="chocolate" data-name="Valrhona 66% Dark Chocolate" data-color="#3D2314" data-price="4">
+              <div class="builder-opt-card" data-sponge="chocolate" data-name="Valrhona 66% Dark Chocolate" data-color="#3D2314" data-price="50">
                 <div class="opt-swatch" style="background: #3D2314;"></div>
                 <div class="opt-title">Valrhona Chocolate</div>
-                <div class="opt-price-tag">+$4.00</div>
+                <div class="opt-price-tag">+₹50</div>
               </div>
-              <div class="builder-opt-card" data-sponge="red-velvet" data-name="Red Velvet Cocoa" data-color="#8E2829" data-price="5">
+              <div class="builder-opt-card" data-sponge="red-velvet" data-name="Red Velvet Cocoa" data-color="#8E2829" data-price="60">
                 <div class="opt-swatch" style="background: #8E2829;"></div>
                 <div class="opt-title">Red Velvet</div>
-                <div class="opt-price-tag">+$5.00</div>
+                <div class="opt-price-tag">+₹60</div>
               </div>
-              <div class="builder-opt-card" data-sponge="matcha" data-name="Ceremonial Uji Matcha" data-color="#8FA382" data-price="6">
+              <div class="builder-opt-card" data-sponge="matcha" data-name="Ceremonial Uji Matcha" data-color="#8FA382" data-price="80">
                 <div class="opt-swatch" style="background: #8FA382;"></div>
                 <div class="opt-title">Uji Matcha</div>
-                <div class="opt-price-tag">+$6.00</div>
+                <div class="opt-price-tag">+₹80</div>
               </div>
             </div>
           </div>
@@ -1188,17 +1187,17 @@
               <span><span class="step-number-tag">2</span> Size & Tiers</span>
             </div>
             <div class="option-cards-grid">
-              <div class="builder-opt-card" data-size="6-inch" data-name="6&quot; Petit (4-6 Servings)" data-tiers="1" data-multiplier="0.85" data-baseprice="48">
+              <div class="builder-opt-card" data-size="6-inch" data-name="6&quot; Petit (4-6 Servings)" data-tiers="1" data-multiplier="1.0" data-baseprice="500">
                 <div class="opt-title">6" Petit</div>
-                <div class="opt-price-tag">4–6 Servings</div>
+                <div class="opt-price-tag">₹500 (4–6 Servings)</div>
               </div>
-              <div class="builder-opt-card active" data-size="8-inch" data-name="8&quot; Classic (10-14 Servings)" data-tiers="1" data-multiplier="1.0" data-baseprice="48">
+              <div class="builder-opt-card active" data-size="8-inch" data-name="8&quot; Classic (10-14 Servings)" data-tiers="1" data-multiplier="1.0" data-baseprice="650">
                 <div class="opt-title">8" Classic</div>
-                <div class="opt-price-tag">10–14 Servings</div>
+                <div class="opt-price-tag">₹650 (10–14 Servings)</div>
               </div>
-              <div class="builder-opt-card" data-size="2-tier" data-name="2-Tier Grand Celebration (35-45 Servings)" data-tiers="2" data-multiplier="1.95" data-baseprice="48">
+              <div class="builder-opt-card" data-size="2-tier" data-name="2-Tier Grand Celebration (35-45 Servings)" data-tiers="2" data-multiplier="1.0" data-baseprice="1400">
                 <div class="opt-title">2-Tier Grand</div>
-                <div class="opt-price-tag">35–45 Servings</div>
+                <div class="opt-price-tag">₹1,400 (35–45 Servings)</div>
               </div>
             </div>
           </div>
@@ -1214,15 +1213,15 @@
                 <div class="opt-title">Swiss Meringue</div>
                 <div class="opt-price-tag">Standard</div>
               </div>
-              <div class="builder-opt-card" data-frosting="chocolate-ganache" data-name="Dark Chocolate Ganache" data-color="#2D1A10" data-price="5">
+              <div class="builder-opt-card" data-frosting="chocolate-ganache" data-name="Dark Chocolate Ganache" data-color="#2D1A10" data-price="60">
                 <div class="opt-swatch" style="background: #2D1A10;"></div>
                 <div class="opt-title">Dark Ganache</div>
-                <div class="opt-price-tag">+$5.00</div>
+                <div class="opt-price-tag">+₹60</div>
               </div>
-              <div class="builder-opt-card" data-frosting="blush-pink" data-name="Blush Strawberry Cream" data-color="#F8D9D6" data-price="3">
+              <div class="builder-opt-card" data-frosting="blush-pink" data-name="Blush Strawberry Cream" data-color="#F8D9D6" data-price="40">
                 <div class="opt-swatch" style="background: #F8D9D6;"></div>
                 <div class="opt-title">Blush Pink</div>
-                <div class="opt-price-tag">+$3.00</div>
+                <div class="opt-price-tag">+₹40</div>
               </div>
             </div>
           </div>
@@ -1233,21 +1232,21 @@
               <span><span class="step-number-tag">4</span> Outer Aesthetic</span>
             </div>
             <div class="option-cards-grid">
-              <div class="builder-opt-card active" data-design="lambeth" data-name="Vintage Lambeth Piping" data-price="8">
+              <div class="builder-opt-card active" data-design="lambeth" data-name="Vintage Lambeth Piping" data-price="100">
                 <div class="opt-title">Lambeth Piping</div>
-                <div class="opt-price-tag">+$8.00</div>
+                <div class="opt-price-tag">+₹100</div>
               </div>
-              <div class="builder-opt-card" data-design="drip" data-name="Belgian Chocolate Drip" data-price="5">
+              <div class="builder-opt-card" data-design="drip" data-name="Belgian Chocolate Drip" data-price="60">
                 <div class="opt-title">Chocolate Drip</div>
-                <div class="opt-price-tag">+$5.00</div>
+                <div class="opt-price-tag">+₹60</div>
               </div>
               <div class="builder-opt-card" data-design="rustic" data-name="Semi-Naked Rustic" data-price="0">
                 <div class="opt-title">Semi-Naked</div>
-                <div class="opt-price-tag">$0.00</div>
+                <div class="opt-price-tag">₹0</div>
               </div>
-              <div class="builder-opt-card" data-design="botanical" data-name="24K Gold & Botanicals" data-price="10">
+              <div class="builder-opt-card" data-design="botanical" data-name="24K Gold & Botanicals" data-price="150">
                 <div class="opt-title">Gold Leaf</div>
-                <div class="opt-price-tag">+$10.00</div>
+                <div class="opt-price-tag">+₹150</div>
               </div>
             </div>
           </div>
@@ -1258,21 +1257,21 @@
               <span><span class="step-number-tag">5</span> Luxury Toppers</span>
             </div>
             <div class="option-cards-grid">
-              <div class="builder-opt-card active" data-topper="macarons" data-name="Parisian Macarons Crown" data-price="8">
+              <div class="builder-opt-card active" data-topper="macarons" data-name="Parisian Macarons Crown" data-price="100">
                 <div class="opt-title">French Macarons</div>
-                <div class="opt-price-tag">+$8.00</div>
+                <div class="opt-price-tag">+₹100</div>
               </div>
-              <div class="builder-opt-card" data-topper="candle" data-name="Gold Sparkler Candle" data-price="4">
+              <div class="builder-opt-card" data-topper="candle" data-name="Gold Sparkler Candle" data-price="50">
                 <div class="opt-title">Sparkler Candle</div>
-                <div class="opt-price-tag">+$4.00</div>
+                <div class="opt-price-tag">+₹50</div>
               </div>
-              <div class="builder-opt-card" data-topper="berries" data-name="Fresh Raspberry Medley" data-price="6">
+              <div class="builder-opt-card" data-topper="berries" data-name="Fresh Raspberry Medley" data-price="80">
                 <div class="opt-title">Fresh Berries</div>
-                <div class="opt-price-tag">+$6.00</div>
+                <div class="opt-price-tag">+₹80</div>
               </div>
               <div class="builder-opt-card" data-topper="none" data-name="No Topper" data-price="0">
                 <div class="opt-title">None</div>
-                <div class="opt-price-tag">$0.00</div>
+                <div class="opt-price-tag">₹0</div>
               </div>
             </div>
           </div>
@@ -1292,7 +1291,7 @@
           <div class="builder-bottom-dock">
             <div>
               <div class="builder-price-label">Custom Build Total</div>
-              <div id="builderCalcPrice" class="builder-calc-price">$64.00</div>
+              <div id="builderCalcPrice" class="builder-calc-price">₹850</div>
             </div>
             <button id="btnAddCustomCakeToBag" class="btn btn-primary btn-lg">
               <span>+</span> Add Custom Cake to Bag
@@ -1382,7 +1381,7 @@
             <div id="checkoutOrderSummaryList"></div>
             <div style="border-top: 1px dashed var(--color-cream-border); padding-top: 0.65rem; margin-top: 0.65rem; display: flex; justify-content: space-between; font-weight: 800; font-size: 1.15rem;">
               <span>Total to Pay:</span>
-              <span id="checkoutFinalTotal">$0.00</span>
+              <span id="checkoutFinalTotal">₹0</span>
             </div>
           </div>
 
@@ -1407,7 +1406,7 @@
         <div style="background: var(--color-cream-bg); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 380px; margin: 0 auto 1.5rem; border: 1px solid var(--color-cream-border);">
           <div style="font-size: 0.8rem; color: var(--color-text-muted); text-transform: uppercase; font-weight: 700;">Your Tracking Code</div>
           <div id="confOrderNumber" style="font-family: monospace; font-size: 1.8rem; font-weight: 800; color: var(--color-espresso); margin: 0.35rem 0;">CT-89241</div>
-          <div id="confTotal" style="font-weight: 700; color: var(--color-espresso); font-size: 1.1rem;">$0.00</div>
+          <div id="confTotal" style="font-weight: 700; color: var(--color-espresso); font-size: 1.1rem;">₹0</div>
           <div id="confPoints" style="color: var(--color-warning); font-size: 0.85rem; font-weight: 700; margin-top: 0.5rem;">+54 Crumb Points Earned</div>
         </div>
 
@@ -1463,7 +1462,7 @@
           <div style="border-top: 1px dashed var(--color-cream-border); padding-top: 1rem; margin-top: 1rem; font-size: 0.85rem;">
             <div><strong>Scheduled For:</strong> <span id="trackSchedule">2026-10-06 (14:30 - 15:30)</span></div>
             <div style="margin-top: 4px;"><strong>Chef Note:</strong> <span id="trackChefNotes" style="color: var(--color-text-muted);">European cultured butter laminated at 4°C.</span></div>
-            <div style="margin-top: 4px;"><strong>Order Total:</strong> <span id="trackTotal" style="font-weight: 700;">$65.30</span></div>
+            <div style="margin-top: 4px;"><strong>Order Total:</strong> <span id="trackTotal" style="font-weight: 700;">₹0</span></div>
           </div>
         </div>
 
@@ -1620,17 +1619,16 @@
             <div class="form-group">
               <label>Category *</label>
               <select id="prodCategorySelect" class="form-control" required>
-                <option value="Artisan Breads">Artisan Breads</option>
-                <option value="Viennoiserie">Viennoiserie & Pastries</option>
-                <option value="Custom Cakes">Custom Cakes</option>
-                <option value="Savory & Sandwiches">Savory & Sandwiches</option>
-                <option value="Gluten-Free & Vegan">Gluten-Free & Vegan</option>
-                <option value="Gift Sets">Gift Sets & Hampers</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Cookies">Cookies</option>
+                <option value="LJ Specials">LJ Specials</option>
+                <option value="Special Mixer with Shanks">Special Mixer with Shanks</option>
+                <option value="Birthday Cake">Birthday Cake</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Price ($ USD) *</label>
-              <input type="number" id="prodPriceInput" class="form-control" step="0.25" min="1" required placeholder="48.00">
+              <label>Price (₹ INR) *</label>
+              <input type="number" id="prodPriceInput" class="form-control" step="1" min="1" required placeholder="110">
             </div>
           </div>
 

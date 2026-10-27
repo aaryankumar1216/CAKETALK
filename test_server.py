@@ -62,13 +62,14 @@ class TestCakeTalk(unittest.TestCase):
         print("✓ GET /api/products passed. Total items:", len(res["products"]))
 
     def test_filter_products_by_category(self):
-        req = MockRequest("GET", "/api/products?category=Artisan%20Breads")
+        req = MockRequest("GET", "/api/products?category=Snacks")
         req.do_GET()
         res = req.get_response_json()
         self.assertTrue(res.get("success"))
+        self.assertGreater(len(res["products"]), 0)
         for p in res["products"]:
-            self.assertEqual(p["category"], "Artisan Breads")
-        print("✓ GET /api/products?category=... passed.")
+            self.assertEqual(p["category"], "Snacks")
+        print("✓ GET /api/products?category=Snacks passed. Total snacks:", len(res["products"]))
 
     def test_get_analytics(self):
         req = MockRequest("GET", "/api/analytics")
@@ -83,19 +84,19 @@ class TestCakeTalk(unittest.TestCase):
         order_body = {
             "customer_name": "Test Patron",
             "customer_email": "test@caketalk.com",
-            "customer_phone": "+1 555-1234",
+            "customer_phone": "+91 98765 43210",
             "order_type": "delivery",
             "scheduled_date": "2026-10-10",
             "scheduled_time": "14:00 - 15:00",
-            "delivery_address": "100 Sweet St",
+            "delivery_address": "100 Bakery Lane, Bangalore",
             "items": [
-                {"id": 1, "title": "Traditional Country Sourdough", "price": 10.50, "quantity": 2}
+                {"id": 1, "title": "Veg Puff", "price": 25.0, "quantity": 4}
             ],
-            "subtotal": 21.00,
+            "subtotal": 100.00,
             "discount": 0.0,
-            "delivery_fee": 5.00,
-            "total_amount": 26.00,
-            "payment_method": "Credit Card"
+            "delivery_fee": 40.00,
+            "total_amount": 140.00,
+            "payment_method": "UPI / Cash on Delivery"
         }
         req = MockRequest("POST", "/api/orders", body=order_body)
         req.do_POST()
@@ -113,19 +114,19 @@ class TestCakeTalk(unittest.TestCase):
         print("✓ GET /api/orders/<id> tracking passed.")
 
         # Test updating order status
-        status_req = MockRequest("PUT", f"/api/orders/{res['order_number']}/status", body={"status": "In Baking", "chef_notes": "Proofing in basket"})
+        status_req = MockRequest("PUT", f"/api/orders/{res['order_number']}/status", body={"status": "In Baking", "chef_notes": "Baking fresh veg puffs"})
         status_req.do_PUT()
         status_res = status_req.get_response_json()
         self.assertTrue(status_res.get("success"))
         print("✓ PUT /api/orders/<id>/status passed.")
 
     def test_coupon_validation(self):
-        coupon_req = MockRequest("POST", "/api/coupons/validate", body={"code": "SWEET10", "order_amount": 50.00})
+        coupon_req = MockRequest("POST", "/api/coupons/validate", body={"code": "SWEET10", "order_amount": 300.00})
         coupon_req.do_POST()
         res = coupon_req.get_response_json()
         self.assertTrue(res.get("success"))
-        self.assertEqual(res["discount_amount"], 5.00)
-        print("✓ POST /api/coupons/validate passed. 10% on $50 = $5.00")
+        self.assertEqual(res["discount_amount"], 30.00)
+        print("✓ POST /api/coupons/validate passed. 10% on ₹300 = ₹30.00")
 
     def test_inventory(self):
         inv_req = MockRequest("GET", "/api/inventory")

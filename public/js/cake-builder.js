@@ -17,7 +17,7 @@ class CakeStudio {
         name: '8" Classic Celebration (10-14 Servings)',
         tiers: 1,
         multiplier: 1.0,
-        basePrice: 48.00
+        basePrice: 650.00
       },
       frosting: {
         id: 'vanilla-meringue',
@@ -28,12 +28,12 @@ class CakeStudio {
       design: {
         id: 'lambeth',
         name: 'Vintage Lambeth Piping',
-        priceAdd: 8.00
+        priceAdd: 100.00
       },
       topper: {
         id: 'macarons',
         name: 'Parisian Macarons Crown',
-        priceAdd: 8.00
+        priceAdd: 100.00
       },
       inscription: 'Happy Birthday!'
     };
@@ -85,7 +85,7 @@ class CakeStudio {
   renderSummary() {
     const total = this.calculatePrice();
     if (this.priceElement) {
-      this.priceElement.textContent = `$${total.toFixed(2)}`;
+      this.priceElement.textContent = `₹${Math.round(total)}`;
     }
     if (this.specsElement) {
       this.specsElement.textContent = `${this.state.size.name.split(' (')[0]} • ${this.state.sponge.name}`;

@@ -196,186 +196,434 @@ def seed_products(conn):
     cursor.execute("SELECT COUNT(*) FROM products")
     if cursor.fetchone()[0] == 0:
         products = [
-            # Artisan Breads
+            # ------------------ SNACKS (10 items) ------------------
             (
-                "Traditional Country Sourdough",
-                "Artisan Breads",
-                10.50,
-                "Naturally fermented 36-hour wild levain loaf with a blistered, caramelised crust and tender, airy crumb.",
-                "https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?auto=format&fit=crop&w=800&q=80",
-                "Wild Ferment",
-                "Vegan, Organic",
-                30, 1, 4.95, 42
-            ),
-            (
-                "Olive & Rosemary Focaccia",
-                "Artisan Breads",
-                12.00,
-                "Ligurian-style golden focaccia drenched in cold-pressed extra virgin olive oil, Kalamata olives, and fresh organic rosemary.",
-                "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80",
-                "Daily Bake",
-                "Vegan",
-                20, 0, 4.88, 28
-            ),
-            (
-                "Seeded Rye & Spelt Batard",
-                "Artisan Breads",
-                11.00,
-                "Hearty ancient grains blend packed with toasted pumpkin, sunflower, and golden flax seeds with deep nutty notes.",
-                "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
-                "High Fiber",
-                "Vegan, Whole Grain",
-                18, 0, 4.82, 19
-            ),
-
-            # Viennoiserie & Pastries
-            (
-                "Pure French Butter Croissant",
-                "Viennoiserie",
-                4.75,
-                "72 delicate honeycomb layers laminated with cultured Normandy butter (84% butterfat) for the ultimate flaky shatter.",
-                "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80",
-                "Bestseller",
-                "Vegetarian",
-                45, 1, 4.98, 86
-            ),
-            (
-                "Valrhona Pain au Chocolat",
-                "Viennoiserie",
-                5.50,
-                "Flaky golden laminated pastry rolled with double batons of 66% Valrhona French dark chocolate.",
-                "https://images.unsplash.com/photo-1608198093002-ad4e005484ec?auto=format&fit=crop&w=800&q=80",
-                "Chef's Choice",
-                "Vegetarian",
-                35, 1, 4.94, 64
-            ),
-            (
-                "Pistachio & Cardamom Cruffin",
-                "Viennoiserie",
-                6.50,
-                "Croissant-muffin hybrid dusted in fragrant spiced sugar and filled with rich Sicilian pistachio pastry cream.",
-                "https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=800&q=80",
-                "Seasonal",
-                "Vegetarian",
-                25, 0, 4.90, 31
-            ),
-            (
-                "Almond Frangipane Twist",
-                "Viennoiserie",
-                5.75,
-                "Twice-baked croissant pastry filled with rich almond cream, topped with toasted sliced almonds and powdered sugar.",
-                "https://images.unsplash.com/photo-1623334044303-241021148842?auto=format&fit=crop&w=800&q=80",
-                "Morning Classic",
-                "Vegetarian",
-                22, 0, 4.86, 24
-            ),
-
-            # Custom Cakes & Celebration Cakes
-            (
-                "Madagascar Vanilla & Raspberry Silk Cake",
-                "Custom Cakes",
-                48.00,
-                "Three layers of delicate sponge infused with bourbon vanilla beans, tart raspberry compote, and silky Swiss meringue buttercream.",
-                "https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=800&q=80",
-                "Signature Cake",
-                "Vegetarian, Nut-Free",
-                15, 1, 4.97, 53
-            ),
-            (
-                "Belgian Dark Truffle Ganache Cake",
-                "Custom Cakes",
-                54.00,
-                "Decadent dark chocolate layers soaked in coffee liqueur, smothered in mirror chocolate ganache and cocoa nib crisp.",
-                "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
-                "Crowd Favorite",
-                "Vegetarian",
-                12, 1, 4.96, 71
-            ),
-            (
-                "Matcha Green Tea & White Peach Gateau",
-                "Custom Cakes",
-                52.00,
-                "Uji ceremonial grade matcha chiffon cake paired with sweet Japanese white peach gelée and whipped mascarpone cream.",
-                "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80",
-                "Artisan Special",
-                "Vegetarian",
-                10, 0, 4.89, 39
-            ),
-            (
-                "Vintage Lambeth Birthday Cake",
-                "Custom Cakes",
-                62.00,
-                "Victorian over-piped buttercream masterpiece with intricate borders, maraschino cherries, and customizable greeting plaque.",
-                "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&w=800&q=80",
-                "Trending Design",
-                "Vegetarian",
-                8, 1, 4.99, 47
-            ),
-
-            # Savory & Sandwiches
-            (
-                "Heirloom Tomato & Whipped Feta Galette",
-                "Savory & Sandwiches",
-                8.50,
-                "All-butter flaky pastry crust filled with herb-infused goat feta, ripe organic heirloom tomatoes, and aged balsamic glaze.",
+                "Veg Puff",
+                "Snacks",
+                25.0,
+                "Yummy vegetable puff with sauce.",
                 "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
-                "Lunch Favorite",
-                "Vegetarian",
-                20, 0, 4.85, 23
+                "Popular",
+                "Veg",
+                45, 1, 4.8, 42
             ),
             (
-                "Truffled Prosciutto & Brie Baguette",
-                "Savory & Sandwiches",
-                13.50,
-                "Crispy artisanal baguette with thinly sliced San Daniele prosciutto, creamy French Brie, wild arugula, and white truffle honey.",
-                "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=800&q=80",
-                "Gourmet Deli",
-                "Nut-Free",
-                16, 1, 4.92, 35
+                "Mushroom Puff",
+                "Snacks",
+                30.0,
+                "It's pure veg mushroom.",
+                "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=800&q=80",
+                "Fresh Bake",
+                "Veg",
+                35, 1, 4.8, 31
+            ),
+            (
+                "Aloo Bun",
+                "Snacks",
+                25.0,
+                "It's aloo bhaji masala.",
+                "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80",
+                "Classic",
+                "Veg",
+                40, 0, 4.7, 26
+            ),
+            (
+                "Masala Bun",
+                "Snacks",
+                25.0,
+                "It's spicy with masala.",
+                "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80",
+                "SPICY",
+                "Veg",
+                50, 1, 4.9, 58
+            ),
+            (
+                "Plain Curry Puff",
+                "Snacks",
+                70.0,
+                "It's a shanks time spicy",
+                "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+                "SPICY",
+                "Veg",
+                30, 0, 4.6, 21
+            ),
+            (
+                "Donuts 1pc",
+                "Snacks",
+                45.0,
+                "It's chocolate fell",
+                "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=800&q=80",
+                "Chocolate",
+                "Veg",
+                30, 0, 4.7, 34
+            ),
+            (
+                "Cream Bun",
+                "Snacks",
+                55.0,
+                "(Veg preparation) It's a good feel with cream.",
+                "https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=800&q=80",
+                "Kids Favorite",
+                "Veg",
+                35, 0, 4.8, 48
+            ),
+            (
+                "Jum Bun",
+                "Snacks",
+                55.0,
+                "Jam mix",
+                "https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?auto=format&fit=crop&w=800&q=80",
+                "Sweet Jam",
+                "Veg",
+                25, 0, 4.6, 25
+            ),
+            (
+                "Lava Cake",
+                "Snacks",
+                40.0,
+                "Chocolate fell",
+                "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+                "Hot Favorite",
+                "Veg",
+                40, 1, 4.9, 72
+            ),
+            (
+                "Pakoda 250g",
+                "Snacks",
+                95.0,
+                "It's a shanks time.",
+                "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80",
+                "Tea Time Snack",
+                "Veg",
+                30, 0, 4.7, 38
             ),
 
-            # Gluten-Free & Vegan
+            # ------------------ COOKIES (2 items) ------------------
             (
-                "Gluten-Free Orange Blossom & Almond Loaf",
-                "Gluten-Free & Vegan",
-                14.00,
-                "Naturally flourless cake made with blanched almonds, citrus zest, and wildflower honey syrup.",
-                "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=800&q=80",
-                "Gluten-Free",
-                "Gluten-Free, Dairy-Free",
-                15, 1, 4.91, 33
+                "Special Cookies (250 g, 6 Pieces)",
+                "Cookies",
+                110.0,
+                "Crispy freshly baked traditional bakery cookies.",
+                "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=800&q=80",
+                "Iyengar Special",
+                "Veg",
+                45, 1, 4.9, 61
             ),
             (
-                "Vegan Salted Caramel Chocolate Cupcake Box (4pk)",
-                "Gluten-Free & Vegan",
-                18.00,
-                "Rich dark cacao sponge filled with house-made dairy-free coconut caramel and velvety fudge swirl frosting.",
-                "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?auto=format&fit=crop&w=800&q=80",
-                "100% Plant-Based",
-                "Vegan, Dairy-Free",
-                20, 0, 4.87, 29
+                "Salt and sweet biscuit",
+                "Cookies",
+                110.0,
+                "Its a biscuit with badam",
+                "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=800&q=80",
+                "Badam Special",
+                "Veg",
+                40, 1, 4.8, 45
             ),
 
-            # Luxury Gift Sets
+            # ------------------ LJ SPECIALS (18 items) ------------------
             (
-                "The Master Baker's Breakfast Hamper",
-                "Gift Sets",
-                45.00,
-                "Curated wicker basket featuring fresh country sourdough, 2 butter croissants, organic blackberry jam, and artisan roast coffee beans.",
+                "Special Rusk (500 grm)",
+                "LJ Specials",
+                115.0,
+                "Yummy",
                 "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
-                "Gifting Pick",
-                "Artisan Selection",
-                12, 1, 4.98, 41
+                "Bestseller",
+                "Veg",
+                55, 1, 4.9, 67
             ),
             (
-                "Parisian Macaron Gift Collection (12pk)",
-                "Gift Sets",
-                32.00,
-                "Handcrafted almond meringue shells filled with dark ganache, Tahitian vanilla, salted caramel, pistachio, and passion fruit curd.",
-                "https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80",
-                "Luxury Box",
-                "Gluten-Free, Vegetarian",
-                25, 1, 4.95, 59
+                "Rusk (250 g)",
+                "LJ Specials",
+                60.0,
+                "Sweet rusk",
+                "https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?auto=format&fit=crop&w=800&q=80",
+                "Daily Rusk",
+                "Veg",
+                45, 0, 4.7, 35
+            ),
+            (
+                "Special Bread",
+                "LJ Specials",
+                60.0,
+                "Tea with bread.",
+                "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=800&q=80",
+                "Fresh Loaf",
+                "Veg",
+                60, 0, 4.8, 52
+            ),
+            (
+                "Special Bun",
+                "LJ Specials",
+                35.0,
+                "It's a bun.",
+                "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80",
+                "Soft Bun",
+                "Veg",
+                40, 0, 4.6, 29
+            ),
+            (
+                "Wheat Bread",
+                "LJ Specials",
+                80.0,
+                "It's a healthy bread.",
+                "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
+                "Healthy Choice",
+                "Veg",
+                35, 0, 4.8, 38
+            ),
+            (
+                "Khara Bun",
+                "LJ Specials",
+                35.0,
+                "Spicy",
+                "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80",
+                "SPICY",
+                "Veg",
+                50, 1, 4.9, 81
+            ),
+            (
+                "Pav bhaji bun",
+                "LJ Specials",
+                40.0,
+                "Soft pillowy pav buns for pav bhaji.",
+                "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80",
+                "Soft Pav",
+                "Veg",
+                45, 0, 4.7, 31
+            ),
+            (
+                "Dilpasand",
+                "LJ Specials",
+                115.0,
+                "Dry fruits.",
+                "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=800&q=80",
+                "Authentic Treat",
+                "Veg",
+                35, 1, 4.9, 69
+            ),
+            (
+                "Kova Dilpasand",
+                "LJ Specials",
+                130.0,
+                "Sweet.",
+                "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=800&q=80",
+                "Khoya Rich",
+                "Veg",
+                28, 1, 4.9, 54
+            ),
+            (
+                "Plain Cake",
+                "LJ Specials",
+                80.0,
+                "Cake with plain",
+                "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=800&q=80",
+                "Tea Cake",
+                "Veg",
+                35, 0, 4.7, 41
+            ),
+            (
+                "Flame Cake (250 g)",
+                "LJ Specials",
+                90.0,
+                "It's a cake with chocolate",
+                "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
+                "Chocolate Rich",
+                "Veg",
+                32, 0, 4.8, 46
+            ),
+            (
+                "Fruit Cake (250 g)",
+                "LJ Specials",
+                90.0,
+                "It's dry fruits cake.",
+                "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=800&q=80",
+                "Tutti Frutti",
+                "Veg",
+                38, 0, 4.8, 49
+            ),
+            (
+                "Banana Cake (250 g)",
+                "LJ Specials",
+                100.0,
+                "Fresh golden banana tea cake.",
+                "https://images.unsplash.com/photo-1603532648955-039310d9ed75?auto=format&fit=crop&w=800&q=80",
+                "Naturally Sweet",
+                "Veg",
+                28, 0, 4.7, 33
+            ),
+            (
+                "Puliyogare (250 g)",
+                "LJ Specials",
+                110.0,
+                "Rice mix",
+                "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=800&q=80",
+                "Traditional Mix",
+                "Veg",
+                35, 0, 4.9, 63
+            ),
+            (
+                "Puliyogare (500 g)",
+                "LJ Specials",
+                180.0,
+                "Rice mix",
+                "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=800&q=80",
+                "Family Pack",
+                "Veg",
+                30, 0, 4.9, 52
+            ),
+            (
+                "Home Biscuit",
+                "LJ Specials",
+                70.0,
+                "Jeera",
+                "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=800&q=80",
+                "Jeera Salted",
+                "Veg",
+                42, 0, 4.6, 28
+            ),
+            (
+                "Popcorn (1 Piece)",
+                "LJ Specials",
+                40.0,
+                "Popcorn",
+                "https://images.unsplash.com/photo-1578849278619-e73505e9610f?auto=format&fit=crop&w=800&q=80",
+                "Snack",
+                "Veg",
+                50, 0, 4.5, 23
+            ),
+            (
+                "Layan Millet (500 g)",
+                "LJ Specials",
+                300.0,
+                "Protein powder.",
+                "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80",
+                "Health Superfood",
+                "Veg",
+                20, 0, 4.8, 20
+            ),
+
+            # ------------------ SPECIAL MIXER WITH SHANKS (3 items) ------------------
+            (
+                "Special Kaju Mixture (250 g)",
+                "Special Mixer with Shanks",
+                110.0,
+                "Shanks.",
+                "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=800&q=80",
+                "Crunchy Cashew",
+                "Veg",
+                42, 1, 4.9, 59
+            ),
+            (
+                "Special Kaju Mixture (500 g)",
+                "Special Mixer with Shanks",
+                210.0,
+                "Shanks.",
+                "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+                "Party Pack",
+                "Veg",
+                35, 0, 4.9, 44
+            ),
+            (
+                "Benne Murukku (250 g)",
+                "Special Mixer with Shanks",
+                85.0,
+                "It's a shanks with tea.",
+                "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80",
+                "Butter Crisp",
+                "Veg",
+                48, 1, 4.8, 51
+            ),
+
+            # ------------------ BIRTHDAY CAKE (9 items) ------------------
+            (
+                "Pineapple Ice Cake (1 kg)",
+                "Birthday Cake",
+                600.0,
+                "Pineapple crush with full cake.",
+                "https://images.unsplash.com/photo-1542826438-bd32f43d626f?auto=format&fit=crop&w=800&q=80",
+                "Celebration Favorite",
+                "Veg",
+                16, 1, 4.9, 84
+            ),
+            (
+                "Blueberry Pastry (1 kg)",
+                "Birthday Cake",
+                600.0,
+                "Blueberry crush.",
+                "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80",
+                "Berry Delight",
+                "Veg",
+                15, 1, 4.9, 69
+            ),
+            (
+                "Butterscotch Ice Cake (1 kg)",
+                "Birthday Cake",
+                700.0,
+                "Crunchy butterscotch praline with rich caramel ice cream finish.",
+                "https://images.unsplash.com/photo-1562777717-dc6984f65a63?auto=format&fit=crop&w=800&q=80",
+                "Caramel Crunch",
+                "Veg",
+                14, 0, 4.8, 57
+            ),
+            (
+                "Badam Pista Cake (1 kg)",
+                "Birthday Cake",
+                750.0,
+                "Badam pista mix with crush.",
+                "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=800&q=80",
+                "Royal Festive",
+                "Veg",
+                12, 1, 4.9, 63
+            ),
+            (
+                "Irish Coffee Cake (1 kg)",
+                "Birthday Cake",
+                700.0,
+                "Rich espresso coffee infused sponge with mocha cream.",
+                "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=800&q=80",
+                "Mocha Velvet",
+                "Veg",
+                12, 0, 4.8, 47
+            ),
+            (
+                "Choco Oreo Cake (1 kg)",
+                "Birthday Cake",
+                750.0,
+                "Oreo with chocolate.",
+                "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&w=800&q=80",
+                "Cookies & Cream",
+                "Veg",
+                16, 1, 4.9, 89
+            ),
+            (
+                "Red Velvet Ice Cake (1 kg)",
+                "Birthday Cake",
+                750.0,
+                "Yummy ice with cream.",
+                "https://images.unsplash.com/photo-1586788680434-30d324b2d46f?auto=format&fit=crop&w=800&q=80",
+                "Velvet Cream",
+                "Veg",
+                15, 1, 4.9, 76
+            ),
+            (
+                "Chocolate Ice Cake Truffle (1 kg)",
+                "Birthday Cake",
+                700.0,
+                "Chocolate with truffle.",
+                "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80",
+                "Truffle Glaze",
+                "Veg",
+                18, 1, 5.0, 98
+            ),
+            (
+                "Chocolate Cake Normal (1 kg)",
+                "Birthday Cake",
+                450.0,
+                "Classic chocolate sponge cake with rich chocolate frosting.",
+                "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
+                "Classic Celebration",
+                "Veg",
+                20, 0, 4.8, 62
             )
         ]
 
@@ -394,66 +642,66 @@ def seed_orders(conn):
                 "CT-89241",
                 "Elena Rostova",
                 "elena.rostova@example.com",
-                "+1 (555) 321-9988",
+                "+91 98450 12345",
                 "delivery",
                 datetime.now().strftime("%Y-%m-%d"),
                 "14:30 - 15:30",
-                "452 Elm Street, Suite 4B, Metro City",
+                "Flat 4B, Prestige Heights, Bangalore",
                 json.dumps([
-                    {"id": 8, "title": "Madagascar Vanilla & Raspberry Silk Cake", "price": 48.00, "quantity": 1, "custom_details": "8-inch, Inscription: 'Happy 30th Elena!'"},
-                    {"id": 4, "title": "Pure French Butter Croissant", "price": 4.75, "quantity": 4}
+                    {"id": 34, "title": "Pineapple Ice Cake (1 kg)", "price": 600.0, "quantity": 1, "custom_details": "Inscription: 'Happy Birthday Elena!'"},
+                    {"id": 1, "title": "Veg Puff", "price": 25.0, "quantity": 4}
                 ]),
-                67.00, 6.70, 5.00, 65.30,
-                "Credit Card (Visa ending in 4242)", "Paid", "In Baking",
-                "Allergies noted: Nut-free facility requested."
+                700.0, 70.0, 0.0, 630.0,
+                "UPI (Google Pay)", "Paid", "In Baking",
+                "Eggless preparation confirmed. Provide candles and knife."
             ),
             (
                 "CT-89242",
                 "Marcus Vance",
                 "marcus.v@example.com",
-                "+1 (555) 777-1234",
+                "+91 97420 54321",
                 "pickup",
                 (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d"),
                 "10:00 - 11:00",
                 "Bakery Store Pickup",
                 json.dumps([
-                    {"id": 9, "title": "Belgian Dark Truffle Ganache Cake", "price": 54.00, "quantity": 1, "custom_details": "Triple chocolate filling, gold sparkler"}
+                    {"id": 41, "title": "Chocolate Ice Cake Truffle (1 kg)", "price": 700.0, "quantity": 1, "custom_details": "Extra chocolate curls"}
                 ]),
-                54.00, 0, 0, 54.00,
-                "Apple Pay", "Paid", "Decorating",
+                700.0, 0, 0, 700.0,
+                "UPI / Card", "Paid", "Decorating",
                 "Customer requested extra chocolate flakes on side."
             ),
             (
                 "CT-89240",
                 "Chloe Jenkins",
                 "chloe.j@example.com",
-                "+1 (555) 888-4321",
+                "+91 98860 67890",
                 "delivery",
                 (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d"),
                 "11:00 - 12:00",
-                "1240 Magnolia Boulevard, Apt 12",
+                "No. 12, 4th Cross, Malleshwaram",
                 json.dumps([
-                    {"id": 1, "title": "Traditional Country Sourdough", "price": 10.50, "quantity": 2},
-                    {"id": 17, "title": "Parisian Macaron Gift Collection (12pk)", "price": 32.00, "quantity": 1}
+                    {"id": 13, "title": "Special Rusk (500 grm)", "price": 115.0, "quantity": 2},
+                    {"id": 11, "title": "Special Cookies (250 g, 6 Pieces)", "price": 110.0, "quantity": 1}
                 ]),
-                53.00, 5.00, 5.00, 53.00,
-                "Credit Card (Mastercard 9012)", "Paid", "Delivered",
+                340.0, 30.0, 0.0, 310.0,
+                "Card on Delivery", "Paid", "Delivered",
                 "Hand delivered to front desk."
             ),
             (
                 "CT-89243",
                 "Julian Ross",
                 "julian.ross@example.com",
-                "+1 (555) 444-9090",
+                "+91 99001 23456",
                 "pickup",
                 datetime.now().strftime("%Y-%m-%d"),
                 "16:00 - 17:00",
                 "Bakery Store Pickup",
                 json.dumps([
-                    {"id": 11, "title": "Vintage Lambeth Birthday Cake", "price": 62.00, "quantity": 1, "custom_details": "Size: 10-inch, Inscription: 'Forever Fabulous'"}
+                    {"id": 36, "title": "Butterscotch Ice Cake (1 kg)", "price": 700.0, "quantity": 1, "custom_details": "Size: 1 kg, Inscription: 'Happy 25th Anniversary'"}
                 ]),
-                62.00, 0, 0, 62.00,
-                "Credit Card", "Paid", "Ready",
+                700.0, 0, 0, 700.0,
+                "UPI (PhonePe)", "Paid", "Ready",
                 "Chilling in bakery walk-in fridge #2."
             )
         ]
@@ -473,15 +721,15 @@ def seed_inventory(conn):
     cursor.execute("SELECT COUNT(*) FROM inventory")
     if cursor.fetchone()[0] == 0:
         items = [
-            ("Organic Unbleached Wheat Flour", "Dry Goods", 185.0, "kg", 50.0, "King Arthur Milling"),
-            ("Normandy Cultured Butter 84%", "Dairy", 38.0, "kg", 20.0, "Isigny Sainte-Mère"),
-            ("Valrhona 66% Dark Chocolate Couverture", "Chocolates", 14.5, "kg", 15.0, "Valrhona France"),  # Low stock
-            ("Bourbon Vanilla Beans (Madagascar)", "Flavorings", 1.2, "kg", 1.0, "Nielsen-Massey"),        # Low stock
-            ("Pasteurized Cage-Free Egg Whites", "Dairy/Eggs", 45.0, "liters", 25.0, "Valley Farm Fresh"),
-            ("Freeze-Dried Raspberry Powder", "Decorations", 4.2, "kg", 3.0, "Sosa Ingredients"),
-            ("Gold Leaf Sheets (24 Karat Edible)", "Decorations", 180.0, "sheets", 50.0, "Barnabas Gold"),
-            ("Eco-Friendly Bakery Cake Boxes 10\"", "Packaging", 92.0, "units", 40.0, "GreenBake Pak"),
-            ("Satin Ribbon (Terracotta Gold)", "Packaging", 22.0, "rolls", 10.0, "Boutique Ribbons")
+            ("Organic Maida Flour", "Dry Goods", 185.0, "kg", 50.0, "Bangalore Grain Mills"),
+            ("Fresh Dairy Butter", "Dairy", 38.0, "kg", 20.0, "Nandini Milk Dairy"),
+            ("Rich Chocolate Couverture", "Chocolates", 14.5, "kg", 15.0, "Morde Chocolate"),  # Low stock
+            ("Vanilla Extract & Crushed Pods", "Flavorings", 1.2, "kg", 1.0, "Sprig Flavors"),        # Low stock
+            ("Fresh Cream & Milk", "Dairy", 45.0, "liters", 25.0, "Nandini Dairy"),
+            ("Tutti Frutti & Mixed Dry Fruits", "Decorations", 12.0, "kg", 5.0, "Royal Dry Fruits"),
+            ("Pure Ghee (Cow Ghee)", "Dairy", 25.0, "kg", 10.0, "Nandini"),
+            ("Eco-Friendly Cake Boxes 1kg", "Packaging", 92.0, "units", 40.0, "GreenBake Pak"),
+            ("Bakery Paper Bags & Pouches", "Packaging", 220.0, "units", 50.0, "EcoPouch Bangalore")
         ]
         cursor.executemany("""
         INSERT INTO inventory (item_name, category, quantity, unit, min_threshold, supplier)
@@ -494,11 +742,11 @@ def seed_reviews(conn):
     cursor.execute("SELECT COUNT(*) FROM reviews")
     if cursor.fetchone()[0] == 0:
         reviews = [
-            (8, "Hannah Sterling", 5, "The Madagascar Vanilla & Raspberry cake was the crown jewel of our anniversary dinner! Buttercream was ethereal and not cloyingly sweet.", 1),
-            (9, "Chef Dominic Miller", 5, "Superb chocolate balance. The Valrhona notes shine through without being bitter. You can tell they use top-tier European butter.", 1),
-            (4, "Amelia Davis", 5, "I lived in Paris for 3 years, and CakeTalk's croissants are genuinely the only ones in town that rival the French bakeries.", 1),
-            (1, "David K.", 5, "The sourdough crust has that unmistakable crackle and sourdough tang. Excellent hydration and open crumb.", 1),
-            (11, "Jessica Alba-Lane", 5, "The Lambeth piping on my sister's birthday cake looked like a museum piece. Everyone was taking photos for Instagram!", 1)
+            (34, "Hannah Sterling", 5, "The Pineapple Ice Cake was the crown jewel of our birthday dinner! Super moist sponge and fresh tropical fruit crush.", 1),
+            (41, "Chef Dominic Miller", 5, "Superb chocolate truffle. Rich Belgian-style cocoa notes and velvety texture. Truly authentic Iyengar quality.", 1),
+            (1, "Amelia Davis", 5, "The Veg Puff and Masala Bun are out of this world! Piping hot, flaky layers and perfect spices.", 1),
+            (13, "David K.", 5, "The Special Rusk is crunchy and so aromatic with evening chai. An absolute daily must-have.", 1),
+            (20, "Jessica Alba-Lane", 5, "The Dilpasand and Kova Dilpasand are royal masterpieces! Stuffed with so many dry fruits and sweet coconut.", 1)
         ]
         cursor.executemany("""
         INSERT INTO reviews (product_id, customer_name, rating, comment, verified_buyer)
@@ -511,10 +759,10 @@ def seed_coupons(conn):
     cursor.execute("SELECT COUNT(*) FROM coupons")
     if cursor.fetchone()[0] == 0:
         coupons = [
-            ("SWEET10", 10.0, 0, "10% off your entire order", 30.0, 1, 14),
-            ("FREESHIP", 0.0, 5.0, "Free local delivery on orders over $40", 40.0, 1, 28),
-            ("BAKERLOVE", 15.0, 0, "15% off custom celebration cakes", 50.0, 1, 9),
-            ("WELCOME5", 0.0, 5.0, "$5 off your first artisan pastry order", 20.0, 1, 35)
+            ("SWEET10", 10.0, 0, "10% off your entire bakery order", 200.0, 1, 14),
+            ("FREESHIP", 0.0, 40.0, "Free local delivery on orders over ₹300", 300.0, 1, 28),
+            ("BAKERLOVE", 15.0, 0, "15% off celebration & birthday cakes", 500.0, 1, 9),
+            ("WELCOME50", 0.0, 50.0, "₹50 off your first bakery order", 250.0, 1, 35)
         ]
         cursor.executemany("""
         INSERT INTO coupons (code, discount_percent, flat_discount, description, min_order, active, usage_count)

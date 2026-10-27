@@ -86,7 +86,7 @@ const Cart = {
   items: [],
   orderType: 'delivery', // 'pickup' or 'delivery'
   coupon: null,
-  deliveryFee: 5.00,
+  deliveryFee: 40.00,
 
   init() {
     try {
@@ -239,7 +239,7 @@ const Cart = {
       const res = await API.validateCoupon(code.trim().toUpperCase(), subtotal);
       if (res.success) {
         this.coupon = res;
-        UI.showToast(`Promo applied: -${res.discount_percent ? res.discount_percent + '%' : '$' + res.discount_amount}`, 'success');
+        UI.showToast(`Promo applied: -${res.discount_percent ? res.discount_percent + '%' : '₹' + res.discount_amount}`, 'success');
         this.render();
       }
     } catch (err) {
@@ -267,8 +267,8 @@ const Cart = {
 
   getDeliveryFee() {
     if (this.orderType === 'pickup') return 0;
-    // Free delivery over $40 or FREESHIP coupon
-    if (this.getSubtotal() >= 40 || (this.coupon && this.coupon.code === 'FREESHIP')) {
+    // Free delivery over ₹300 or FREESHIP coupon
+    if (this.getSubtotal() >= 300 || (this.coupon && this.coupon.code === 'FREESHIP')) {
       return 0;
     }
     return this.deliveryFee;
@@ -309,7 +309,7 @@ const Cart = {
     // Mobile sticky bar total and state toggle
     const stickyTotalEl = document.getElementById('stickyCartTotal');
     if (stickyTotalEl) {
-      stickyTotalEl.textContent = `$${total.toFixed(2)}`;
+      stickyTotalEl.textContent = `₹${total.toFixed(0)}`;
     }
     const stickyCountEl = document.getElementById('stickyCartCount');
     if (stickyCountEl) {
@@ -351,7 +351,7 @@ const Cart = {
           <div class="cart-item-details">
             <h5 class="cart-item-name">${item.title}</h5>
             ${item.custom_details ? `<div class="cart-item-meta" style="color: var(--color-terracotta);">${item.custom_details}</div>` : `<div class="cart-item-meta">${item.category}</div>`}
-            <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+            <div class="cart-item-price">₹${(item.price * item.quantity).toFixed(0)}</div>
             <div class="cart-item-qty-controls">
               <button class="qty-btn" onclick="Cart.updateQty(${idx}, -1)">−</button>
               <span style="font-weight: 700; font-size: 0.85rem; padding: 0 6px;">${item.quantity}</span>
@@ -365,14 +365,14 @@ const Cart = {
 
     // Totals Table in Drawer
     const subtotalEl = document.getElementById('cartDrawerSubtotal');
-    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+    if (subtotalEl) subtotalEl.textContent = `₹${subtotal.toFixed(0)}`;
 
     const discountRowEl = document.getElementById('cartDrawerDiscountRow');
     const discountValEl = document.getElementById('cartDrawerDiscount');
     if (discountRowEl && discountValEl) {
       if (discount > 0) {
         discountRowEl.style.display = 'flex';
-        discountValEl.textContent = `-$${discount.toFixed(2)}`;
+        discountValEl.textContent = `-₹${discount.toFixed(0)}`;
       } else {
         discountRowEl.style.display = 'none';
       }
@@ -380,11 +380,11 @@ const Cart = {
 
     const deliveryValEl = document.getElementById('cartDrawerDelivery');
     if (deliveryValEl) {
-      deliveryValEl.textContent = delivery === 0 ? 'FREE' : `$${delivery.toFixed(2)}`;
+      deliveryValEl.textContent = delivery === 0 ? 'FREE' : `₹${delivery.toFixed(0)}`;
     }
 
     const grandTotalEl = document.getElementById('cartDrawerTotal');
-    if (grandTotalEl) grandTotalEl.textContent = `$${total.toFixed(2)}`;
+    if (grandTotalEl) grandTotalEl.textContent = `₹${total.toFixed(0)}`;
   },
 
   attachEvents() {
@@ -455,13 +455,13 @@ const Checkout = {
       sumEl.innerHTML = Cart.items.map(it => `
         <div style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px;">
           <span>${it.quantity}x ${it.title}</span>
-          <span style="font-weight: 600;">$${(it.price * it.quantity).toFixed(2)}</span>
+          <span style="font-weight: 600;">₹${(it.price * it.quantity).toFixed(0)}</span>
         </div>
       `).join('');
     }
 
     const totalEl = document.getElementById('checkoutFinalTotal');
-    if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+    if (totalEl) totalEl.textContent = `₹${total.toFixed(0)}`;
 
     // Set default scheduled date to today
     const dateInput = document.getElementById('checkoutDate');
@@ -528,7 +528,7 @@ const OrderTracker = {
     if (!modal) return;
 
     document.getElementById('confOrderNumber').textContent = orderNumber;
-    document.getElementById('confTotal').textContent = `$${total.toFixed(2)}`;
+    document.getElementById('confTotal').textContent = `₹${total.toFixed(0)}`;
     document.getElementById('confPoints').textContent = `+${points} Crumb Points Earned!`;
 
     UI.openModal('orderConfirmationModal');
@@ -565,7 +565,7 @@ const OrderTracker = {
     document.getElementById('trackOrderCode').textContent = order.order_number;
     document.getElementById('trackCustomerName').textContent = order.customer_name;
     document.getElementById('trackSchedule').textContent = `${order.scheduled_date} (${order.scheduled_time})`;
-    document.getElementById('trackTotal').textContent = `$${order.total_amount.toFixed(2)}`;
+    document.getElementById('trackTotal').textContent = `₹${order.total_amount.toFixed(0)}`;
     document.getElementById('trackChefNotes').textContent = order.chef_notes || 'All ingredients weighed & prepared with European butter.';
 
     // Progress Stepper Status
@@ -588,7 +588,7 @@ const OrderTracker = {
       itemsEl.innerHTML = order.items.map(it => `
         <div style="display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0;">
           <span>${it.quantity}x ${it.title} ${it.custom_details ? `(${it.custom_details})` : ''}</span>
-          <span style="font-weight: 600;">$${(it.price * it.quantity).toFixed(2)}</span>
+          <span style="font-weight: 600;">₹${(it.price * it.quantity).toFixed(0)}</span>
         </div>
       `).join('');
     }
@@ -661,7 +661,7 @@ const CustomerOrders = {
     } else {
       listEl.innerHTML = orders.map(ord => {
         const statusClass = (ord.status || 'pending').toLowerCase().replace(/\s+/g, '-');
-        const formattedTotal = typeof ord.total_amount === 'number' ? `$${ord.total_amount.toFixed(2)}` : ord.total_amount;
+        const formattedTotal = typeof ord.total_amount === 'number' ? `₹${ord.total_amount.toFixed(0)}` : (String(ord.total_amount).startsWith('₹') ? ord.total_amount : `₹${ord.total_amount}`);
         return `
         <div class="customer-order-card" style="background: var(--glass-bg-elevated); border: 1px solid var(--glass-border-light); border-radius: var(--radius-md); padding: 1.1rem; margin-bottom: 0.85rem; box-shadow: var(--shadow-xs);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
@@ -760,7 +760,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span>(${p.review_count} reviews)</span>
             </div>
             <div class="card-footer">
-              <div class="card-price">$${p.price.toFixed(2)}</div>
+              <div class="card-price">₹${p.price.toFixed(0)}</div>
               <div class="card-action-slot" data-product-id="${p.id}">
                 ${qty > 0 ? `
                   <div class="card-qty-stepper" data-product-id="${p.id}">
