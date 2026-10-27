@@ -41,7 +41,7 @@ A production-ready, full-stack web platform built for **CakeTalk**, serving both
 ### 2. Owner & Admin Management Portal (`/admin`)
 - **Secure Authentication**: Protected dashboard gate with staff login (`admin@caketalk.com` / `admin123`).
 - **Real-Time Analytics Dashboard**:
-  - Total Revenue, Total Orders, Average Order Value, and Active Patrons KPIs.
+  - Total Revenue, Total Orders, and Average Order Value KPIs.
   - Real-time pipeline status monitor (*Pending*, *In Baking*, *Decorating*, *Ready*, *Delivered*).
   - Category sales distribution and recent order log.
 - **Order Management & Workflow**:

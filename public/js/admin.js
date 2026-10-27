@@ -120,8 +120,10 @@ const AdminApp = {
 
       document.getElementById('kpiRevenue').textContent = `₹${data.total_revenue.toLocaleString('en-IN')}`;
       document.getElementById('kpiOrders').textContent = data.total_orders;
-      document.getElementById('kpiAOV').textContent = `₹${data.avg_order_value.toFixed(0)}`;
-      document.getElementById('kpiCustomers').textContent = data.total_customers;
+      const aovEl = document.getElementById('kpiAOV');
+      if (aovEl) aovEl.textContent = `₹${data.avg_order_value.toFixed(0)}`;
+      const custEl = document.getElementById('kpiCustomers');
+      if (custEl) custEl.textContent = data.total_customers;
 
       // Status pill counts
       const statusContainer = document.getElementById('kpiOrderStatusStrip');
