@@ -28,7 +28,7 @@
     })();
   </script>
 </head>
-<body>
+<body class="mode-login">
 
   <!-- Top Announcement Bar -->
   <aside class="announcement-bar" aria-label="Bakery Announcements">
@@ -221,108 +221,28 @@
     <div class="login-page-wrapper">
       <div class="container login-page-container">
         
-        <div class="login-page-grid">
-          <!-- LEFT COLUMN: Brand Story, Visuals & Quick Demo Access -->
-          <div class="login-brand-card">
-            <div class="login-brand-badge">🍰 Fresh Daily Artisan Bakes</div>
-            <h2 class="login-brand-headline">Welcome to CakeTalk</h2>
-            <p class="login-brand-subheadline">
-              Bengaluru's favorite heritage bakery since 1981. Handcrafted pastries, pure veg savory puffs, and bespoke 3D celebration cakes made fresh every morning.
-            </p>
-
-            <!-- Bakery Highlights -->
-            <div class="login-highlights-list">
-              <div class="login-highlight-item">
-                <span class="highlight-icon">🥐</span>
-                <div class="highlight-text">
-                  <strong>Morning Oven Bakes</strong>
-                  <span>Fresh wild fermented sourdough, patties, and savory puffs warm from 7 AM.</span>
-                </div>
-              </div>
-              <div class="login-highlight-item">
-                <span class="highlight-icon">🎂</span>
-                <div class="highlight-text">
-                  <strong>3D Custom Cake Studio</strong>
-                  <span>Interactive 3D customizer: select flavors, tiers, frostings, and instant pricing.</span>
-                </div>
-              </div>
-              <div class="login-highlight-item">
-                <span class="highlight-icon">🏅</span>
-                <div class="highlight-text">
-                  <strong>Crumb Club Rewards</strong>
-                  <span>Get 50 bonus Crumb Points upon signing up for instant discounts on every order.</span>
-                </div>
-              </div>
-              <div class="login-highlight-item">
-                <span class="highlight-icon">👑</span>
-                <div class="highlight-text">
-                  <strong>Bakery Owner Suite</strong>
-                  <span>Live order dispatching, batch image studio, recipe inventory, and sales analytics.</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Instant One-Click Demo Accounts -->
-            <div class="login-demo-section">
-              <div class="demo-section-label">⚡ One-Click Test Accounts:</div>
-              <div class="demo-cards-row">
-                <button type="button" class="demo-pill-btn customer-pill" onclick="AuthApp.switchTab('customer-login'); AuthApp.autofillCustomer();" title="Click to fill customer test credentials">
-                  <span class="demo-pill-icon">🛍️</span>
-                  <div class="demo-pill-content">
-                    <span class="demo-pill-title">Customer Demo</span>
-                    <span class="demo-pill-cred">customer@caketalk.com</span>
-                  </div>
-                  <span class="demo-pill-action">Auto-fill ⚡</span>
-                </button>
-
-                <button type="button" class="demo-pill-btn owner-pill" onclick="AuthApp.switchTab('owner-login'); AuthApp.autofillOwner();" title="Click to fill owner test credentials">
-                  <span class="demo-pill-icon">👑</span>
-                  <div class="demo-pill-content">
-                    <span class="demo-pill-title">Owner / Staff Demo</span>
-                    <span class="demo-pill-cred">owner@caketalk.com</span>
-                  </div>
-                  <span class="demo-pill-action">Auto-fill ⚡</span>
-                </button>
-              </div>
-            </div>
+        <!-- Centered Authentication Card -->
+        <div class="login-auth-card">
+          <div class="login-card-header" style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="font-size: 2.5rem; line-height: 1; margin-bottom: 0.5rem;">🎂</div>
+            <h2 style="font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-espresso); margin-bottom: 0.35rem;">CakeTalk Portal</h2>
+            <p style="font-size: 0.88rem; color: var(--color-text-muted); margin: 0;">Sign in to your customer account or owner dashboard</p>
           </div>
 
-          <!-- RIGHT COLUMN: Authentication Form Box -->
-          <div class="login-auth-card">
-            
-            <!-- Active Session Card (If User is Already Signed In) -->
-            <div id="loginActiveSessionBanner" class="active-session-banner" style="display: none;">
-              <div class="session-banner-header">
-                <span class="session-avatar">👤</span>
-                <div class="session-meta">
-                  <div class="session-name" id="sessionUserName">User Name</div>
-                  <div class="session-sub" id="sessionUserRole">Customer Account</div>
-                </div>
-              </div>
-              <div class="session-banner-actions">
-                <button type="button" class="btn btn-primary btn-sm" id="btnResumeSession" onclick="AuthApp.resumeSession()">
-                  Resume Session →
-                </button>
-                <button type="button" class="btn btn-secondary btn-sm" onclick="AuthApp.logout()">
-                  Sign Out / Switch
-                </button>
-              </div>
-            </div>
+          <!-- Navigation Tabs -->
+          <div class="auth-tabs-nav">
+            <button type="button" class="auth-tab-btn active" id="tabBtnCustomerLogin" onclick="AuthApp.switchTab('customer-login')">
+              <span>🛍️</span> Customer Sign In
+            </button>
+            <button type="button" class="auth-tab-btn owner-tab" id="tabBtnOwnerLogin" onclick="AuthApp.switchTab('owner-login')">
+              <span>👑</span> Owner Suite
+            </button>
+            <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="AuthApp.switchTab('customer-register')">
+              <span>✍️</span> New Customer
+            </button>
+          </div>
 
-            <!-- Navigation Tabs -->
-            <div class="auth-tabs-nav">
-              <button type="button" class="auth-tab-btn active" id="tabBtnCustomerLogin" onclick="AuthApp.switchTab('customer-login')">
-                <span>🛍️</span> Customer Sign In
-              </button>
-              <button type="button" class="auth-tab-btn owner-tab" id="tabBtnOwnerLogin" onclick="AuthApp.switchTab('owner-login')">
-                <span>👑</span> Owner Suite
-              </button>
-              <button type="button" class="auth-tab-btn" id="tabBtnRegister" onclick="AuthApp.switchTab('customer-register')">
-                <span>✍️</span> New Customer
-              </button>
-            </div>
-
-            <!-- Error Banner -->
+          <!-- Error Banner -->
             <div id="authErrorBanner" class="auth-error-banner"></div>
 
             <!-- TAB 1: CUSTOMER LOGIN -->
@@ -499,10 +419,8 @@
 
           </div>
         </div>
-
       </div>
     </div>
-  </div>
 
   <!-- =======================================================================
        CUSTOMER STOREFRONT CONTAINER (VIEW 2)
@@ -2090,6 +2008,9 @@
           return;
         }
 
+        document.body.classList.remove('mode-login', 'mode-customer');
+        document.body.classList.add('mode-admin');
+
         customerContainer.classList.add('hidden');
         loginContainer.classList.add('hidden');
         adminContainer.classList.remove('hidden');
@@ -2103,6 +2024,9 @@
           AdminApp.init();
         }
       } else if (mode === 'customer') {
+        document.body.classList.remove('mode-login', 'mode-admin');
+        document.body.classList.add('mode-customer');
+
         adminContainer.classList.add('hidden');
         loginContainer.classList.add('hidden');
         customerContainer.classList.remove('hidden');
@@ -2116,10 +2040,13 @@
         }, 150);
       } else {
         // Mode is 'login'
+        document.body.classList.remove('mode-customer', 'mode-admin');
+        document.body.classList.add('mode-login');
+
         customerContainer.classList.add('hidden');
         adminContainer.classList.add('hidden');
         loginContainer.classList.remove('hidden');
-        if (btnHeaderGuest) btnHeaderGuest.style.display = 'inline-flex';
+        if (btnHeaderGuest) btnHeaderGuest.style.display = 'none';
         if (window.location.hash !== '#login') {
           window.location.hash = '#login';
         }
@@ -2127,7 +2054,6 @@
 
         if (window.AuthApp) {
           AuthApp.switchTab(authTab);
-          if (AuthApp.updateSessionBanner) AuthApp.updateSessionBanner();
         }
       }
     }

@@ -10,33 +10,7 @@ const AuthApp = {
   init() {
     this.currentUser = API.getCurrentUser();
     this.updateUI();
-    this.updateSessionBanner();
     this.attachEvents();
-  },
-
-  updateSessionBanner() {
-    const banner = document.getElementById('loginActiveSessionBanner');
-    const nameEl = document.getElementById('sessionUserName');
-    const roleEl = document.getElementById('sessionUserRole');
-    const resumeBtn = document.getElementById('btnResumeSession');
-
-    if (!banner) return;
-
-    if (this.currentUser && this.currentUser.name) {
-      const isOwner = this.currentUser.role === 'admin' || this.currentUser.role === 'owner';
-      banner.style.display = 'flex';
-      if (nameEl) nameEl.textContent = this.currentUser.name;
-      if (roleEl) {
-        roleEl.textContent = isOwner 
-          ? '👑 Bakery Owner Suite (Active Staff Session)' 
-          : `🛍️ Customer Account • ${this.currentUser.loyalty_points || 50} Crumb Points`;
-      }
-      if (resumeBtn) {
-        resumeBtn.textContent = isOwner ? 'Enter Owner Suite 👑' : 'Resume Storefront 🛍️';
-      }
-    } else {
-      banner.style.display = 'none';
-    }
   },
 
   updateUI() {
@@ -229,7 +203,6 @@ const AuthApp = {
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();
-        this.updateSessionBanner();
         if (window.UI) {
           UI.closeModal('authModal');
           UI.showToast(`Welcome back, ${res.user.name}!`, 'success');
@@ -255,7 +228,6 @@ const AuthApp = {
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();
-        this.updateSessionBanner();
         if (window.UI) {
           UI.closeModal('authModal');
           UI.showToast(`Owner verified. Welcome to Management Suite, ${res.user.name}!`, 'success');
@@ -304,7 +276,6 @@ const AuthApp = {
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();
-        this.updateSessionBanner();
         if (window.UI) {
           UI.closeModal('authModal');
           UI.showToast(`Welcome to CakeTalk Crumb Club, ${res.user.name}! 50 Welcome Points added.`, 'success');
@@ -348,7 +319,6 @@ const AuthApp = {
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();
-        this.updateSessionBanner();
         if (window.UI) {
           UI.closeModal('authModal');
           UI.showToast(`Owner account activated for ${res.user.name}!`, 'success');
@@ -366,7 +336,6 @@ const AuthApp = {
     API.logout();
     this.currentUser = null;
     this.updateUI();
-    this.updateSessionBanner();
 
     if (window.UI) {
       UI.showToast('You have been signed out successfully.', 'info');
@@ -375,15 +344,6 @@ const AuthApp = {
     // Return to the login entry page
     if (window.switchWebsiteMode) {
       switchWebsiteMode('login');
-    }
-  },
-
-  resumeSession() {
-    if (this.currentUser) {
-      const isOwner = this.currentUser.role === 'admin' || this.currentUser.role === 'owner';
-      if (window.switchWebsiteMode) {
-        switchWebsiteMode(isOwner ? 'admin' : 'customer');
-      }
     }
   },
 
