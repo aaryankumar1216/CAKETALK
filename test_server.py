@@ -337,5 +337,40 @@ class TestCakeTalk(unittest.TestCase):
         self.assertTrue(del_res.get("success"))
         print("✓ DELETE /api/admin/pincodes/<id> cleanup passed.")
 
+    def test_delete_customer(self):
+        # 1. Register a temporary customer
+        email = f"temp_cust_{random.randint(1000, 9999)}@example.com"
+        reg_req = MockRequest("POST", "/api/auth/register", body={
+            "name": "Customer To Delete",
+            "email": email,
+            "phone": f"99{random.randint(10000000, 99999999)}",
+            "pincode": "562106",
+            "password": "password123",
+            "role": "customer"
+        })
+        reg_req.do_POST()
+        reg_res = reg_req.get_response_json()
+        self.assertTrue(reg_res.get("success"))
+        cust_id = reg_res["user"]["id"]
+
+        # 2. Delete the customer
+        del_req = MockRequest("DELETE", f"/api/customers/{cust_id}")
+        del_req.do_DELETE()
+        del_res = del_req.get_response_json()
+        self.assertTrue(del_res.get("success"))
+        print("✓ DELETE /api/customers/<id> customer deletion passed.")
+
+        # 3. Verify customer is gone
+        del_check = MockRequest("DELETE", f"/api/customers/{cust_id}")
+        del_check.do_DELETE()
+        self.assertFalse(del_check.get_response_json().get("success", False))
+
+        # 4. Verify cannot delete admin/owner account (ID 1)
+        admin_del = MockRequest("DELETE", "/api/customers/1")
+        admin_del.do_DELETE()
+        admin_res = admin_del.get_response_json()
+        self.assertFalse(admin_res.get("success", False))
+        print("✓ DELETE /api/customers/<id> protected owner/admin deletion passed.")
+
 if __name__ == "__main__":
     unittest.main()

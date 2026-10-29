@@ -698,7 +698,7 @@ const AdminApp = {
   async loadCustomers() {
     const tbody = document.getElementById('customersTableTbody');
     if (!tbody) return;
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading customer directory...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">Loading customer directory...</td></tr>';
 
     try {
       const res = await API.getCustomers();
@@ -724,12 +724,32 @@ const AdminApp = {
           </td>
           <td>${c.order_count} orders</td>
           <td style="font-weight: 800;">₹${c.total_spent.toFixed(0)}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary" style="color: #E53E3E; border-color: rgba(229, 62, 62, 0.35); font-weight: 600;" onclick="AdminApp.deleteCustomer(${c.id}, '${c.name.replace(/'/g, "\\'")}')" title="Remove Customer Account">
+              🗑️ Remove
+            </button>
+          </td>
         </tr>
       `;
       }).join('');
     } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="7" style="color: red; text-align: center;">Error: ${e.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="color: red; text-align: center;">Error: ${e.message}</td></tr>`;
     }
+  },
+
+  async deleteCustomer(id, name) {
+    if (!confirm(`Are you sure you want to remove customer "${name}" from CakeTalk? This will delete their customer account and loyalty points.`)) {
+      return;
+    }
+
+    try {
+      const res = await API.deleteCustomer(id);
+      UI.showToast(res.message || `Customer "${name}" removed successfully`, 'success');
+      await this.loadCustomers();
+    } catch (err) {
+      UI.showToast(err.message || 'Failed to remove customer', 'error');
+    }
+  },
   },
 
   // 6. Coupons Tab

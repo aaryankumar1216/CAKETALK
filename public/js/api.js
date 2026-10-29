@@ -264,6 +264,12 @@ const API = {
     return this.request('/customers');
   },
 
+  async deleteCustomer(id) {
+    return this.request(`/customers/${id}`, {
+      method: 'DELETE'
+    });
+  },
+
   // 10. Delivery Pincodes & Service Zones (Customer verification & Owner management)
   async checkPincode(pincode) {
     const cleanPin = String(pincode).trim();

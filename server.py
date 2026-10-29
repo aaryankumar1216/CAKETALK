@@ -1006,6 +1006,26 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_error_json("Invalid pincode ID")
                     return
 
+            elif path.startswith("/api/customers/"):
+                try:
+                    customer_id = int(path.split("/")[3])
+                    cursor.execute("SELECT id, name, email, role FROM users WHERE id = ?", (customer_id,))
+                    user = cursor.fetchone()
+                    if not user:
+                        self.send_error_json("Customer not found", 404)
+                        return
+                    if user["role"] != "customer":
+                        self.send_error_json("Cannot remove an owner or staff account from the customer directory", 403)
+                        return
+
+                    cursor.execute("DELETE FROM users WHERE id = ?", (customer_id,))
+                    conn.commit()
+                    self.send_json({"success": True, "message": f"Customer '{user['name']}' has been removed from directory."})
+                    return
+                except ValueError:
+                    self.send_error_json("Invalid customer ID")
+                    return
+
             else:
                 self.send_error_json("DELETE endpoint not supported", 404)
         finally:
