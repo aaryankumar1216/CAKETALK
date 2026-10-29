@@ -704,7 +704,12 @@ const AdminApp = {
       const res = await API.getCustomers();
       if (!res.success) return;
 
-      tbody.innerHTML = res.customers.map(c => `
+      tbody.innerHTML = res.customers.map(c => {
+        const pinBadge = c.pincode 
+          ? `<span style="font-family: monospace; font-weight: 700; background: #EDF2F7; padding: 2px 7px; border-radius: 4px; color: var(--color-espresso);">📍 ${c.pincode}</span>`
+          : '<span style="color: #A0AEC0;">—</span>';
+
+        return `
         <tr>
           <td>
             <div style="font-weight: 700;">${c.name}</div>
@@ -712,6 +717,7 @@ const AdminApp = {
           </td>
           <td>${c.email}</td>
           <td>${c.phone || '—'}</td>
+          <td>${pinBadge}</td>
           <td>
             <span class="badge badge-honey">${c.loyalty_points} Crumb Pts</span>
             <div style="font-size: 0.72rem; color: #718096; margin-top: 2px;">Tier: ${c.tier}</div>
@@ -719,9 +725,10 @@ const AdminApp = {
           <td>${c.order_count} orders</td>
           <td style="font-weight: 800;">₹${c.total_spent.toFixed(0)}</td>
         </tr>
-      `).join('');
+      `;
+      }).join('');
     } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="6" style="color: red; text-align: center;">Error: ${e.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="color: red; text-align: center;">Error: ${e.message}</td></tr>`;
     }
   },
 

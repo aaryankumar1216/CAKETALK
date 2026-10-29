@@ -218,7 +218,7 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 # 8. Customers Directory API (Admin)
                 elif path == "/api/customers":
                     cursor.execute("""
-                    SELECT u.id, u.name, u.email, u.phone, u.loyalty_points, u.tier, u.created_at,
+                    SELECT u.id, u.name, u.email, u.phone, u.pincode, u.loyalty_points, u.tier, u.created_at,
                            COUNT(o.id) as order_count, COALESCE(SUM(o.total_amount), 0) as total_spent
                     FROM users u
                     LEFT JOIN orders o ON u.email = o.customer_email
