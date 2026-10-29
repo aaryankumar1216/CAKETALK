@@ -13,10 +13,31 @@ const AdminApp = {
   },
 
   updateHeaderActions() {
-    // Only display "+ Add Product" button in the header when viewing the Products tab
+    // Only display "+ Add Product" button in the header if it exists
     const addProductBtn = document.getElementById('adminHeaderAddProductBtn');
     if (addProductBtn) {
       addProductBtn.style.display = (this.currentTab === 'products') ? 'inline-flex' : 'none';
+    }
+  },
+
+  updateUserSidebarProfile() {
+    if (!this.currentUser) return;
+    const nameEl = document.getElementById('sidebarAdminName') || document.querySelector('.admin-name');
+    const roleEl = document.getElementById('sidebarAdminRole') || document.querySelector('.admin-role');
+    const avatarEl = document.getElementById('sidebarAvatarCircle') || document.querySelector('.avatar-circle');
+    
+    if (nameEl && this.currentUser.name) {
+      nameEl.textContent = this.currentUser.name;
+    }
+    if (roleEl) {
+      roleEl.textContent = (this.currentUser.role === 'admin' || this.currentUser.role === 'owner')
+        ? 'Owner • The Harsha Cake Talk'
+        : 'Bakery Staff';
+    }
+    if (avatarEl && this.currentUser.name) {
+      const parts = this.currentUser.name.split(' ').filter(Boolean);
+      const initials = parts.map(p => p[0]).join('').slice(0, 2).toUpperCase();
+      avatarEl.textContent = initials || 'HG';
     }
   },
 
@@ -28,6 +49,7 @@ const AdminApp = {
         if (u.role === 'admin' || u.role === 'owner') {
           this.currentUser = u;
           this.hideLoginOverlay();
+          this.updateUserSidebarProfile();
           this.updateHeaderActions();
           this.loadCurrentTab();
           return;
@@ -405,6 +427,9 @@ const AdminApp = {
         document.querySelectorAll(`.product-card[data-product-id="${id}"] img`).forEach(img => {
           img.src = newUrl;
         });
+
+        // Fully refresh products table from backend to guarantee sync
+        await this.loadProducts();
       }
     } catch (err) {
       UI.showToast(err.message || 'Failed to update image', 'error');

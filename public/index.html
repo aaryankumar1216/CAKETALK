@@ -1196,20 +1196,20 @@
 
         <div class="sidebar-user-footer">
           <div class="admin-avatar-info">
-            <div class="avatar-circle">EV</div>
+            <div class="avatar-circle" id="sidebarAvatarCircle">HG</div>
             <div>
-              <div class="admin-name">Eleanor Vance</div>
-              <div class="admin-role">Head Pâtissier</div>
+              <div class="admin-name" id="sidebarAdminName">Harsha Gowda</div>
+              <div class="admin-role" id="sidebarAdminRole">Owner • The Harsha Cake Talk</div>
             </div>
           </div>
-          <button id="btnAdminLogout" title="Sign out" style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">
+          <button id="btnAdminLogout" onclick="AuthApp.logout()" title="Sign out" style="color: rgba(255,255,255,0.7); font-size: 1.1rem; background: none; border: none; cursor: pointer;">
             🚪
           </button>
         </div>
       </aside>
 
       <!-- Main Admin Content Area (Scrolls Independently) -->
-      <main class="admin-main-wrapper">
+      <main class="admin-main-wrapper" style="margin-left: 0 !important; flex: 1;">
         <!-- Admin Header -->
         <header class="admin-top-header">
           <div class="header-title-box">
@@ -1219,9 +1219,6 @@
           <div class="admin-header-actions">
             <button class="btn btn-secondary btn-sm" onclick="switchWebsiteMode('customer')">
               <span>🌐</span> Customer Storefront
-            </button>
-            <button class="btn btn-primary btn-sm" id="adminHeaderAddProductBtn" onclick="AdminApp.openAddProductModal()" style="display: none;">
-              <span>+</span> Add Product
             </button>
           </div>
         </header>
@@ -2091,8 +2088,8 @@
           </div>
 
           <div class="form-group">
-            <label>High-Res Image URL *</label>
-            <input type="url" id="prodImageUrlInput" class="form-control" required placeholder="https://images.unsplash.com/photo-...">
+            <label>High-Res Image URL or Store Path *</label>
+            <input type="text" id="prodImageUrlInput" class="form-control" required placeholder="https://images.unsplash.com/... or /images/store/...">
           </div>
 
           <div class="form-grid-2">
@@ -2149,9 +2146,9 @@
           </div>
 
           <div class="form-group">
-            <label>Image Address / URL *</label>
-            <input type="url" id="quickImgUrlInput" class="form-control" required placeholder="https://images.unsplash.com/photo-..." oninput="document.getElementById('quickImgPreview').src = this.value;">
-            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Paste any direct image link (.jpg, .png, Unsplash, etc.)</span>
+            <label>Image Address / URL or Store Path *</label>
+            <input type="text" id="quickImgUrlInput" class="form-control" required placeholder="https://images.unsplash.com/... or /images/store/..." oninput="document.getElementById('quickImgPreview').src = this.value;">
+            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Paste any direct image link (.jpg, .png, Unsplash, or local path)</span>
           </div>
 
           <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
