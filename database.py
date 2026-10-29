@@ -36,11 +36,18 @@ def init_db():
         password_hash TEXT NOT NULL,
         role TEXT NOT NULL DEFAULT 'customer',
         phone TEXT,
+        pincode TEXT,
         loyalty_points INTEGER DEFAULT 50,
         tier TEXT DEFAULT 'Silver Baker',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
+
+    # Ensure pincode column exists if table was created previously
+    cursor.execute("PRAGMA table_info(users)")
+    existing_cols = [col[1] for col in cursor.fetchall()]
+    if "pincode" not in existing_cols:
+        cursor.execute("ALTER TABLE users ADD COLUMN pincode TEXT")
 
     # 2. Products Table
     cursor.execute("""
@@ -173,6 +180,20 @@ def init_db():
     );
     """)
 
+    # 10. Delivery Pincodes Table (Owner managed serviceable delivery zones)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS delivery_pincodes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pincode TEXT UNIQUE NOT NULL,
+        area_name TEXT NOT NULL,
+        city TEXT NOT NULL DEFAULT 'Bangalore',
+        estimated_time TEXT DEFAULT '30-45 mins',
+        delivery_fee REAL DEFAULT 0.0,
+        is_active INTEGER DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
     conn.commit()
 
     # Seed data if tables are empty
@@ -183,6 +204,7 @@ def init_db():
     seed_reviews(conn)
     seed_coupons(conn)
     seed_inquiries(conn)
+    seed_delivery_pincodes(conn)
 
     conn.close()
     print("Database initialized successfully at:", DB_FILE)
@@ -801,6 +823,26 @@ def seed_inquiries(conn):
         INSERT INTO inquiries (name, email, phone, event_date, guest_count, cake_theme, budget_range, notes, status)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, inquiries)
+        conn.commit()
+
+def seed_delivery_pincodes(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM delivery_pincodes")
+    if cursor.fetchone()[0] == 0:
+        pincodes = [
+            ("562106", "Anekal Town & Market", "Bangalore Rural", "30-45 mins", 0.0, 1),
+            ("560100", "Electronic City Phase 1 & 2", "Bangalore", "35-50 mins", 30.0, 1),
+            ("560099", "Bommasandra Industrial Area & Jigani", "Bangalore", "35-45 mins", 20.0, 1),
+            ("562107", "Chandapura & Surya City", "Bangalore", "30-40 mins", 0.0, 1),
+            ("560034", "Koramangala (Blocks 1-8)", "Bangalore", "45-60 mins", 40.0, 1),
+            ("560102", "HSR Layout (Sectors 1-7)", "Bangalore", "40-55 mins", 35.0, 1),
+            ("560068", "Madiwala & Silk Board", "Bangalore", "45-60 mins", 40.0, 1),
+            ("560076", "Bannerghatta Road & Hulimavu", "Bangalore", "45-60 mins", 35.0, 1)
+        ]
+        cursor.executemany("""
+        INSERT INTO delivery_pincodes (pincode, area_name, city, estimated_time, delivery_fee, is_active)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """, pincodes)
         conn.commit()
 
 if __name__ == "__main__":

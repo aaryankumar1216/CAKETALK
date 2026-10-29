@@ -7,6 +7,7 @@ import unittest
 import json
 import io
 import os
+import random
 import sqlite3
 from database import init_db, get_db_connection, DB_FILE
 from server import CakeTalkRequestHandler
@@ -163,12 +164,12 @@ class TestCakeTalk(unittest.TestCase):
         print("✓ POST /api/auth/login (Owner) passed.")
 
     def test_customer_registration(self):
-        import random
         rand_id = random.randint(10000, 99999)
         reg_req = MockRequest("POST", "/api/auth/register", body={
             "name": f"New Patron {rand_id}",
             "email": f"newpatron{rand_id}@example.com",
             "phone": f"98765{rand_id}",
+            "pincode": "562106",
             "password": "mypassword123",
             "role": "customer"
         })
@@ -176,8 +177,9 @@ class TestCakeTalk(unittest.TestCase):
         res = reg_req.get_response_json()
         self.assertTrue(res.get("success"))
         self.assertEqual(res["user"]["role"], "customer")
+        self.assertEqual(res["user"]["pincode"], "562106")
         self.assertEqual(res["user"]["loyalty_points"], 50)
-        print("✓ POST /api/auth/register (New Customer) passed.")
+        print("✓ POST /api/auth/register (New Customer with Delivery Pincode) passed.")
 
     def test_owner_role_restriction(self):
         # Customer trying to authenticate into owner suite
@@ -256,6 +258,84 @@ class TestCakeTalk(unittest.TestCase):
         self.assertEqual(verify_res["user"]["phone"], "9876543210")
         self.assertEqual(verify_res["user"]["role"], "customer")
         print("✓ POST /api/auth/otp/verify (Correct OTP & Sign In) passed for user:", verify_res["user"]["name"])
+
+    def test_delivery_pincodes_and_serviceability(self):
+        # 1. Check existing serviceable pincode (Anekal 562106)
+        check_req = MockRequest("GET", "/api/pincodes?pincode=562106")
+        check_req.do_GET()
+        check_res = check_req.get_response_json()
+        self.assertTrue(check_res.get("success"))
+        self.assertTrue(check_res.get("available"))
+        self.assertEqual(check_res.get("pincode"), "562106")
+        self.assertIn("Anekal", check_res.get("area_name"))
+        print("✓ GET /api/pincodes?pincode=562106 serviceable check passed.")
+
+        # 2. Check unserviceable pincode
+        unavail_req = MockRequest("GET", "/api/pincodes?pincode=999999")
+        unavail_req.do_GET()
+        unavail_res = unavail_req.get_response_json()
+        self.assertTrue(unavail_res.get("success"))
+        self.assertFalse(unavail_res.get("available"))
+        print("✓ GET /api/pincodes?pincode=999999 unserviceable check passed.")
+
+        # 3. Owner adds a new delivery pincode (560001 - MG Road)
+        add_req = MockRequest("POST", "/api/admin/pincodes", body={
+            "pincode": "560001",
+            "area_name": "MG Road & Central Bangalore",
+            "city": "Bangalore",
+            "estimated_time": "30-40 mins",
+            "delivery_fee": 25.0,
+            "is_active": 1
+        })
+        add_req.do_POST()
+        add_res = add_req.get_response_json()
+        self.assertTrue(add_res.get("success"))
+        new_pin_id = add_res.get("id")
+        print("✓ POST /api/admin/pincodes owner add new zone passed. ID:", new_pin_id)
+
+        # 4. Check that new pincode is now available
+        new_check = MockRequest("GET", "/api/pincodes?pincode=560001")
+        new_check.do_GET()
+        new_res = new_check.get_response_json()
+        self.assertTrue(new_res.get("available"))
+        self.assertEqual(new_res.get("delivery_fee"), 25.0)
+
+        # 5. Owner toggles status to Paused
+        toggle_req = MockRequest("PUT", f"/api/admin/pincodes/{new_pin_id}/toggle")
+        toggle_req.do_PUT()
+        toggle_res = toggle_req.get_response_json()
+        self.assertTrue(toggle_res.get("success"))
+        self.assertEqual(toggle_res.get("is_active"), 0)
+        print("✓ PUT /api/admin/pincodes/<id>/toggle owner pause zone passed.")
+
+        # 6. Verify it is now unavailable
+        paused_check = MockRequest("GET", "/api/pincodes?pincode=560001")
+        paused_check.do_GET()
+        paused_res = paused_check.get_response_json()
+        self.assertFalse(paused_res.get("available"))
+
+        # 7. Customer registration with deliverable pincode
+        unique_email = f"pincode_cust_{random.randint(1000, 9999)}@test.com"
+        reg_req = MockRequest("POST", "/api/auth/register", body={
+            "name": "Pincode Test User",
+            "email": unique_email,
+            "phone": f"98{random.randint(10000000, 99999999)}",
+            "pincode": "562106",
+            "password": "password123",
+            "role": "customer"
+        })
+        reg_req.do_POST()
+        reg_res = reg_req.get_response_json()
+        self.assertTrue(reg_res.get("success"))
+        self.assertEqual(reg_res["user"]["pincode"], "562106")
+        print("✓ POST /api/auth/register with verified pincode passed.")
+
+        # 8. Clean up test pincode
+        del_req = MockRequest("DELETE", f"/api/admin/pincodes/{new_pin_id}")
+        del_req.do_DELETE()
+        del_res = del_req.get_response_json()
+        self.assertTrue(del_res.get("success"))
+        print("✓ DELETE /api/admin/pincodes/<id> cleanup passed.")
 
 if __name__ == "__main__":
     unittest.main()

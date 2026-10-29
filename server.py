@@ -230,6 +230,66 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_json({"success": True, "customers": customers})
                     return
 
+                # 9. Delivery Pincodes API (Customer verification & Owner management)
+                elif path == "/api/pincodes":
+                    check_pin = query_params.get("pincode", [None])[0]
+                    if check_pin:
+                        clean_pin = re.sub(r"\D", "", check_pin.strip())
+                        cursor.execute("SELECT * FROM delivery_pincodes WHERE pincode = ?", (clean_pin,))
+                        row = cursor.fetchone()
+                        if row:
+                            r = dict(row)
+                            if r["is_active"]:
+                                fee_text = "Free Delivery" if r["delivery_fee"] == 0 else f"₹{r['delivery_fee']} Delivery"
+                                self.send_json({
+                                    "success": True,
+                                    "available": True,
+                                    "pincode": r["pincode"],
+                                    "area_name": r["area_name"],
+                                    "city": r["city"],
+                                    "estimated_time": r["estimated_time"],
+                                    "delivery_fee": r["delivery_fee"],
+                                    "message": f"✅ Delivery Available: Delivering fresh to {r['area_name']}, {r['city']} in {r['estimated_time']} ({fee_text})!"
+                                })
+                            else:
+                                self.send_json({
+                                    "success": True,
+                                    "available": False,
+                                    "pincode": r["pincode"],
+                                    "area_name": r["area_name"],
+                                    "city": r["city"],
+                                    "message": f"⚠️ Delivery to {r['area_name']} ({r['pincode']}) is temporarily paused by bakery management."
+                                })
+                        else:
+                            self.send_json({
+                                "success": True,
+                                "available": False,
+                                "pincode": clean_pin,
+                                "message": f"❌ Sorry! We do not deliver to pincode {clean_pin} yet. Serviceable zones include Anekal, Electronic City, Koramangala, etc."
+                            })
+                        return
+
+                    # Return all active delivery pincodes
+                    cursor.execute("SELECT * FROM delivery_pincodes WHERE is_active = 1 ORDER BY pincode ASC")
+                    pincodes = [dict(r) for r in cursor.fetchall()]
+                    self.send_json({"success": True, "pincodes": pincodes})
+                    return
+
+                # 9b. Admin Delivery Pincodes (all zones, metrics)
+                elif path == "/api/admin/pincodes":
+                    cursor.execute("SELECT * FROM delivery_pincodes ORDER BY is_active DESC, pincode ASC")
+                    pincodes = [dict(r) for r in cursor.fetchall()]
+                    active_count = sum(1 for p in pincodes if p["is_active"])
+                    free_count = sum(1 for p in pincodes if p["delivery_fee"] == 0 and p["is_active"])
+                    self.send_json({
+                        "success": True,
+                        "pincodes": pincodes,
+                        "total": len(pincodes),
+                        "active_count": active_count,
+                        "free_count": free_count
+                    })
+                    return
+
                 else:
                     self.send_error_json("Endpoint not found", 404)
                     return
@@ -410,11 +470,12 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 })
                 return
 
-            # 2. Auth: Register (Supports New Customer with Phone & Email, or Owner/Staff with Security Key)
+            # 2. Auth: Register (Supports New Customer with Phone, Pincode & Email, or Owner/Staff with Security Key)
             elif path == "/api/auth/register":
                 name = body.get("name", "").strip()
                 email = body.get("email", "").strip().lower()
                 phone = body.get("phone", "").strip()
+                pincode = body.get("pincode", "").strip()
                 password = body.get("password", "")
                 role = body.get("role", "customer").strip().lower()
                 store_key = body.get("store_key", "").strip()
@@ -427,6 +488,7 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_error_json("Password must be at least 6 characters")
                     return
 
+                clean_pincode = None
                 if role in ("owner", "admin"):
                     # Validate Owner Master Security Key
                     valid_keys = ("CAKETALK-OWNER-2026", "1216", "owner123", "admin123")
@@ -438,6 +500,21 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                     assigned_role = "customer"
                     if not phone:
                         self.send_error_json("Phone number is required for customer registration")
+                        return
+
+                    # Validate Delivery Pincode for customer
+                    clean_pincode = re.sub(r"\D", "", pincode)
+                    if not clean_pincode or len(clean_pincode) != 6:
+                        self.send_error_json("Please enter a valid 6-digit Indian delivery pincode (e.g. 562106)")
+                        return
+
+                    cursor.execute("SELECT area_name, is_active FROM delivery_pincodes WHERE pincode = ?", (clean_pincode,))
+                    p_row = cursor.fetchone()
+                    if not p_row:
+                        self.send_error_json(f"Sorry, we do not deliver to pincode {clean_pincode} yet. Please enter a serviceable pincode (e.g. 562106 for Anekal, 560100 for Electronic City).")
+                        return
+                    if not p_row["is_active"]:
+                        self.send_error_json(f"Delivery to pincode {clean_pincode} ({p_row['area_name']}) is temporarily paused by bakery management.")
                         return
 
                 # Check if email already registered
@@ -455,18 +532,18 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
 
                 hashed = hash_password(password)
                 cursor.execute("""
-                INSERT INTO users (name, email, password_hash, role, phone, loyalty_points, tier)
-                VALUES (?, ?, ?, ?, ?, 50, 'Silver Baker')
-                """, (name, email, hashed, assigned_role, phone))
+                INSERT INTO users (name, email, password_hash, role, phone, pincode, loyalty_points, tier)
+                VALUES (?, ?, ?, ?, ?, ?, 50, 'Silver Baker')
+                """, (name, email, hashed, assigned_role, phone, clean_pincode))
                 conn.commit()
 
                 user_id = cursor.lastrowid
                 user_dict = {
                     "id": user_id, "name": name, "email": email, "role": assigned_role,
-                    "phone": phone, "loyalty_points": 50, "tier": "Silver Baker"
+                    "phone": phone, "pincode": clean_pincode, "loyalty_points": 50, "tier": "Silver Baker"
                 }
                 token = f"ct_token_{user_id}_{random.randint(100000, 999999)}"
-                self.send_json({"success": True, "user": user_dict, "token": token, "message": "Account created successfully!"})
+                self.send_json({"success": True, "user": user_dict, "token": token, "message": "Account created successfully with 50 Welcome Crumb Points!"})
                 return
 
             # 3. Create Order
@@ -682,6 +759,46 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json({"success": True, "message": "Inquiry submitted! Our master pastry chef will contact you within 24 hours."})
                 return
 
+            # 10. Add or Update Delivery Pincode (Admin / Owner)
+            elif path == "/api/admin/pincodes":
+                raw_pin = body.get("pincode", "")
+                area_name = body.get("area_name", "").strip()
+                city = body.get("city", "Bangalore").strip()
+                estimated_time = body.get("estimated_time", "30-45 mins").strip()
+                delivery_fee = float(body.get("delivery_fee", 0.0))
+                is_active = int(body.get("is_active", 1))
+
+                clean_pin = re.sub(r"\D", "", str(raw_pin).strip())
+                if not clean_pin or len(clean_pin) != 6:
+                    self.send_error_json("Please enter a valid 6-digit Indian postal pincode")
+                    return
+
+                if not area_name:
+                    self.send_error_json("Locality / Area Name is required")
+                    return
+
+                cursor.execute("SELECT id FROM delivery_pincodes WHERE pincode = ?", (clean_pin,))
+                existing = cursor.fetchone()
+                if existing:
+                    cursor.execute("""
+                    UPDATE delivery_pincodes
+                    SET area_name = ?, city = ?, estimated_time = ?, delivery_fee = ?, is_active = ?
+                    WHERE pincode = ?
+                    """, (area_name, city, estimated_time, delivery_fee, is_active, clean_pin))
+                    p_id = existing["id"]
+                    msg = f"Delivery zone {clean_pin} ({area_name}) updated successfully!"
+                else:
+                    cursor.execute("""
+                    INSERT INTO delivery_pincodes (pincode, area_name, city, estimated_time, delivery_fee, is_active)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """, (clean_pin, area_name, city, estimated_time, delivery_fee, is_active))
+                    p_id = cursor.lastrowid
+                    msg = f"Delivery pincode {clean_pin} ({area_name}) added to active zones!"
+
+                conn.commit()
+                self.send_json({"success": True, "id": p_id, "pincode": clean_pin, "message": msg})
+                return
+
             else:
                 self.send_error_json("POST endpoint not supported", 404)
 
@@ -824,6 +941,29 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_error_json("Invalid inquiry ID")
                     return
 
+            # 6. Toggle Delivery Pincode Active State (Admin)
+            elif path.startswith("/api/admin/pincodes/") and path.endswith("/toggle"):
+                try:
+                    pincode_id = int(path.split("/")[4])
+                    cursor.execute("SELECT is_active, pincode, area_name FROM delivery_pincodes WHERE id = ?", (pincode_id,))
+                    row = cursor.fetchone()
+                    if not row:
+                        self.send_error_json("Pincode entry not found", 404)
+                        return
+                    new_state = 0 if row["is_active"] else 1
+                    cursor.execute("UPDATE delivery_pincodes SET is_active = ? WHERE id = ?", (new_state, pincode_id))
+                    conn.commit()
+                    status_text = "Activated" if new_state else "Paused"
+                    self.send_json({
+                        "success": True,
+                        "is_active": new_state,
+                        "message": f"Delivery to {row['pincode']} ({row['area_name']}) {status_text}."
+                    })
+                    return
+                except ValueError:
+                    self.send_error_json("Invalid pincode ID")
+                    return
+
             else:
                 self.send_error_json("PUT endpoint not supported", 404)
 
@@ -849,6 +989,23 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 except ValueError:
                     self.send_error_json("Invalid product ID")
                     return
+
+            elif path.startswith("/api/admin/pincodes/"):
+                try:
+                    pincode_id = int(path.split("/")[4])
+                    cursor.execute("SELECT pincode, area_name FROM delivery_pincodes WHERE id = ?", (pincode_id,))
+                    row = cursor.fetchone()
+                    if not row:
+                        self.send_error_json("Pincode entry not found", 404)
+                        return
+                    cursor.execute("DELETE FROM delivery_pincodes WHERE id = ?", (pincode_id,))
+                    conn.commit()
+                    self.send_json({"success": True, "message": f"Pincode {row['pincode']} ({row['area_name']}) removed from delivery zones"})
+                    return
+                except ValueError:
+                    self.send_error_json("Invalid pincode ID")
+                    return
+
             else:
                 self.send_error_json("DELETE endpoint not supported", 404)
         finally:

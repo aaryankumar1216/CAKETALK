@@ -399,8 +399,23 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="custRegAddress">Delivery Address / Landmark (Optional)</label>
-                  <input type="text" id="custRegAddress" class="form-control" placeholder="e.g. 42 MG Road, Anekal, Bangalore">
+                  <label for="custRegPincode">Delivery Pincode & Serviceability Check *</label>
+                  <div class="pincode-check-row">
+                    <div class="pincode-input-wrap">
+                      <span class="pincode-pin-icon">📍</span>
+                      <input type="text" id="custRegPincode" class="form-control" placeholder="Enter 6-digit Pincode (e.g. 562106)" maxlength="6" pattern="[0-9]{6}" required oninput="AuthApp.onPincodeInput(this.value)">
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-check-pincode" id="btnCheckPincode" onclick="AuthApp.checkPincodeAvailability()">
+                      <span>🔍</span> Check Pincode
+                    </button>
+                  </div>
+                  <div id="pincodeCheckBadge" class="pincode-feedback-box" style="display: none;"></div>
+                  <div class="pincode-quick-chips">
+                    <span class="chips-label">Popular Delivery Zones:</span>
+                    <button type="button" class="chip-pincode" onclick="AuthApp.selectQuickPincode('562106')">562106 (Anekal)</button>
+                    <button type="button" class="chip-pincode" onclick="AuthApp.selectQuickPincode('560100')">560100 (E-City)</button>
+                    <button type="button" class="chip-pincode" onclick="AuthApp.selectQuickPincode('560034')">560034 (Koramangala)</button>
+                  </div>
                 </div>
                 <div class="form-grid-2">
                   <div class="form-group">

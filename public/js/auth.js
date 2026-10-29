@@ -407,6 +407,80 @@ const AuthApp = {
     }
   },
 
+  // Pincode Availability Verification
+  isPincodeVerified: false,
+  verifiedPincode: null,
+
+  onPincodeInput(val) {
+    const clean = (val || '').replace(/\D/g, '');
+    const badge = document.getElementById('pincodeCheckBadge');
+    if (clean.length < 6) {
+      this.isPincodeVerified = false;
+      this.verifiedPincode = null;
+      if (badge) badge.style.display = 'none';
+    } else if (clean.length === 6) {
+      this.checkPincodeAvailability();
+    }
+  },
+
+  selectQuickPincode(pincode) {
+    const input = document.getElementById('custRegPincode');
+    if (input) {
+      input.value = pincode;
+      this.checkPincodeAvailability();
+    }
+  },
+
+  async checkPincodeAvailability() {
+    const input = document.getElementById('custRegPincode');
+    const badge = document.getElementById('pincodeCheckBadge');
+    const btn = document.getElementById('btnCheckPincode');
+    if (!input || !badge) return;
+
+    const cleanPin = input.value.replace(/\D/g, '');
+    if (cleanPin.length !== 6) {
+      badge.style.display = 'block';
+      badge.className = 'pincode-feedback-box invalid';
+      badge.innerHTML = '⚠️ Please enter a 6-digit Indian delivery pincode (e.g. <code>562106</code>).';
+      this.isPincodeVerified = false;
+      this.verifiedPincode = null;
+      return;
+    }
+
+    if (btn) btn.disabled = true;
+    badge.style.display = 'block';
+    badge.className = 'pincode-feedback-box checking';
+    badge.innerHTML = '🔄 Checking bakery delivery serviceability...';
+
+    try {
+      const res = await API.checkPincode(cleanPin);
+      if (res.available) {
+        badge.className = 'pincode-feedback-box available';
+        const feeText = res.delivery_fee === 0 ? 'Free Delivery' : `₹${res.delivery_fee} Delivery Fee`;
+        badge.innerHTML = `
+          <div style="font-weight: 700;">✅ Delivery Available to ${res.area_name}, ${res.city}!</div>
+          <div style="font-size: 0.8rem; margin-top: 2px;">⚡ Dispatch ETA: ${res.estimated_time} • ${feeText}</div>
+        `;
+        this.isPincodeVerified = true;
+        this.verifiedPincode = cleanPin;
+      } else {
+        badge.className = 'pincode-feedback-box unavailable';
+        badge.innerHTML = `
+          <div style="font-weight: 700;">❌ Delivery Unavailable for Pincode ${cleanPin}</div>
+          <div style="font-size: 0.8rem; margin-top: 2px;">${res.message || 'We currently serve Bangalore & Anekal delivery zones.'}</div>
+        `;
+        this.isPincodeVerified = false;
+        this.verifiedPincode = null;
+      }
+    } catch (err) {
+      badge.className = 'pincode-feedback-box invalid';
+      badge.innerHTML = `⚠️ Error checking pincode: ${err.message}`;
+      this.isPincodeVerified = false;
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  },
+
   async submitCustomerRegister(e) {
     e.preventDefault();
     this.clearError();
@@ -414,7 +488,7 @@ const AuthApp = {
     const name = document.getElementById('custRegName').value.trim();
     const email = document.getElementById('custRegEmail').value.trim();
     const phone = document.getElementById('custRegPhone').value.trim();
-    const address = document.getElementById('custRegAddress')?.value.trim() || '';
+    const pincode = document.getElementById('custRegPincode')?.value.trim() || '';
     const password = document.getElementById('custRegPassword').value;
     const confirmPw = document.getElementById('custRegConfirmPassword').value;
 
@@ -428,12 +502,18 @@ const AuthApp = {
       return;
     }
 
+    const cleanPin = pincode.replace(/\D/g, '');
+    if (cleanPin.length !== 6) {
+      this.showError('Please enter a valid 6-digit delivery pincode (e.g. 562106).');
+      return;
+    }
+
     try {
       const res = await API.register({
         name,
         email,
         phone,
-        address,
+        pincode: cleanPin,
         password,
         role: 'customer'
       });

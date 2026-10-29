@@ -3664,4 +3664,133 @@ body.mode-login .mobile-sticky-order-bar {
   color: #9AE6B4;
 }
 
+/* --- Delivery Pincode Verification Styles --- */
+.pincode-check-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pincode-input-wrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.pincode-pin-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 1rem;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.pincode-input-wrap .form-control {
+  padding-left: 36px;
+  height: 44px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.btn-check-pincode {
+  white-space: nowrap;
+  height: 44px;
+  padding: 0 14px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-warm-beige);
+  color: var(--color-espresso);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-check-pincode:hover {
+  background: var(--color-terracotta);
+  color: #fff;
+  border-color: var(--color-terracotta);
+}
+
+.pincode-feedback-box {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.pincode-feedback-box.available {
+  background: rgba(56, 161, 105, 0.12);
+  border: 1px solid rgba(56, 161, 105, 0.35);
+  color: #22543D;
+}
+
+[data-theme="dark"] .pincode-feedback-box.available {
+  background: rgba(56, 161, 105, 0.2);
+  color: #9AE6B4;
+}
+
+.pincode-feedback-box.unavailable {
+  background: rgba(229, 62, 62, 0.1);
+  border: 1px solid rgba(229, 62, 62, 0.3);
+  color: #9B2C2C;
+}
+
+[data-theme="dark"] .pincode-feedback-box.unavailable {
+  background: rgba(229, 62, 62, 0.2);
+  color: #FEB2B2;
+}
+
+.pincode-feedback-box.checking {
+  background: rgba(49, 130, 206, 0.1);
+  border: 1px solid rgba(49, 130, 206, 0.25);
+  color: #2B6CB0;
+}
+
+.pincode-feedback-box.invalid {
+  background: rgba(221, 107, 32, 0.1);
+  border: 1px solid rgba(221, 107, 32, 0.3);
+  color: #C05621;
+}
+
+.pincode-quick-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.76rem;
+}
+
+.chips-label {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.chip-pincode {
+  background: rgba(199, 91, 63, 0.08);
+  border: 1px solid rgba(199, 91, 63, 0.25);
+  color: var(--color-terracotta);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip-pincode:hover {
+  background: var(--color-terracotta);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+
 

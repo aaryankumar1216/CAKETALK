@@ -108,6 +108,8 @@ const AdminApp = {
       await this.loadCoupons();
     } else if (this.currentTab === 'inquiries') {
       await this.loadInquiries();
+    } else if (this.currentTab === 'pincodes') {
+      await this.loadPincodes();
     }
   },
 
@@ -806,6 +808,158 @@ const AdminApp = {
       UI.showToast(`Inquiry marked as ${newStatus}`, 'success');
     } catch (e) {
       UI.showToast(e.message, 'error');
+    }
+  },
+
+  // 8. Delivery Pincodes & Service Zones (Owner Management)
+  allPincodes: [],
+
+  async loadPincodes() {
+    const tbody = document.getElementById('pincodesTableTbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">Loading delivery pincodes & dispatch zones...</td></tr>';
+
+    try {
+      const res = await API.getAdminPincodes();
+      if (!res.success) return;
+
+      this.allPincodes = res.pincodes || [];
+
+      // Update KPI widgets
+      const totalEl = document.getElementById('kpiPincodesTotal');
+      const activeEl = document.getElementById('kpiPincodesActive');
+      const freeEl = document.getElementById('kpiPincodesFree');
+      if (totalEl) totalEl.textContent = res.total || this.allPincodes.length;
+      if (activeEl) activeEl.textContent = res.active_count || this.allPincodes.filter(p => p.is_active).length;
+      if (freeEl) freeEl.textContent = res.free_count || this.allPincodes.filter(p => p.is_active && p.delivery_fee === 0).length;
+
+      this.renderPincodesTable(this.allPincodes);
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="7" style="color: red; text-align: center; padding: 1.5rem;">Error loading pincodes: ${e.message}</td></tr>`;
+    }
+  },
+
+  renderPincodesTable(list) {
+    const tbody = document.getElementById('pincodesTableTbody');
+    if (!tbody) return;
+
+    if (!list || list.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #718096;">No delivery pincodes found. Add your first delivery zone above!</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = list.map(pin => {
+      const feeLabel = pin.delivery_fee === 0 ? '<span style="color: #2F855A; font-weight: 700;">FREE</span>' : `₹${pin.delivery_fee.toFixed(0)}`;
+      const statusBadge = pin.is_active 
+        ? '<span style="background: rgba(56, 161, 105, 0.15); color: #22543D; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">● Active Zone</span>'
+        : '<span style="background: rgba(229, 62, 62, 0.15); color: #9B2C2C; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">○ Delivery Paused</span>';
+      
+      const toggleBtnClass = pin.is_active ? 'btn-secondary' : 'btn-primary';
+      const toggleBtnText = pin.is_active ? '⏸ Pause Service' : '▶ Enable Service';
+
+      return `
+        <tr>
+          <td>
+            <span style="font-family: monospace; font-size: 1.05rem; font-weight: 800; color: var(--color-espresso); background: #EDF2F7; padding: 3px 8px; border-radius: 4px;">
+              ${pin.pincode}
+            </span>
+          </td>
+          <td><strong>${pin.area_name}</strong></td>
+          <td style="color: #4A5568;">${pin.city}</td>
+          <td><span style="font-size: 0.85rem; color: #4A5568;">⏱ ${pin.estimated_time || '35-45 mins'}</span></td>
+          <td>${feeLabel}</td>
+          <td>${statusBadge}</td>
+          <td>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="btn btn-sm ${toggleBtnClass}" onclick="AdminApp.togglePincode(${pin.id})">
+                ${toggleBtnText}
+              </button>
+              <button class="btn btn-sm btn-secondary" style="color: #E53E3E; border-color: rgba(229, 62, 62, 0.3);" onclick="AdminApp.deletePincode(${pin.id}, '${pin.pincode}')" title="Delete Pincode">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  filterPincodes(term) {
+    const q = (term || '').toLowerCase().trim();
+    if (!q) {
+      this.renderPincodesTable(this.allPincodes);
+      return;
+    }
+    const filtered = this.allPincodes.filter(p => 
+      p.pincode.toLowerCase().includes(q) || 
+      p.area_name.toLowerCase().includes(q) || 
+      (p.city && p.city.toLowerCase().includes(q))
+    );
+    this.renderPincodesTable(filtered);
+  },
+
+  async submitAddPincode(e) {
+    e.preventDefault();
+    const pincode = document.getElementById('adminNewPincode').value.trim();
+    const area_name = document.getElementById('adminNewArea').value.trim();
+    const city = document.getElementById('adminNewCity').value.trim() || 'Bangalore';
+    const estimated_time = document.getElementById('adminNewTime').value.trim() || '35-45 mins';
+    const delivery_fee = parseFloat(document.getElementById('adminNewFee').value || '0');
+
+    if (!pincode || pincode.length !== 6 || !/^\d{6}$/.test(pincode)) {
+      UI.showToast('Please enter a valid 6-digit Indian postal pincode.', 'error');
+      return;
+    }
+
+    if (!area_name) {
+      UI.showToast('Please enter the locality or area name.', 'error');
+      return;
+    }
+
+    try {
+      const res = await API.addPincode({
+        pincode,
+        area_name,
+        city,
+        estimated_time,
+        delivery_fee,
+        is_active: 1
+      });
+
+      if (res.success) {
+        UI.showToast(res.message || `Pincode ${pincode} saved successfully!`, 'success');
+        document.getElementById('addPincodeForm').reset();
+        document.getElementById('adminNewCity').value = 'Bangalore';
+        document.getElementById('adminNewTime').value = '35-45 mins';
+        document.getElementById('adminNewFee').value = '0';
+        await this.loadPincodes();
+      }
+    } catch (err) {
+      UI.showToast(err.message || 'Failed to save delivery pincode.', 'error');
+    }
+  },
+
+  async togglePincode(id) {
+    try {
+      const res = await API.togglePincode(id);
+      UI.showToast(res.message || 'Pincode delivery status updated', 'success');
+      await this.loadPincodes();
+    } catch (err) {
+      UI.showToast(err.message || 'Failed to toggle pincode', 'error');
+    }
+  },
+
+  async deletePincode(id, pincode) {
+    if (!confirm(`Are you sure you want to remove pincode ${pincode} from your delivery zones?`)) {
+      return;
+    }
+
+    try {
+      const res = await API.deletePincode(id);
+      UI.showToast(res.message || `Pincode ${pincode} removed`, 'success');
+      await this.loadPincodes();
+    } catch (err) {
+      UI.showToast(err.message || 'Failed to remove pincode', 'error');
     }
   }
 };

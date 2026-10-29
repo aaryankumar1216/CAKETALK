@@ -262,6 +262,39 @@ const API = {
   // 9. Customers (Admin)
   async getCustomers() {
     return this.request('/customers');
+  },
+
+  // 10. Delivery Pincodes & Service Zones (Customer verification & Owner management)
+  async checkPincode(pincode) {
+    const cleanPin = String(pincode).trim();
+    return this.request(`/pincodes?pincode=${encodeURIComponent(cleanPin)}`);
+  },
+
+  async getPincodes() {
+    return this.request('/pincodes');
+  },
+
+  async getAdminPincodes() {
+    return this.request('/admin/pincodes');
+  },
+
+  async addPincode(pincodeData) {
+    return this.request('/admin/pincodes', {
+      method: 'POST',
+      body: JSON.stringify(pincodeData)
+    });
+  },
+
+  async togglePincode(id) {
+    return this.request(`/admin/pincodes/${id}/toggle`, {
+      method: 'PUT'
+    });
+  },
+
+  async deletePincode(id) {
+    return this.request(`/admin/pincodes/${id}`, {
+      method: 'DELETE'
+    });
   }
 };
 window.API = API;
