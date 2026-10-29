@@ -132,14 +132,17 @@ const AuthApp = {
 
     const tabBtns = [
       { id: 'tabBtnCustomerLogin', target: 'customer-login' },
-      { id: 'tabBtnOwnerLogin', target: 'owner-login' },
-      { id: 'tabBtnRegister', target: 'customer-register' }
+      { id: 'tabBtnOwnerLogin', target: 'owner-login' }
     ];
 
     tabBtns.forEach(t => {
       const btn = document.getElementById(t.id);
       if (btn) {
-        if (t.target === tabId || (tabId === 'owner-register' && t.target === 'owner-login')) {
+        if (
+          t.target === tabId ||
+          (tabId === 'customer-register' && t.target === 'customer-login') ||
+          (tabId === 'owner-register' && t.target === 'owner-login')
+        ) {
           btn.classList.add('active');
         } else {
           btn.classList.remove('active');
