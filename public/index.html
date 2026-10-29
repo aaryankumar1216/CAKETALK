@@ -2126,10 +2126,10 @@
 
   <!-- 10. Quick Single Product Image Modal -->
   <div id="quickImageModal" class="modal-backdrop">
-    <div class="modal-box" style="max-width: 480px;">
+    <div class="modal-box" style="max-width: 520px;">
       <div class="modal-header">
         <div>
-          <h3 class="modal-title">Change Product Image</h3>
+          <h3 class="modal-title">Change Product Photo</h3>
           <p id="quickImgProdTitle" style="font-size: 0.82rem; color: var(--color-espresso); font-weight: 700; margin-top: 2px;">Product Title</p>
         </div>
         <button class="modal-close-btn" onclick="UI.closeModal('quickImageModal')">✕</button>
@@ -2138,22 +2138,61 @@
         <form id="quickImageForm" onsubmit="AdminApp.handleQuickImageSubmit(event)">
           <input type="hidden" id="quickImgProdId">
           
+          <!-- Live Preview -->
           <div style="text-align: center; margin-bottom: 1.25rem;">
             <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 700;">Live Image Preview</div>
-            <div style="width: 140px; height: 140px; margin: 0 auto; border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--color-terracotta); box-shadow: var(--shadow-sm); background: #eee;">
+            <div style="width: 150px; height: 150px; margin: 0 auto; border-radius: var(--radius-md); overflow: hidden; border: 2px solid var(--color-terracotta); box-shadow: var(--shadow-sm); background: #eee;">
               <img id="quickImgPreview" src="" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80'">
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Image Address / URL or Store Path *</label>
-            <input type="text" id="quickImgUrlInput" class="form-control" required placeholder="https://images.unsplash.com/... or /images/store/..." oninput="document.getElementById('quickImgPreview').src = this.value;">
-            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Paste any direct image link (.jpg, .png, Unsplash, or local path)</span>
+          <!-- Method 1: Upload from Device / Camera -->
+          <div style="margin-bottom: 1rem; padding: 0.85rem; border: 1px dashed var(--color-terracotta); border-radius: 8px; background: rgba(200, 105, 60, 0.05); text-align: center;">
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--color-espresso); margin-bottom: 0.4rem;">
+              📸 Upload Photo from Device or Camera
+            </label>
+            <input type="file" id="quickImgFileInput" accept="image/*" style="display: none;" onchange="AdminApp.handleQuickImageFileUpload(this)">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('quickImgFileInput').click()" style="gap: 6px;">
+              <span>📁</span> Choose Photo File...
+            </button>
+            <div id="quickImgFileStatus" style="font-size: 0.75rem; color: var(--color-terracotta); font-weight: 600; margin-top: 5px;"></div>
+          </div>
+
+          <!-- Method 2: Choose from Field Visit Store Photos -->
+          <div style="margin-bottom: 1rem;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 700; color: var(--color-espresso); margin-bottom: 0.35rem;">
+              🏪 Or Pick From Bakery Store Photos:
+            </label>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+              <button type="button" onclick="AdminApp.selectStorePhoto('/images/store/caketalk-pastries-chiller.jpg')" title="Pastry Chiller Case" style="padding: 2px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; text-align: center;">
+                <img src="/images/store/caketalk-pastries-chiller.jpg" style="width: 100%; height: 42px; object-fit: cover; border-radius: 4px;">
+                <span style="font-size: 0.65rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Pastries</span>
+              </button>
+              <button type="button" onclick="AdminApp.selectStorePhoto('/images/store/caketalk-cakes-chiller.jpg')" title="Cakes Chiller" style="padding: 2px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; text-align: center;">
+                <img src="/images/store/caketalk-cakes-chiller.jpg" style="width: 100%; height: 42px; object-fit: cover; border-radius: 4px;">
+                <span style="font-size: 0.65rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Cakes</span>
+              </button>
+              <button type="button" onclick="AdminApp.selectStorePhoto('/images/store/caketalk-bakes.jpg')" title="Fresh Bakes" style="padding: 2px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; text-align: center;">
+                <img src="/images/store/caketalk-bakes.jpg" style="width: 100%; height: 42px; object-fit: cover; border-radius: 4px;">
+                <span style="font-size: 0.65rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Bakes</span>
+              </button>
+              <button type="button" onclick="AdminApp.selectStorePhoto('/images/store/caketalk-display.jpg')" title="Cookies & Biscuits" style="padding: 2px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; text-align: center;">
+                <img src="/images/store/caketalk-display.jpg" style="width: 100%; height: 42px; object-fit: cover; border-radius: 4px;">
+                <span style="font-size: 0.65rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Cookies</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Method 3: Web Image URL / Path Input -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Image Address / URL or Path *</label>
+            <input type="text" id="quickImgUrlInput" class="form-control" required placeholder="https://images.unsplash.com/... or /images/..." oninput="document.getElementById('quickImgPreview').src = this.value;">
+            <span style="font-size: 0.72rem; color: var(--color-text-muted);">Supports device uploads, store assets, or external image URLs</span>
           </div>
 
           <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
             <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="UI.closeModal('quickImageModal')">Cancel</button>
-            <button type="submit" class="btn btn-primary" style="flex: 2;">Save Image URL</button>
+            <button type="submit" id="btnSaveQuickPhoto" class="btn btn-primary" style="flex: 2;">Save Product Photo ✓</button>
           </div>
         </form>
       </div>

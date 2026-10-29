@@ -392,26 +392,77 @@ const AdminApp = {
     const titleEl = document.getElementById('quickImgProdTitle');
     const inputEl = document.getElementById('quickImgUrlInput');
     const prevEl = document.getElementById('quickImgPreview');
+    const statusEl = document.getElementById('quickImgFileStatus');
+    const fileInput = document.getElementById('quickImgFileInput');
 
     if (idEl) idEl.value = p.id;
     if (titleEl) titleEl.textContent = `${p.title} (${p.category} • ₹${p.price.toFixed(0)})`;
     if (inputEl) inputEl.value = p.image_url;
     if (prevEl) prevEl.src = p.image_url;
+    if (statusEl) statusEl.textContent = '';
+    if (fileInput) fileInput.value = '';
 
     UI.openModal('quickImageModal');
+  },
+
+  selectStorePhoto(url) {
+    const inputEl = document.getElementById('quickImgUrlInput');
+    const prevEl = document.getElementById('quickImgPreview');
+    const statusEl = document.getElementById('quickImgFileStatus');
+    if (inputEl) inputEl.value = url;
+    if (prevEl) prevEl.src = url;
+    if (statusEl) statusEl.textContent = '✓ Store photo selected';
+  },
+
+  async handleQuickImageFileUpload(inputEl) {
+    if (!inputEl || !inputEl.files || !inputEl.files[0]) return;
+    const file = inputEl.files[0];
+    const statusEl = document.getElementById('quickImgFileStatus');
+    const inputUrlEl = document.getElementById('quickImgUrlInput');
+    const prevEl = document.getElementById('quickImgPreview');
+
+    if (statusEl) statusEl.textContent = `Uploading ${file.name}...`;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const base64Data = e.target.result;
+      if (prevEl) prevEl.src = base64Data;
+
+      try {
+        const uploadRes = await API.uploadImage(base64Data, file.name);
+        if (uploadRes.success && uploadRes.image_url) {
+          if (inputUrlEl) inputUrlEl.value = uploadRes.image_url;
+          if (statusEl) statusEl.textContent = `✓ Uploaded: ${file.name} (Ready to save)`;
+          UI.showToast('Photo uploaded from device! Click "Save Product Photo" to apply.', 'success');
+        } else {
+          if (inputUrlEl) inputUrlEl.value = base64Data;
+          if (statusEl) statusEl.textContent = `✓ Loaded: ${file.name}`;
+        }
+      } catch (err) {
+        if (inputUrlEl) inputUrlEl.value = base64Data;
+        if (statusEl) statusEl.textContent = `✓ Loaded: ${file.name}`;
+      }
+    };
+    reader.readAsDataURL(file);
   },
 
   async handleQuickImageSubmit(e) {
     e.preventDefault();
     const id = document.getElementById('quickImgProdId').value;
     const newUrl = document.getElementById('quickImgUrlInput').value.trim();
+    const saveBtn = document.getElementById('btnSaveQuickPhoto');
 
     if (!id || !newUrl) return;
+
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving photo...';
+    }
 
     try {
       const res = await API.updateProductImage(id, newUrl);
       if (res.success) {
-        UI.showToast('Product photo updated successfully!', 'success');
+        UI.showToast(res.message || 'Product photo updated successfully!', 'success');
         UI.closeModal('quickImageModal');
 
         // Update local cache
@@ -430,9 +481,19 @@ const AdminApp = {
 
         // Fully refresh products table from backend to guarantee sync
         await this.loadProducts();
+
+        // If customer storefront renderProducts exists, refresh it too
+        if (typeof window.renderProducts === 'function') {
+          window.renderProducts();
+        }
       }
     } catch (err) {
       UI.showToast(err.message || 'Failed to update image', 'error');
+    } finally {
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Product Photo ✓';
+      }
     }
   },
 

@@ -6,7 +6,15 @@ const API = {
   baseUrl: '/api',
 
   async request(endpoint, options = {}) {
-    const url = `${this.baseUrl}${endpoint}`;
+    let url = `${this.baseUrl}${endpoint}`;
+    const method = (options.method || 'GET').toUpperCase();
+
+    // Cache-busting for GET requests to guarantee live, fresh database synchronization
+    if (method === 'GET') {
+      const sep = url.includes('?') ? '&' : '?';
+      url = `${url}${sep}_t=${Date.now()}`;
+    }
+
     const defaultHeaders = {
       'Content-Type': 'application/json',
     };
@@ -18,6 +26,7 @@ const API = {
 
     try {
       const response = await fetch(url, {
+        cache: 'no-store',
         ...options,
         headers: {
           ...defaultHeaders,
@@ -69,6 +78,13 @@ const API = {
     return this.request(`/products/${id}/image`, {
       method: 'PUT',
       body: JSON.stringify({ image_url: imageUrl })
+    });
+  },
+
+  async uploadImage(imageData, filename = 'product.jpg') {
+    return this.request('/upload-image', {
+      method: 'POST',
+      body: JSON.stringify({ image_data: imageData, filename: filename })
     });
   },
 

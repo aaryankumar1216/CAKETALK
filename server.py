@@ -27,6 +27,9 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(status_code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(response_bytes)))
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0")
+        self.send_header("Pragma", "no-cache")
+        self.send_header("Expires", "0")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
@@ -805,6 +808,50 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json({"success": True, "id": p_id, "pincode": clean_pin, "message": msg})
                 return
 
+            # 11. Image Upload API (Supports direct device uploads from camera or computer)
+            elif path == "/api/upload-image":
+                image_data = body.get("image_data", "").strip()
+                filename = body.get("filename", "product.jpg").strip()
+                if not image_data:
+                    self.send_error_json("No image data received")
+                    return
+
+                try:
+                    import base64, time
+                    if "base64," in image_data:
+                        header, base64_data = image_data.split("base64,", 1)
+                        if "png" in header:
+                            ext = ".png"
+                        elif "webp" in header:
+                            ext = ".webp"
+                        elif "gif" in header:
+                            ext = ".gif"
+                        else:
+                            ext = ".jpg"
+                    else:
+                        base64_data = image_data
+                        ext = ".jpg"
+
+                    image_bytes = base64.b64decode(base64_data)
+                    safe_filename = f"upload_{int(time.time())}_{random.randint(1000, 9999)}{ext}"
+                    upload_dir = os.path.join(PUBLIC_DIR, "images", "uploads")
+                    os.makedirs(upload_dir, exist_ok=True)
+                    target_file = os.path.join(upload_dir, safe_filename)
+                    with open(target_file, "wb") as f:
+                        f.write(image_bytes)
+
+                    relative_url = f"/images/uploads/{safe_filename}"
+                    self.send_json({
+                        "success": True,
+                        "image_url": relative_url,
+                        "filename": safe_filename,
+                        "message": "Photo uploaded successfully to bakery media storage!"
+                    })
+                    return
+                except Exception as e:
+                    self.send_error_json(f"Upload failed: {str(e)}", 500)
+                    return
+
             else:
                 self.send_error_json("POST endpoint not supported", 404)
 
@@ -860,18 +907,31 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 return
 
             # 2b. Quick Single Product Image Update (Admin)
-            elif path.startswith("/api/products/") and path.endswith("/image"):
+            elif path.startswith("/api/products/") and (path.endswith("/image") or path.endswith("/image/")):
                 try:
-                    product_id = int(path.split("/")[3])
+                    parts = path.strip("/").split("/")
+                    product_id = int(parts[2])
                     img_url = (body.get("image_url") or "").strip()
                     if not img_url:
                         self.send_error_json("Image URL is required")
                         return
+
+                    cursor.execute("SELECT id, title FROM products WHERE id = ?", (product_id,))
+                    prod = cursor.fetchone()
+                    if not prod:
+                        self.send_error_json(f"Product #{product_id} not found in database", 404)
+                        return
+
                     cursor.execute("UPDATE products SET image_url = ? WHERE id = ?", (img_url, product_id))
                     conn.commit()
-                    self.send_json({"success": True, "message": "Product image updated successfully", "image_url": img_url})
+                    self.send_json({
+                        "success": True,
+                        "message": f"Product '{prod['title']}' photo updated successfully!",
+                        "image_url": img_url,
+                        "id": product_id
+                    })
                     return
-                except ValueError:
+                except (ValueError, IndexError):
                     self.send_error_json("Invalid product ID")
                     return
 
