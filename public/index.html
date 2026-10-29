@@ -1131,10 +1131,10 @@
       </div>
     </div>
 
-    <!-- Admin Body Layout -->
-    <div style="display: flex; min-height: 80vh; position: relative;">
+    <!-- Admin Body Layout (Stable Fixed Sidebar + Independent Scrollable Main Content) -->
+    <div class="admin-body-container">
       <!-- Left Sidebar Navigation -->
-      <aside class="admin-sidebar" style="position: relative; top: 0; min-height: 100%;">
+      <aside class="admin-sidebar">
         <div class="sidebar-brand-box">
           <div class="sidebar-logo">🎂</div>
           <div>
@@ -1208,8 +1208,8 @@
         </div>
       </aside>
 
-      <!-- Main Admin Content Area -->
-      <main class="admin-main-wrapper" style="margin-left: 0; flex: 1;">
+      <!-- Main Admin Content Area (Scrolls Independently) -->
+      <main class="admin-main-wrapper">
         <!-- Admin Header -->
         <header class="admin-top-header">
           <div class="header-title-box">

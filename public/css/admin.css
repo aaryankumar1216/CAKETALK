@@ -595,3 +595,98 @@
   color: #FFFFFF;
   border-color: rgba(255, 255, 255, 0.15);
 }
+
+/* ==========================================================================
+   Embedded Mode (Single Page App Container in index.html)
+   Enforces stable fixed left sidebar and independently scrollable right main content
+   ========================================================================== */
+body.mode-admin {
+  height: 100vh;
+  overflow: hidden;
+  background-color: #F8F6F2;
+}
+
+body.mode-admin #adminViewContainer {
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+body.mode-admin .admin-mode-top-banner {
+  flex-shrink: 0;
+  z-index: 105;
+}
+
+.admin-body-container {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 42px);
+  max-height: calc(100vh - 42px);
+  overflow: hidden;
+  position: relative;
+}
+
+body.mode-admin .admin-sidebar {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 260px;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--glass-bg-dark);
+  border-right: 1px solid var(--glass-border-dark);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
+}
+
+body.mode-admin .admin-main-wrapper {
+  flex: 1;
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-left: 0;
+  background-color: #F8F6F2;
+  scroll-behavior: smooth;
+}
+
+body.mode-admin .admin-sidebar::-webkit-scrollbar,
+.sidebar-nav-menu::-webkit-scrollbar {
+  width: 4px;
+}
+body.mode-admin .admin-sidebar::-webkit-scrollbar-thumb,
+.sidebar-nav-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+body.mode-admin .admin-main-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+body.mode-admin .admin-main-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+body.mode-admin .admin-main-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(200, 105, 60, 0.25);
+  border-radius: 4px;
+}
+body.mode-admin .admin-main-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 105, 60, 0.45);
+}
+
+body.mode-admin .admin-top-header {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  flex-shrink: 0;
+}
