@@ -744,6 +744,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       grid.innerHTML = res.products.map(p => {
         const qty = Cart.getProductQty(p.id);
         const isOutOfStock = p.stock !== undefined && p.stock <= 0;
+        const isLowStock = p.stock !== undefined && p.stock > 0 && p.stock <= 5;
+        const stockBadge = isOutOfStock
+          ? `<span class="card-stock-pill out">🔴 Sold Out • Oven Batch Soon</span>`
+          : isLowStock
+            ? `<span class="card-stock-pill low">🟡 Only ${p.stock} left in store</span>`
+            : `<span class="card-stock-pill in">🟢 Fresh In Stock (${p.stock})</span>`;
         return `
         <div class="product-card" data-product-id="${p.id}">
           <div class="card-image-box">
@@ -758,6 +764,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="card-rating-row">
               <span class="rating-stars">★ ${p.rating.toFixed(1)}</span>
               <span>(${p.review_count} reviews)</span>
+              ${stockBadge}
             </div>
             <div class="card-footer">
               <div class="card-price">₹${p.price.toFixed(0)}</div>
@@ -835,24 +842,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // Logistics Zip Checker
+  // Logistics Pincode Checker (Queries Real Serviceable Zones)
   const zipInput = document.getElementById('deliveryZipInput');
   const zipBtn = document.getElementById('btnCheckZip');
   const zipResult = document.getElementById('zipCheckResult');
 
   if (zipBtn && zipInput && zipResult) {
-    zipBtn.addEventListener('click', () => {
-      const code = zipInput.value.trim();
-      if (!code || code.length < 5) {
-        zipResult.innerHTML = '<span class="status-unavailable">Please enter a valid 5-digit ZIP code.</span>';
+    zipBtn.addEventListener('click', async () => {
+      const code = (zipInput.value || '').trim().replace(/\D/g, '');
+      if (!code || code.length !== 6) {
+        zipResult.innerHTML = '<span class="status-unavailable" style="color: var(--color-danger); font-size: 0.85rem;">⚠️ Please enter a 6-digit Indian delivery pincode (e.g. 562106).</span>';
         return;
       }
-      // Demo validation: Covered zones
-      zipResult.innerHTML = `
-        <span class="status-available">
-          ✓ Delivery Available for ${code}! Same-Day Hand-Delivery via Chilled Van (Orders placed before 2:00 PM).
-        </span>
-      `;
+      zipResult.innerHTML = '<span style="color: var(--color-text-muted); font-size: 0.85rem;">🔍 Checking live delivery coverage...</span>';
+      try {
+        const res = await API.checkPincode(code);
+        if (res.available) {
+          const feeTxt = res.delivery_fee === 0 ? 'Free Delivery' : `₹${res.delivery_fee} Delivery Fee`;
+          zipResult.innerHTML = `
+            <span class="status-available" style="color: var(--color-success); font-weight: 600; font-size: 0.88rem;">
+              ✓ Delivery Available for ${res.area_name || code}! (${feeTxt} • Est: ${res.estimated_time || '30-45 mins'})
+            </span>
+          `;
+        } else {
+          zipResult.innerHTML = `
+            <span class="status-unavailable" style="color: var(--color-danger); font-size: 0.85rem;">
+              ❌ ${res.message || `Delivery not available for pincode ${code} yet. Store pickup is open daily in Anekal!`}
+            </span>
+          `;
+        }
+      } catch (err) {
+        zipResult.innerHTML = `<span class="status-unavailable" style="color: var(--color-danger); font-size: 0.85rem;">${err.message || 'Error checking delivery pincode'}</span>`;
+      }
     });
   }
 

@@ -1073,10 +1073,34 @@ h1, h2, h3, h4, h5 {
 .card-rating-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.35rem;
   font-size: 0.82rem;
   color: var(--color-text-muted);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.card-stock-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.18rem 0.5rem;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.card-stock-pill.in {
+  background: rgba(34, 107, 65, 0.12);
+  color: #1A4D2E;
+}
+.card-stock-pill.low {
+  background: rgba(217, 119, 6, 0.14);
+  color: #B45309;
+}
+.card-stock-pill.out {
+  background: rgba(220, 38, 38, 0.12);
+  color: #DC2626;
 }
 
 .rating-stars {
