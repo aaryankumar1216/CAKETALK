@@ -242,29 +242,95 @@
           <!-- Error Banner -->
             <div id="authErrorBanner" class="auth-error-banner"></div>
 
-            <!-- TAB 1: CUSTOMER LOGIN -->
+            <!-- TAB 1: CUSTOMER LOGIN (OTP or Password) -->
             <div id="authPaneCustomerLogin" class="auth-pane active">
-              <div class="demo-creds-box">
-                <div class="demo-creds-title">🔑 Customer Demo Credentials:</div>
-                <div class="demo-creds-text">
-                  ID: <code>customer@caketalk.com</code> | Password: <code>customer123</code>
-                </div>
-                <button type="button" class="btn-demo-autofill" onclick="AuthApp.autofillCustomer()">⚡ Autofill Customer</button>
+              
+              <!-- Customer Sign In Method Switcher -->
+              <div class="cust-login-method-nav">
+                <button type="button" class="btn-login-method active" id="btnMethodOtp" onclick="AuthApp.setCustLoginMethod('otp')">
+                  <span>📲</span> Phone + OTP
+                </button>
+                <button type="button" class="btn-login-method" id="btnMethodPassword" onclick="AuthApp.setCustLoginMethod('password')">
+                  <span>🔑</span> Password
+                </button>
               </div>
 
-              <form id="customerLoginForm" onsubmit="AuthApp.submitCustomerLogin(event)">
-                <div class="form-group">
-                  <label for="custLoginIdentifier">Email Address or Mobile Phone *</label>
-                  <input type="text" id="custLoginIdentifier" class="form-control" placeholder="e.g. customer@caketalk.com or 9876543210" required>
+              <!-- METHOD A: MOBILE PHONE + OTP -->
+              <div id="custOtpSection">
+                <div class="demo-creds-box">
+                  <div class="demo-creds-title">📲 Instant OTP Demo:</div>
+                  <div class="demo-creds-text">
+                    Registered Mobile: <code>9876543210</code> (Pooja Sharma)
+                  </div>
+                  <button type="button" class="btn-demo-autofill" onclick="AuthApp.autofillPhone()">⚡ Autofill Phone</button>
                 </div>
-                <div class="form-group">
-                  <label for="custLoginPassword">Password *</label>
-                  <input type="password" id="custLoginPassword" class="form-control" placeholder="••••••••" required>
+
+                <form id="customerOtpForm" onsubmit="event.preventDefault(); AuthApp.requestOTP();">
+                  <div class="form-group">
+                    <label for="custOtpPhone">10-Digit Mobile Phone Number *</label>
+                    <div class="phone-input-group">
+                      <span class="phone-prefix">🇮🇳 +91</span>
+                      <input type="tel" id="custOtpPhone" class="form-control" placeholder="9876543210" pattern="[0-9]{10}" maxlength="10" required>
+                    </div>
+                  </div>
+
+                  <!-- Step 1 Button: Send OTP -->
+                  <div id="otpStep1Actions">
+                    <button type="submit" id="btnSendOtp" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 0.95rem; font-weight: 700;">
+                      Send Login OTP 📲
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Step 2: OTP Verification Field (Shown after OTP is requested) -->
+                <div id="custOtpVerificationSection" style="display: none; margin-top: 1rem;">
+                  <div class="otp-status-badge" id="otpStatusBadge">
+                    <span>📲 SMS Sent! Enter code below:</span>
+                    <span id="demoOtpPill" style="font-family: monospace; background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 4px;"></span>
+                  </div>
+
+                  <form onsubmit="event.preventDefault(); AuthApp.verifyOTP();" style="margin-top: 0.85rem;">
+                    <div class="form-group">
+                      <label for="custOtpCode">6-Digit Verification Code (OTP) *</label>
+                      <input type="text" id="custOtpCode" class="form-control" placeholder="••••••" maxlength="6" pattern="[0-9]{6}" style="letter-spacing: 0.35em; font-size: 1.3rem; font-weight: 700; text-align: center;" required>
+                    </div>
+
+                    <button type="submit" id="btnVerifyOtp" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 0.95rem; font-weight: 700;">
+                      Verify Code & Sign In 🛍️
+                    </button>
+                  </form>
+
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.85rem; font-size: 0.82rem;">
+                    <span id="otpCountdownLabel" style="color: var(--color-text-muted);">Resend code in <strong id="otpTimerSec">30</strong>s</span>
+                    <button type="button" id="btnResendOtp" onclick="AuthApp.requestOTP()" style="background: none; border: none; color: var(--color-terracotta); font-weight: 700; cursor: pointer; display: none; padding: 0;">Resend OTP</button>
+                  </div>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 0.95rem; font-weight: 700;">
-                  Sign In as Customer →
-                </button>
-              </form>
+              </div>
+
+              <!-- METHOD B: EMAIL / PASSWORD -->
+              <div id="custPasswordSection" style="display: none;">
+                <div class="demo-creds-box">
+                  <div class="demo-creds-title">🔑 Customer Demo Credentials:</div>
+                  <div class="demo-creds-text">
+                    ID: <code>customer@caketalk.com</code> | Password: <code>customer123</code>
+                  </div>
+                  <button type="button" class="btn-demo-autofill" onclick="AuthApp.autofillCustomer()">⚡ Autofill Customer</button>
+                </div>
+
+                <form id="customerLoginForm" onsubmit="AuthApp.submitCustomerLogin(event)">
+                  <div class="form-group">
+                    <label for="custLoginIdentifier">Email Address or Mobile Phone *</label>
+                    <input type="text" id="custLoginIdentifier" class="form-control" placeholder="e.g. customer@caketalk.com or 9876543210" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="custLoginPassword">Password *</label>
+                    <input type="password" id="custLoginPassword" class="form-control" placeholder="••••••••" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 0.95rem; font-weight: 700;">
+                    Sign In with Password →
+                  </button>
+                </form>
+              </div>
 
               <div class="auth-form-footer">
                 New to CakeTalk? <a onclick="AuthApp.switchTab('customer-register')">Register as New Customer (Get 50 Pts)</a>

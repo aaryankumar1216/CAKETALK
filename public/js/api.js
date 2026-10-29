@@ -214,6 +214,25 @@ const API = {
     return res;
   },
 
+  async sendOTP(phone) {
+    return this.request('/auth/otp/send', {
+      method: 'POST',
+      body: JSON.stringify({ phone })
+    });
+  },
+
+  async verifyOTP(phone, otp) {
+    const res = await this.request('/auth/otp/verify', {
+      method: 'POST',
+      body: JSON.stringify({ phone, otp })
+    });
+    if (res.success && res.token) {
+      localStorage.setItem('caketalk_token', res.token);
+      localStorage.setItem('caketalk_user', JSON.stringify(res.user));
+    }
+    return res;
+  },
+
   async register(data) {
     const res = await this.request('/auth/register', {
       method: 'POST',

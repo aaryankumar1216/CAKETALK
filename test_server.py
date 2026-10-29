@@ -231,5 +231,31 @@ class TestCakeTalk(unittest.TestCase):
         self.assertEqual(rows[1]["image_url"], img2)
         print("✓ PUT /api/products/batch-images multi-product image studio update passed.")
 
+    def test_mobile_otp_flow(self):
+        # 1. Send OTP
+        send_req = MockRequest("POST", "/api/auth/otp/send", body={"phone": "9876543210"})
+        send_req.do_POST()
+        send_res = send_req.get_response_json()
+        self.assertTrue(send_res.get("success"))
+        otp_code = send_res.get("otp")
+        self.assertEqual(len(otp_code), 6)
+        print("✓ POST /api/auth/otp/send passed. Generated OTP:", otp_code)
+
+        # 2. Verify Wrong OTP
+        wrong_req = MockRequest("POST", "/api/auth/otp/verify", body={"phone": "9876543210", "otp": "000000"})
+        wrong_req.do_POST()
+        wrong_res = wrong_req.get_response_json()
+        self.assertFalse(wrong_res.get("success", False))
+        print("✓ POST /api/auth/otp/verify (Wrong OTP rejected) passed.")
+
+        # 3. Verify Correct OTP & Sign In
+        verify_req = MockRequest("POST", "/api/auth/otp/verify", body={"phone": "9876543210", "otp": otp_code})
+        verify_req.do_POST()
+        verify_res = verify_req.get_response_json()
+        self.assertTrue(verify_res.get("success"))
+        self.assertEqual(verify_res["user"]["phone"], "9876543210")
+        self.assertEqual(verify_res["user"]["role"], "customer")
+        print("✓ POST /api/auth/otp/verify (Correct OTP & Sign In) passed for user:", verify_res["user"]["name"])
+
 if __name__ == "__main__":
     unittest.main()

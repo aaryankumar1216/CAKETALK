@@ -184,6 +184,168 @@ const AuthApp = {
     this.clearError();
   },
 
+  autofillPhone() {
+    const phoneEl = document.getElementById('custOtpPhone');
+    if (phoneEl) phoneEl.value = '9876543210';
+    this.clearError();
+  },
+
+  setCustLoginMethod(method) {
+    this.clearError();
+    const btnOtp = document.getElementById('btnMethodOtp');
+    const btnPass = document.getElementById('btnMethodPassword');
+    const secOtp = document.getElementById('custOtpSection');
+    const secPass = document.getElementById('custPasswordSection');
+
+    if (method === 'otp') {
+      if (btnOtp) btnOtp.classList.add('active');
+      if (btnPass) btnPass.classList.remove('active');
+      if (secOtp) secOtp.style.display = 'block';
+      if (secPass) secPass.style.display = 'none';
+    } else {
+      if (btnPass) btnPass.classList.add('active');
+      if (btnOtp) btnOtp.classList.remove('active');
+      if (secPass) secPass.style.display = 'block';
+      if (secOtp) secOtp.style.display = 'none';
+    }
+  },
+
+  async requestOTP() {
+    this.clearError();
+    const phoneEl = document.getElementById('custOtpPhone');
+    const phone = phoneEl ? phoneEl.value.replace(/\D/g, '') : '';
+
+    if (!phone || phone.length < 10) {
+      this.showError('Please enter a valid 10-digit mobile number to receive your OTP.');
+      return;
+    }
+
+    const btnSend = document.getElementById('btnSendOtp');
+    if (btnSend) {
+      btnSend.disabled = true;
+      btnSend.textContent = 'Sending OTP...';
+    }
+
+    try {
+      const res = await API.sendOTP(phone);
+      if (res.success) {
+        // Show verification section
+        const verSec = document.getElementById('custOtpVerificationSection');
+        if (verSec) verSec.style.display = 'block';
+
+        const demoPill = document.getElementById('demoOtpPill');
+        if (demoPill) demoPill.textContent = `Demo Code: ${res.otp}`;
+
+        // Pre-fill OTP input for instant testing
+        const codeInput = document.getElementById('custOtpCode');
+        if (codeInput) {
+          codeInput.value = res.otp;
+          codeInput.focus();
+        }
+
+        if (window.UI) {
+          UI.showToast(`📲 Simulated SMS: Your CakeTalk verification code is ${res.otp}`, 'success');
+        }
+
+        // Start countdown timer
+        this.startOtpCountdown(30);
+
+        if (btnSend) {
+          btnSend.textContent = 'OTP Sent ✓';
+          btnSend.style.background = '#28a745';
+        }
+      }
+    } catch (err) {
+      this.showError(err.message || 'Failed to send OTP. Please try again.');
+      if (btnSend) {
+        btnSend.disabled = false;
+        btnSend.textContent = 'Send Login OTP 📲';
+      }
+    }
+  },
+
+  startOtpCountdown(seconds = 30) {
+    if (this.otpCountdownInterval) {
+      clearInterval(this.otpCountdownInterval);
+    }
+
+    let timeLeft = seconds;
+    const timerLabel = document.getElementById('otpCountdownLabel');
+    const timerSec = document.getElementById('otpTimerSec');
+    const resendBtn = document.getElementById('btnResendOtp');
+
+    if (timerLabel) timerLabel.style.display = 'inline';
+    if (resendBtn) resendBtn.style.display = 'none';
+
+    this.otpCountdownInterval = setInterval(() => {
+      timeLeft--;
+      if (timerSec) timerSec.textContent = timeLeft;
+
+      if (timeLeft <= 0) {
+        clearInterval(this.otpCountdownInterval);
+        if (timerLabel) timerLabel.style.display = 'none';
+        if (resendBtn) resendBtn.style.display = 'inline';
+        const btnSend = document.getElementById('btnSendOtp');
+        if (btnSend) {
+          btnSend.disabled = false;
+          btnSend.textContent = 'Resend OTP 📲';
+          btnSend.style.background = '';
+        }
+      }
+    }, 1000);
+  },
+
+  async verifyOTP() {
+    this.clearError();
+    const phoneEl = document.getElementById('custOtpPhone');
+    const codeEl = document.getElementById('custOtpCode');
+
+    const phone = phoneEl ? phoneEl.value.replace(/\D/g, '') : '';
+    const code = codeEl ? codeEl.value.trim() : '';
+
+    if (!phone || phone.length < 10) {
+      this.showError('Please enter your 10-digit mobile number.');
+      return;
+    }
+
+    if (!code || code.length !== 6) {
+      this.showError('Please enter the 6-digit verification code.');
+      return;
+    }
+
+    const btnVerify = document.getElementById('btnVerifyOtp');
+    if (btnVerify) {
+      btnVerify.disabled = true;
+      btnVerify.textContent = 'Verifying code...';
+    }
+
+    try {
+      const res = await API.verifyOTP(phone, code);
+      if (res.success && res.user) {
+        this.currentUser = res.user;
+        this.updateUI();
+
+        if (this.otpCountdownInterval) {
+          clearInterval(this.otpCountdownInterval);
+        }
+
+        if (window.UI) {
+          UI.showToast(res.message || `Welcome to CakeTalk, ${res.user.name}!`, 'success');
+        }
+
+        if (window.switchWebsiteMode) {
+          switchWebsiteMode('customer');
+        }
+      }
+    } catch (err) {
+      this.showError(err.message || 'OTP verification failed. Please check the code.');
+      if (btnVerify) {
+        btnVerify.disabled = false;
+        btnVerify.textContent = 'Verify Code & Sign In 🛍️';
+      }
+    }
+  },
+
   autofillOwner() {
     const idEl = document.getElementById('ownerLoginIdentifier');
     const pwEl = document.getElementById('ownerLoginPassword');

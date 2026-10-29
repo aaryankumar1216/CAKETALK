@@ -162,6 +162,17 @@ def init_db():
     );
     """)
 
+    # 9. Mobile OTP Verifications Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS otp_codes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        phone TEXT NOT NULL,
+        code TEXT NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
     conn.commit()
 
     # Seed data if tables are empty

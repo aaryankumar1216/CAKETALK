@@ -12,7 +12,8 @@ import urllib.parse
 import mimetypes
 import random
 import string
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 from database import get_db_connection, init_db, hash_password
 
 PORT = 8000
@@ -313,6 +314,100 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
 
                 token = f"ct_token_{user_dict['id']}_{random.randint(100000, 999999)}"
                 self.send_json({"success": True, "user": user_dict, "token": token})
+                return
+
+            # 1b. Auth: Send Mobile Phone OTP
+            elif path == "/api/auth/otp/send":
+                raw_phone = str(body.get("phone", "")).strip()
+                clean_phone = re.sub(r"\D", "", raw_phone)
+                if len(clean_phone) > 10:
+                    clean_phone = clean_phone[-10:]
+
+                if len(clean_phone) < 10:
+                    self.send_error_json("Please enter a valid 10-digit mobile number")
+                    return
+
+                code = str(random.randint(100000, 999999))
+                expires_at = (datetime.now() + timedelta(minutes=5)).strftime("%Y-%m-%d %H:%M:%S")
+
+                cursor.execute("DELETE FROM otp_codes WHERE phone = ?", (clean_phone,))
+                cursor.execute("""
+                INSERT INTO otp_codes (phone, code, expires_at)
+                VALUES (?, ?, ?)
+                """, (clean_phone, code, expires_at))
+                conn.commit()
+
+                print(f"[SMS GATEWAY SIMULATOR] Sent OTP {code} to +91 {clean_phone}")
+                self.send_json({
+                    "success": True,
+                    "phone": clean_phone,
+                    "otp": code,
+                    "message": f"Verification code sent to +91 {clean_phone}.",
+                    "expires_in": 300
+                })
+                return
+
+            # 1c. Auth: Verify Mobile Phone OTP & Sign In
+            elif path == "/api/auth/otp/verify":
+                raw_phone = str(body.get("phone", "")).strip()
+                clean_phone = re.sub(r"\D", "", raw_phone)
+                if len(clean_phone) > 10:
+                    clean_phone = clean_phone[-10:]
+
+                otp = str(body.get("otp", "")).strip()
+
+                if not clean_phone or not otp:
+                    self.send_error_json("Phone number and OTP code are required")
+                    return
+
+                cursor.execute("""
+                SELECT id, code, expires_at FROM otp_codes 
+                WHERE phone = ? AND expires_at > CURRENT_TIMESTAMP 
+                ORDER BY id DESC LIMIT 1
+                """, (clean_phone,))
+                record = cursor.fetchone()
+
+                if not record or record["code"] != otp:
+                    self.send_error_json("Invalid or expired OTP. Please enter the correct code or request a new one.")
+                    return
+
+                # Delete used OTP
+                cursor.execute("DELETE FROM otp_codes WHERE phone = ?", (clean_phone,))
+
+                # Check if customer exists in users table
+                cursor.execute("""
+                SELECT id, name, email, role, phone, loyalty_points, tier 
+                FROM users 
+                WHERE phone = ? OR phone = ? OR phone = ?
+                """, (clean_phone, "+91 " + clean_phone, "+91" + clean_phone))
+                user = cursor.fetchone()
+
+                if not user:
+                    # Seamless new customer auto-registration via verified phone
+                    default_name = f"Patron {clean_phone[-4:]}"
+                    default_email = f"patron{clean_phone[-4:]}@caketalk.com"
+                    default_pw_hash = hash_password("otp_user_" + clean_phone)
+                    cursor.execute("""
+                    INSERT INTO users (name, email, password_hash, role, phone, loyalty_points, tier)
+                    VALUES (?, ?, ?, 'customer', ?, 50, 'Silver Baker')
+                    """, (default_name, default_email, default_pw_hash, clean_phone))
+                    conn.commit()
+                    user_id = cursor.lastrowid
+                    user_dict = {
+                        "id": user_id, "name": default_name, "email": default_email,
+                        "role": "customer", "phone": clean_phone, "loyalty_points": 50, "tier": "Silver Baker"
+                    }
+                else:
+                    user_dict = dict(user)
+
+                conn.commit()
+                token = f"ct_token_{user_dict['id']}_{random.randint(100000, 999999)}"
+                self.send_json({
+                    "success": True,
+                    "user": user_dict,
+                    "token": token,
+                    "message": f"Verified successfully! Welcome, {user_dict['name']}."
+                })
                 return
 
             # 2. Auth: Register (Supports New Customer with Phone & Email, or Owner/Staff with Security Key)
