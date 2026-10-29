@@ -1133,6 +1133,12 @@
               <span class="sidebar-text">Event Inquiries</span>
             </button>
           </li>
+          <li class="sidebar-nav-item">
+            <button data-admin-tab="pincodes">
+              <span class="sidebar-icon">📍</span>
+              <span class="sidebar-text">Delivery Pincodes</span>
+            </button>
+          </li>
         </ul>
 
         <div class="sidebar-user-footer">
@@ -1338,9 +1344,11 @@
                       <th>Customer</th>
                       <th>Email</th>
                       <th>Phone</th>
+                      <th>Delivery Pincode</th>
                       <th>Crumb Club Tier</th>
                       <th>Order History</th>
                       <th>Lifetime Spend</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody id="customersTableTbody"></tbody>
@@ -1394,6 +1402,92 @@
                     </tr>
                   </thead>
                   <tbody id="inquiriesTableTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 8: DELIVERY PINCODES & SERVICEABLE ZONES -->
+          <section id="tab-pincodes" class="tab-content-panel">
+            <!-- Top Stats Row -->
+            <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 1.5rem;">
+              <div class="kpi-card">
+                <div class="kpi-label">Total Delivery Pincodes</div>
+                <div class="kpi-value" id="kpiPincodesTotal">0</div>
+                <div class="kpi-subtext">Configured delivery locations</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Active Delivery Zones</div>
+                <div class="kpi-value" id="kpiPincodesActive" style="color: #2F855A;">0</div>
+                <div class="kpi-subtext">Currently accepting orders</div>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-label">Free Delivery Zones</div>
+                <div class="kpi-value" id="kpiPincodesFree" style="color: var(--color-terracotta);">0</div>
+                <div class="kpi-subtext">₹0 dispatch fee</div>
+              </div>
+            </div>
+
+            <!-- Add / Update Serviceable Pincode Card -->
+            <div class="admin-card" style="margin-bottom: 1.5rem;">
+              <div class="admin-card-header">
+                <h3>📍 Add / Update Deliverable Pincode</h3>
+                <span style="font-size: 0.85rem; color: #718096;">Update areas where your bakery delivers</span>
+              </div>
+              <div style="padding: 1.25rem;">
+                <form id="addPincodeForm" onsubmit="AdminApp.submitAddPincode(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: flex-end;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="adminNewPincode" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 4px; display: block;">6-Digit Pincode *</label>
+                    <input type="text" id="adminNewPincode" class="form-control" placeholder="e.g. 560001" maxlength="6" pattern="[0-9]{6}" required style="font-family: monospace; font-weight: 700;">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="adminNewArea" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 4px; display: block;">Locality / Area Name *</label>
+                    <input type="text" id="adminNewArea" class="form-control" placeholder="e.g. Whitefield / ITPL" required>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="adminNewCity" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 4px; display: block;">City</label>
+                    <input type="text" id="adminNewCity" class="form-control" value="Bangalore">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="adminNewTime" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 4px; display: block;">Est. Delivery Time</label>
+                    <input type="text" id="adminNewTime" class="form-control" placeholder="e.g. 40-50 mins" value="35-45 mins">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="adminNewFee" style="font-weight: 600; font-size: 0.82rem; margin-bottom: 4px; display: block;">Delivery Fee (₹)</label>
+                    <input type="number" id="adminNewFee" class="form-control" min="0" step="5" value="0">
+                  </div>
+                  <div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; height: 42px; font-weight: 700; justify-content: center;">
+                      ➕ Save Pincode
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Serviceable Pincodes List Table -->
+            <div class="admin-card">
+              <div class="admin-card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <h3>Active Bakery Delivery Zones</h3>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="text" id="pincodeSearchInput" placeholder="Filter pincodes or areas..." oninput="AdminApp.filterPincodes(this.value)" class="form-control" style="font-size: 0.85rem; padding: 6px 12px; width: 220px;">
+                  <button class="btn btn-secondary btn-sm" onclick="AdminApp.loadPincodes()">🔄 Refresh</button>
+                </div>
+              </div>
+              <div class="admin-table-container">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Pincode</th>
+                      <th>Locality / Zone</th>
+                      <th>City</th>
+                      <th>Est. Delivery Time</th>
+                      <th>Delivery Fee</th>
+                      <th>Delivery Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pincodesTableTbody"></tbody>
                 </table>
               </div>
             </div>

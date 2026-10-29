@@ -16,7 +16,7 @@ const AdminApp = {
     if (savedUser) {
       try {
         const u = JSON.parse(savedUser);
-        if (u.role === 'admin') {
+        if (u.role === 'admin' || u.role === 'owner') {
           this.currentUser = u;
           this.hideLoginOverlay();
           this.loadCurrentTab();
@@ -37,13 +37,22 @@ const AdminApp = {
     if (overlay) overlay.style.display = 'none';
   },
 
+  navEventsAttached: false,
+
   attachNavEvents() {
+    if (this.navEventsAttached) return;
+    this.navEventsAttached = true;
+
     // Tab switching
     document.querySelectorAll('[data-admin-tab]').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tabBtn = btn.closest('[data-admin-tab]');
+        if (!tabBtn) return;
         document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
-        btn.parentElement.classList.add('active');
-        this.currentTab = btn.dataset.adminTab;
+        const navItem = tabBtn.closest('.sidebar-nav-item');
+        if (navItem) navItem.classList.add('active');
+        this.currentTab = tabBtn.dataset.adminTab;
         this.switchTab(this.currentTab);
       });
     });
@@ -59,7 +68,7 @@ const AdminApp = {
 
         try {
           const res = await API.login(email, password);
-          if (res.success && res.user.role === 'admin') {
+          if (res.success && (res.user.role === 'admin' || res.user.role === 'owner')) {
             this.currentUser = res.user;
             this.hideLoginOverlay();
             this.loadCurrentTab();
@@ -87,7 +96,17 @@ const AdminApp = {
       target.classList.add('active');
       const titleEl = document.getElementById('adminHeaderTitle');
       if (titleEl) {
-        titleEl.textContent = tabName.charAt(0).toUpperCase() + tabName.slice(1);
+        const labels = {
+          analytics: 'Analytics Overview',
+          orders: 'Order Management',
+          products: 'Products & Menu',
+          inventory: 'Inventory & Pantry',
+          customers: 'Customer Directory',
+          coupons: 'Promotions & Deals',
+          inquiries: 'Event Inquiries',
+          pincodes: 'Delivery Pincodes & Service Zones'
+        };
+        titleEl.textContent = labels[tabName] || (tabName.charAt(0).toUpperCase() + tabName.slice(1));
       }
       this.loadCurrentTab();
     }
@@ -749,7 +768,6 @@ const AdminApp = {
     } catch (err) {
       UI.showToast(err.message || 'Failed to remove customer', 'error');
     }
-  },
   },
 
   // 6. Coupons Tab
