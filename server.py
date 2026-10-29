@@ -442,23 +442,29 @@ class CakeTalkRequestHandler(http.server.SimpleHTTPRequestHandler):
                 """, (clean_phone, "+91 " + clean_phone, "+91" + clean_phone))
                 user = cursor.fetchone()
 
+                provided_name = body.get("name", "").strip()
+
                 if not user:
-                    # Seamless new customer auto-registration via verified phone
-                    default_name = f"Patron {clean_phone[-4:]}"
+                    # Seamless new customer auto-registration via verified phone + name
+                    cust_name = provided_name if provided_name else f"Patron {clean_phone[-4:]}"
                     default_email = f"patron{clean_phone[-4:]}@caketalk.com"
                     default_pw_hash = hash_password("otp_user_" + clean_phone)
                     cursor.execute("""
                     INSERT INTO users (name, email, password_hash, role, phone, loyalty_points, tier)
                     VALUES (?, ?, ?, 'customer', ?, 50, 'Silver Baker')
-                    """, (default_name, default_email, default_pw_hash, clean_phone))
+                    """, (cust_name, default_email, default_pw_hash, clean_phone))
                     conn.commit()
                     user_id = cursor.lastrowid
                     user_dict = {
-                        "id": user_id, "name": default_name, "email": default_email,
+                        "id": user_id, "name": cust_name, "email": default_email,
                         "role": "customer", "phone": clean_phone, "loyalty_points": 50, "tier": "Silver Baker"
                     }
                 else:
                     user_dict = dict(user)
+                    if provided_name and user_dict.get("name", "").startswith("Patron "):
+                        cursor.execute("UPDATE users SET name = ? WHERE id = ?", (provided_name, user_dict["id"]))
+                        conn.commit()
+                        user_dict["name"] = provided_name
 
                 conn.commit()
                 token = f"ct_token_{user_dict['id']}_{random.randint(100000, 999999)}"

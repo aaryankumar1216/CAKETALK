@@ -185,7 +185,9 @@ const AuthApp = {
   },
 
   autofillPhone() {
+    const nameEl = document.getElementById('custOtpName');
     const phoneEl = document.getElementById('custOtpPhone');
+    if (nameEl) nameEl.value = 'Pooja Sharma';
     if (phoneEl) phoneEl.value = '9876543210';
     this.clearError();
   },
@@ -212,11 +214,20 @@ const AuthApp = {
 
   async requestOTP() {
     this.clearError();
+    const nameEl = document.getElementById('custOtpName');
+    const name = nameEl ? nameEl.value.trim() : '';
     const phoneEl = document.getElementById('custOtpPhone');
     const phone = phoneEl ? phoneEl.value.replace(/\D/g, '') : '';
 
+    if (!name) {
+      this.showError('Please enter your full name.');
+      if (nameEl) nameEl.focus();
+      return;
+    }
+
     if (!phone || phone.length < 10) {
       this.showError('Please enter a valid 10-digit mobile number to receive your OTP.');
+      if (phoneEl) phoneEl.focus();
       return;
     }
 
@@ -297,6 +308,8 @@ const AuthApp = {
 
   async verifyOTP() {
     this.clearError();
+    const nameEl = document.getElementById('custOtpName');
+    const name = nameEl ? nameEl.value.trim() : '';
     const phoneEl = document.getElementById('custOtpPhone');
     const codeEl = document.getElementById('custOtpCode');
 
@@ -320,7 +333,7 @@ const AuthApp = {
     }
 
     try {
-      const res = await API.verifyOTP(phone, code);
+      const res = await API.verifyOTP(phone, code, name);
       if (res.success && res.user) {
         this.currentUser = res.user;
         this.updateUI();

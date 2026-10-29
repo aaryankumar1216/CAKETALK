@@ -251,7 +251,7 @@ class TestCakeTalk(unittest.TestCase):
         print("✓ POST /api/auth/otp/verify (Wrong OTP rejected) passed.")
 
         # 3. Verify Correct OTP & Sign In
-        verify_req = MockRequest("POST", "/api/auth/otp/verify", body={"phone": "9876543210", "otp": otp_code})
+        verify_req = MockRequest("POST", "/api/auth/otp/verify", body={"phone": "9876543210", "otp": otp_code, "name": "Pooja Sharma (Patron)"})
         verify_req.do_POST()
         verify_res = verify_req.get_response_json()
         self.assertTrue(verify_res.get("success"))

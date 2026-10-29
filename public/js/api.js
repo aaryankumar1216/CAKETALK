@@ -221,10 +221,12 @@ const API = {
     });
   },
 
-  async verifyOTP(phone, otp) {
+  async verifyOTP(phone, otp, name = '') {
+    const payload = { phone, otp };
+    if (name) payload.name = name;
     const res = await this.request('/auth/otp/verify', {
       method: 'POST',
-      body: JSON.stringify({ phone, otp })
+      body: JSON.stringify(payload)
     });
     if (res.success && res.token) {
       localStorage.setItem('caketalk_token', res.token);

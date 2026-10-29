@@ -251,15 +251,12 @@
 
               <!-- METHOD A: MOBILE PHONE + OTP -->
               <div id="custOtpSection">
-                <div class="demo-creds-box">
-                  <div class="demo-creds-title">📲 Instant OTP Demo:</div>
-                  <div class="demo-creds-text">
-                    Registered Mobile: <code>9876543210</code> (Pooja Sharma)
-                  </div>
-                  <button type="button" class="btn-demo-autofill" onclick="AuthApp.autofillPhone()">⚡ Autofill Phone</button>
-                </div>
-
                 <form id="customerOtpForm" onsubmit="event.preventDefault(); AuthApp.requestOTP();">
+                  <div class="form-group">
+                    <label for="custOtpName">Full Name *</label>
+                    <input type="text" id="custOtpName" class="form-control" placeholder="e.g. Pooja Sharma" required>
+                  </div>
+
                   <div class="form-group">
                     <label for="custOtpPhone">10-Digit Mobile Phone Number *</label>
                     <div class="phone-input-group">
