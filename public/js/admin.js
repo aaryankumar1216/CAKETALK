@@ -9,6 +9,15 @@ const AdminApp = {
   async init() {
     this.checkAuth();
     this.attachNavEvents();
+    this.updateHeaderActions();
+  },
+
+  updateHeaderActions() {
+    // Only display "+ Add Product" button in the header when viewing the Products tab
+    const addProductBtn = document.getElementById('adminHeaderAddProductBtn');
+    if (addProductBtn) {
+      addProductBtn.style.display = (this.currentTab === 'products') ? 'inline-flex' : 'none';
+    }
   },
 
   checkAuth() {
@@ -19,6 +28,7 @@ const AdminApp = {
         if (u.role === 'admin' || u.role === 'owner') {
           this.currentUser = u;
           this.hideLoginOverlay();
+          this.updateHeaderActions();
           this.loadCurrentTab();
           return;
         }
@@ -71,6 +81,7 @@ const AdminApp = {
           if (res.success && (res.user.role === 'admin' || res.user.role === 'owner')) {
             this.currentUser = res.user;
             this.hideLoginOverlay();
+            this.updateHeaderActions();
             this.loadCurrentTab();
           } else {
             if (errorEl) errorEl.textContent = 'Access denied: Admin credentials required.';
@@ -108,6 +119,7 @@ const AdminApp = {
         };
         titleEl.textContent = labels[tabName] || (tabName.charAt(0).toUpperCase() + tabName.slice(1));
       }
+      this.updateHeaderActions();
       this.loadCurrentTab();
     }
   },
