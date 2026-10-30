@@ -263,7 +263,7 @@ def seed_products(conn):
                 "Snacks",
                 25.0,
                 "It's aloo bhaji masala.",
-                "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80",
+                "/images/products/aloo-bun.jpg",
                 "Classic",
                 "Veg",
                 40, 0, 4.7, 26
