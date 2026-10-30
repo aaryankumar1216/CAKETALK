@@ -283,7 +283,7 @@ def seed_products(conn):
                 "Snacks",
                 70.0,
                 "It's a shanks time spicy",
-                "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+                "/images/products/plain-curry-puff.jpg",
                 "SPICY",
                 "Veg",
                 30, 0, 4.6, 21
