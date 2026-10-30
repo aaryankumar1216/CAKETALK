@@ -345,7 +345,7 @@ def seed_products(conn):
                 "Cookies",
                 110.0,
                 "Crispy freshly baked traditional bakery cookies.",
-                "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=800&q=80",
+                "/images/products/special-cookies.png",
                 "Iyengar Special",
                 "Veg",
                 45, 1, 4.9, 61
