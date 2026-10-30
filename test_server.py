@@ -195,43 +195,58 @@ class TestCakeTalk(unittest.TestCase):
         print("✓ Role restriction passed (Customer denied on Owner portal).")
 
     def test_update_single_product_image(self):
-        test_img = "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80"
-        req = MockRequest("PUT", "/api/products/1/image", body={"image_url": test_img})
-        req.do_PUT()
-        res = req.get_response_json()
-        self.assertTrue(res.get("success"))
-        self.assertEqual(res.get("image_url"), test_img)
-
-        # Verify in DB
         conn = get_db_connection()
         c = conn.cursor()
         c.execute("SELECT image_url FROM products WHERE id = 1")
-        row = c.fetchone()
-        self.assertEqual(row["image_url"], test_img)
-        print("✓ PUT /api/products/1/image single photo update passed.")
+        orig_img = c.fetchone()["image_url"]
+        try:
+            test_img = "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80"
+            req = MockRequest("PUT", "/api/products/1/image", body={"image_url": test_img})
+            req.do_PUT()
+            res = req.get_response_json()
+            self.assertTrue(res.get("success"))
+            self.assertEqual(res.get("image_url"), test_img)
+
+            # Verify in DB
+            c.execute("SELECT image_url FROM products WHERE id = 1")
+            row = c.fetchone()
+            self.assertEqual(row["image_url"], test_img)
+            print("✓ PUT /api/products/1/image single photo update passed.")
+        finally:
+            c.execute("UPDATE products SET image_url = ? WHERE id = 1", (orig_img,))
+            conn.commit()
+            conn.close()
 
     def test_batch_update_product_images(self):
-        img1 = "https://images.unsplash.com/photo-test-1.jpg"
-        img2 = "https://images.unsplash.com/photo-test-2.jpg"
-        req = MockRequest("PUT", "/api/products/batch-images", body={
-            "updates": [
-                {"id": 1, "image_url": img1},
-                {"id": 2, "image_url": img2}
-            ]
-        })
-        req.do_PUT()
-        res = req.get_response_json()
-        self.assertTrue(res.get("success"))
-        self.assertEqual(res.get("updated_count"), 2)
-
-        # Verify both in DB
         conn = get_db_connection()
         c = conn.cursor()
         c.execute("SELECT id, image_url FROM products WHERE id IN (1, 2) ORDER BY id ASC")
-        rows = c.fetchall()
-        self.assertEqual(rows[0]["image_url"], img1)
-        self.assertEqual(rows[1]["image_url"], img2)
-        print("✓ PUT /api/products/batch-images multi-product image studio update passed.")
+        orig_rows = {r["id"]: r["image_url"] for r in c.fetchall()}
+        try:
+            img1 = "https://images.unsplash.com/photo-test-1.jpg"
+            img2 = "https://images.unsplash.com/photo-test-2.jpg"
+            req = MockRequest("PUT", "/api/products/batch-images", body={
+                "updates": [
+                    {"id": 1, "image_url": img1},
+                    {"id": 2, "image_url": img2}
+                ]
+            })
+            req.do_PUT()
+            res = req.get_response_json()
+            self.assertTrue(res.get("success"))
+            self.assertEqual(res.get("updated_count"), 2)
+
+            # Verify both in DB
+            c.execute("SELECT id, image_url FROM products WHERE id IN (1, 2) ORDER BY id ASC")
+            rows = c.fetchall()
+            self.assertEqual(rows[0]["image_url"], img1)
+            self.assertEqual(rows[1]["image_url"], img2)
+            print("✓ PUT /api/products/batch-images multi-product image studio update passed.")
+        finally:
+            for pid, img in orig_rows.items():
+                c.execute("UPDATE products SET image_url = ? WHERE id = ?", (img, pid))
+            conn.commit()
+            conn.close()
 
     def test_mobile_otp_flow(self):
         # 1. Send OTP

@@ -243,7 +243,7 @@ def seed_products(conn):
                 "Snacks",
                 25.0,
                 "Yummy vegetable puff with sauce.",
-                "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+                "/images/products/veg-puff.jpg",
                 "Popular",
                 "Veg",
                 45, 1, 4.8, 42
