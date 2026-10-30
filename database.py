@@ -427,7 +427,7 @@ def seed_products(conn):
                 "LJ Specials",
                 40.0,
                 "Soft pillowy pav buns for pav bhaji.",
-                "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80",
+                "/images/products/pav-bhaji-bun.png",
                 "Soft Pav",
                 "Veg",
                 45, 0, 4.7, 31
