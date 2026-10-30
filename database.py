@@ -367,7 +367,7 @@ def seed_products(conn):
                 "LJ Specials",
                 115.0,
                 "Yummy",
-                "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
+                "/images/products/special-rusk.png",
                 "Bestseller",
                 "Veg",
                 55, 1, 4.9, 67
