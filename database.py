@@ -487,7 +487,7 @@ def seed_products(conn):
                 "LJ Specials",
                 100.0,
                 "Fresh golden banana tea cake.",
-                "https://images.unsplash.com/photo-1603532648955-039310d9ed75?auto=format&fit=crop&w=800&q=80",
+                "/images/products/banana-cake.png",
                 "Naturally Sweet",
                 "Veg",
                 28, 0, 4.7, 33
