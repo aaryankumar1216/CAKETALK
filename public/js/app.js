@@ -79,6 +79,17 @@ const UI = {
 };
 window.UI = UI;
 
+/**
+ * Format any text mentioning "Veg" or "Vegetarian" with authentic Indian green dot indicator
+ */
+function formatWithVegDot(str) {
+  if (!str) return '';
+  return String(str).replace(/\b(veg|vegetarian)\b/gi, (match) => {
+    return `<span class="veg-inline-word"><span class="veg-indicator" title="100% Vegetarian"><span class="veg-dot"></span></span>${match}</span>`;
+  });
+}
+window.formatWithVegDot = formatWithVegDot;
+
 // -----------------------------------------------------------------------------
 // 2. Cart Management
 // -----------------------------------------------------------------------------
@@ -349,8 +360,8 @@ const Cart = {
         <div class="cart-item-row">
           <img src="${item.image_url}" alt="${item.title}" class="cart-item-img">
           <div class="cart-item-details">
-            <h5 class="cart-item-name">${item.title}</h5>
-            ${item.custom_details ? `<div class="cart-item-meta" style="color: var(--color-terracotta);">${item.custom_details}</div>` : `<div class="cart-item-meta">${item.category}</div>`}
+            <h5 class="cart-item-name">${formatWithVegDot(item.title)}</h5>
+            ${item.custom_details ? `<div class="cart-item-meta" style="color: var(--color-terracotta);">${item.custom_details}</div>` : `<div class="cart-item-meta">${item.category} • <span class="veg-badge-inline"><span class="veg-indicator" title="100% Vegetarian"><span class="veg-dot"></span></span>Veg</span></div>`}
             <div class="cart-item-price">₹${(item.price * item.quantity).toFixed(0)}</div>
             <div class="cart-item-qty-controls">
               <button class="qty-btn" onclick="Cart.updateQty(${idx}, -1)">−</button>
@@ -586,8 +597,8 @@ const OrderTracker = {
     const itemsEl = document.getElementById('trackOrderItemsList');
     if (itemsEl && order.items) {
       itemsEl.innerHTML = order.items.map(it => `
-        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0;">
-          <span>${it.quantity}x ${it.title} ${it.custom_details ? `(${it.custom_details})` : ''}</span>
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0; align-items: center;">
+          <span style="display: inline-flex; align-items: center; gap: 4px;">${it.quantity}x ${formatWithVegDot(it.title)} ${it.custom_details ? `(${it.custom_details})` : ''}</span>
           <span style="font-weight: 600;">₹${(it.price * it.quantity).toFixed(0)}</span>
         </div>
       `).join('');
@@ -676,7 +687,7 @@ const CustomerOrders = {
             📅 ${ord.date} ${ord.time ? `• ⏰ ${ord.time}` : ''}
           </div>
           <div style="font-size: 0.86rem; color: var(--color-espresso); margin-bottom: 0.65rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            📦 ${ord.items_summary}
+            📦 ${formatWithVegDot(ord.items_summary)}
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--glass-border-subtle); padding-top: 0.65rem;">
             <span style="font-weight: 800; color: var(--color-espresso); font-size: 0.95rem;">
@@ -750,17 +761,25 @@ document.addEventListener('DOMContentLoaded', async () => {
           : isLowStock
             ? `<span class="card-stock-pill low">🟡 Only ${p.stock} left in store</span>`
             : `<span class="card-stock-pill in">🟢 Fresh In Stock (${p.stock})</span>`;
+        const isVeg = p.dietary_tags && p.dietary_tags.toLowerCase().includes('veg');
+        const dietaryBadge = p.dietary_tags ? `
+          <span class="card-dietary-badge ${isVeg ? 'card-dietary-veg' : ''}">
+            ${isVeg ? `<span class="veg-indicator" title="100% Vegetarian"><span class="veg-dot"></span></span>` : ''}
+            ${p.dietary_tags.split(',')[0]}
+          </span>
+        ` : '';
+
         return `
         <div class="product-card" data-product-id="${p.id}">
           <div class="card-image-box">
             <img src="${p.image_url}" alt="${p.title}" loading="lazy">
             ${p.badge ? `<span class="card-tag-pill">${p.badge}</span>` : ''}
-            ${p.dietary_tags ? `<span class="card-dietary-badge">${p.dietary_tags.split(',')[0]}</span>` : ''}
+            ${dietaryBadge}
           </div>
           <div class="card-body">
             <div class="card-category-meta">${p.category}</div>
-            <h4 class="card-title">${p.title}</h4>
-            <p class="card-description">${p.description}</p>
+            <h4 class="card-title">${formatWithVegDot(p.title)}</h4>
+            <p class="card-description">${formatWithVegDot(p.description)}</p>
             <div class="card-rating-row">
               <span class="rating-stars">★ ${p.rating.toFixed(1)}</span>
               <span>(${p.review_count} reviews)</span>

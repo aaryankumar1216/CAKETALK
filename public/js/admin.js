@@ -2,6 +2,14 @@
  * CakeTalk Bakery Platform - Owner / Admin Dashboard Logic
  */
 
+function formatWithVegDot(str) {
+  if (!str) return '';
+  return String(str).replace(/\b(veg|vegetarian)\b/gi, (match) => {
+    return `<span class="veg-inline-word"><span class="veg-indicator" title="100% Vegetarian"><span class="veg-dot"></span></span>${match}</span>`;
+  });
+}
+window.formatWithVegDot = formatWithVegDot;
+
 const AdminApp = {
   currentTab: 'analytics',
   currentUser: null,
@@ -246,7 +254,7 @@ const AdminApp = {
           </td>
           <td>
             <div style="max-width: 260px; font-size: 0.82rem;">
-              ${o.items.map(it => `<div>• <strong>${it.quantity}x</strong> ${it.title} ${it.custom_details ? `<span style="color: var(--color-terracotta);">(${it.custom_details})</span>` : ''}</div>`).join('')}
+              ${o.items.map(it => `<div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">• <strong>${it.quantity}x</strong> <span class="veg-indicator" style="width:11px;height:11px;margin-right:2px;"><span class="veg-dot" style="width:5px;height:5px;"></span></span>${formatWithVegDot(it.title)} ${it.custom_details ? `<span style="color: var(--color-terracotta);">(${it.custom_details})</span>` : ''}</div>`).join('')}
             </div>
           </td>
           <td style="font-weight: 800; font-size: 0.95rem;">₹${o.total_amount.toFixed(0)}</td>
@@ -322,8 +330,14 @@ const AdminApp = {
             </div>
           </td>
           <td>
-            <div style="font-weight: 700;">${p.title}</div>
-            <div style="font-size: 0.75rem; color: #718096;">${p.badge || ''}</div>
+            <div style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+              ${p.dietary_tags && p.dietary_tags.toLowerCase().includes('veg') ? `<span class="veg-indicator" title="100% Vegetarian"><span class="veg-dot"></span></span>` : ''}
+              ${formatWithVegDot(p.title)}
+            </div>
+            <div style="font-size: 0.75rem; color: #718096; display: flex; align-items: center; gap: 6px; margin-top: 3px;">
+              <span class="veg-badge-inline"><span class="veg-indicator"><span class="veg-dot"></span></span>Veg</span>
+              ${p.badge ? `<span>• ${p.badge}</span>` : ''}
+            </div>
           </td>
           <td>${p.category}</td>
           <td style="font-weight: 700;">₹${p.price.toFixed(0)}</td>
@@ -542,8 +556,11 @@ const AdminApp = {
             <img src="${currentVal}" id="batchImgPreview-${p.id}" alt="${p.title}" onerror="this.src='https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80'">
           </div>
           <div class="batch-info-col">
-            <div class="batch-info-title" title="${p.title}">${p.title}</div>
-            <div class="batch-info-meta">${p.category} • ₹${p.price.toFixed(0)}</div>
+            <div class="batch-info-title" title="${p.title}" style="display: flex; align-items: center; gap: 5px;">
+              <span class="veg-indicator" title="100% Vegetarian"><span class="veg-dot"></span></span>
+              ${formatWithVegDot(p.title)}
+            </div>
+            <div class="batch-info-meta">${p.category} • <span class="veg-badge-inline"><span class="veg-indicator"><span class="veg-dot"></span></span>Veg</span> • ₹${p.price.toFixed(0)}</div>
             <span class="batch-status-badge ${isModified ? 'pending' : 'saved'}" id="batchBadge-${p.id}">
               ${isModified ? 'Modified ⚠️' : 'Current ✓'}
             </span>
