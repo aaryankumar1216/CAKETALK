@@ -611,7 +611,7 @@ def seed_products(conn):
                 "Birthday Cake",
                 750.0,
                 "Badam pista mix with crush.",
-                "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=800&q=80",
+                "/images/products/badam-pista-cake.jpg",
                 "Royal Festive",
                 "Veg",
                 12, 1, 4.9, 63
