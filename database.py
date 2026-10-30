@@ -303,7 +303,7 @@ def seed_products(conn):
                 "Snacks",
                 55.0,
                 "(Veg preparation) It's a good feel with cream.",
-                "https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=800&q=80",
+                "/images/products/cream-bun.jpg",
                 "Kids Favorite",
                 "Veg",
                 35, 0, 4.8, 48
