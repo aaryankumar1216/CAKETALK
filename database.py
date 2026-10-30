@@ -437,7 +437,7 @@ def seed_products(conn):
                 "LJ Specials",
                 115.0,
                 "Dry fruits.",
-                "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=800&q=80",
+                "/images/products/dilpasand.png",
                 "Authentic Treat",
                 "Veg",
                 35, 1, 4.9, 69
