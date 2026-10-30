@@ -569,7 +569,7 @@ def seed_products(conn):
                 "Special Mixer with Shanks",
                 85.0,
                 "It's a shanks with tea.",
-                "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80",
+                "/images/products/benne-murukku.jpg",
                 "Butter Crisp",
                 "Veg",
                 48, 1, 4.8, 51
