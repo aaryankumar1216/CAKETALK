@@ -591,7 +591,7 @@ def seed_products(conn):
                 "Birthday Cake",
                 600.0,
                 "Blueberry crush.",
-                "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80",
+                "/images/products/blueberry-pastry.png",
                 "Berry Delight",
                 "Veg",
                 15, 1, 4.9, 69
