@@ -447,7 +447,7 @@ def seed_products(conn):
                 "LJ Specials",
                 130.0,
                 "Sweet.",
-                "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=800&q=80",
+                "/images/products/kova-dilpasand.png",
                 "Khoya Rich",
                 "Veg",
                 28, 1, 4.9, 54
