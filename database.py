@@ -377,7 +377,7 @@ def seed_products(conn):
                 "LJ Specials",
                 60.0,
                 "Sweet rusk",
-                "https://images.unsplash.com/photo-1589367920969-ab8e050bbb04?auto=format&fit=crop&w=800&q=80",
+                "/images/products/rusk.png",
                 "Daily Rusk",
                 "Veg",
                 45, 0, 4.7, 35
