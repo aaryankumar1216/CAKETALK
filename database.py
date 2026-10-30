@@ -497,7 +497,7 @@ def seed_products(conn):
                 "LJ Specials",
                 110.0,
                 "Rice mix",
-                "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=800&q=80",
+                "/images/products/puliyogare.png",
                 "Traditional Mix",
                 "Veg",
                 35, 0, 4.9, 63
@@ -507,7 +507,7 @@ def seed_products(conn):
                 "LJ Specials",
                 180.0,
                 "Rice mix",
-                "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=800&q=80",
+                "/images/products/puliyogare.png",
                 "Family Pack",
                 "Veg",
                 30, 0, 4.9, 52
