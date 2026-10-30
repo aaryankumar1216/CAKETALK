@@ -407,7 +407,7 @@ def seed_products(conn):
                 "LJ Specials",
                 80.0,
                 "It's a healthy bread.",
-                "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
+                "/images/products/wheat-bread.png",
                 "Healthy Choice",
                 "Veg",
                 35, 0, 4.8, 38
