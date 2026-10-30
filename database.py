@@ -417,7 +417,7 @@ def seed_products(conn):
                 "LJ Specials",
                 35.0,
                 "Spicy",
-                "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80",
+                "/images/products/khara-bun.jpg",
                 "SPICY",
                 "Veg",
                 50, 1, 4.9, 81
