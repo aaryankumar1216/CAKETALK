@@ -253,7 +253,7 @@ def seed_products(conn):
                 "Snacks",
                 30.0,
                 "It's pure veg mushroom.",
-                "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=800&q=80",
+                "/images/products/mushroom-puff.png",
                 "Fresh Bake",
                 "Veg",
                 35, 1, 4.8, 31
