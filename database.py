@@ -549,7 +549,7 @@ def seed_products(conn):
                 "Special Mixer with Shanks",
                 110.0,
                 "Shanks.",
-                "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=800&q=80",
+                "/images/products/special-kaju-mixture.png",
                 "Crunchy Cashew",
                 "Veg",
                 42, 1, 4.9, 59
@@ -559,7 +559,7 @@ def seed_products(conn):
                 "Special Mixer with Shanks",
                 210.0,
                 "Shanks.",
-                "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+                "/images/products/special-kaju-mixture.png",
                 "Party Pack",
                 "Veg",
                 35, 0, 4.9, 44
