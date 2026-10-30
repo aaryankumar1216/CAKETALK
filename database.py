@@ -361,7 +361,7 @@ def seed_products(conn):
                 40, 1, 4.8, 45
             ),
 
-            # ------------------ LJ SPECIALS (18 items) ------------------
+            # ------------------ LJ SPECIALS (17 items) ------------------
             (
                 "Special Rusk (500 grm)",
                 "LJ Specials",
@@ -531,16 +531,6 @@ def seed_products(conn):
                 "Snack",
                 "Veg",
                 50, 0, 4.5, 23
-            ),
-            (
-                "Layan Millet (500 g)",
-                "LJ Specials",
-                300.0,
-                "Protein powder.",
-                "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80",
-                "Health Superfood",
-                "Veg",
-                20, 0, 4.8, 20
             ),
 
             # ------------------ SPECIAL MIXER WITH SHANKS (3 items) ------------------
