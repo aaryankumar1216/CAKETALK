@@ -293,7 +293,7 @@ def seed_products(conn):
                 "Snacks",
                 45.0,
                 "It's chocolate fell",
-                "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=800&q=80",
+                "/images/products/donuts.png",
                 "Chocolate",
                 "Veg",
                 30, 0, 4.7, 34
