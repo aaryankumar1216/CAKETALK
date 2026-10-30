@@ -333,7 +333,7 @@ def seed_products(conn):
                 "Snacks",
                 95.0,
                 "It's a shanks time.",
-                "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80",
+                "/images/products/pakoda.png",
                 "Tea Time Snack",
                 "Veg",
                 30, 0, 4.7, 38
