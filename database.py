@@ -477,7 +477,7 @@ def seed_products(conn):
                 "LJ Specials",
                 90.0,
                 "It's dry fruits cake.",
-                "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=800&q=80",
+                "/images/products/fruit-cake.png",
                 "Tutti Frutti",
                 "Veg",
                 38, 0, 4.8, 49
