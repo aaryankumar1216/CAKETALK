@@ -273,7 +273,7 @@ def seed_products(conn):
                 "Snacks",
                 25.0,
                 "It's spicy with masala.",
-                "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80",
+                "/images/products/masala-bun.png",
                 "SPICY",
                 "Veg",
                 50, 1, 4.9, 58
