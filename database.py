@@ -397,7 +397,7 @@ def seed_products(conn):
                 "LJ Specials",
                 35.0,
                 "It's a bun.",
-                "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80",
+                "/images/products/special-bun.png",
                 "Soft Bun",
                 "Veg",
                 40, 0, 4.6, 29
